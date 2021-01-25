@@ -1,0 +1,29 @@
+{
+  "name": "support-reminders",
+  "isAwsLambda": true,
+  "cloudformation": "../cfn.yaml",
+  "projectName": "Contributions::support-reminders",
+  "buildDir": "./target",
+  "riffraffFile": "./riff-raff.yaml",
+  "dependencies": {
+    "@types/aws-sdk": "^2.7.0",
+    "@types/pg": "^7.4.14",
+    "@types/pg-format": "^1.0.0",
+    "node-fetch": "^2.1.2",
+    "aws-sdk": "^2.264.1",
+    "typescript": "4.1.3",
+    "pg": "^7.9.0",
+    "pg-format": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "10.14.22",
+    "@types/node-fetch": "^1.6.9",
+    "node-riffraff-artefact": "^2.0.1"
+  },
+  "scripts": {
+    "clean": "rm -rf target",
+    "build": "tsc",
+    "create-reminder-signup": "yarn build && node target/create-reminder-signup/lambda/local.js",
+    "package": "ARTEFACT_PATH=$PWD/target VERBOSE=true riffraff-artefact"
+  }
+}
