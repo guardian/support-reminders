@@ -9,21 +9,36 @@
     "@types/aws-sdk": "^2.7.0",
     "@types/pg": "^7.4.14",
     "@types/pg-format": "^1.0.0",
-    "node-fetch": "^2.1.2",
+    "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.264.1",
-    "typescript": "4.1.3",
+    "node-fetch": "^2.1.2",
     "pg": "^7.9.0",
-    "pg-format": "^1.0.4"
+    "pg-format": "^1.0.4",
+    "typescript": "4.1.3"
   },
   "devDependencies": {
+    "@guardian/eslint-config": "^0.4.2",
+    "@guardian/eslint-config-typescript": "^0.4.2",
+    "@guardian/prettier": "^0.4.2",
+    "@types/aws-lambda": "^8.10.71",
     "@types/node": "10.14.22",
     "@types/node-fetch": "^1.6.9",
-    "node-riffraff-artefact": "^2.0.1"
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/parser": "^4.14.1",
+    "eslint": "^7.18.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "node-riffraff-artefact": "^2.0.1",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1"
   },
   "scripts": {
     "clean": "rm -rf target",
+    "lint": "eslint ./src --ext .js,.ts",
     "build": "tsc",
-    "create-reminder-signup": "yarn build && node target/create-reminder-signup/lambda/local.js",
+    "create-reminder-signup": "ts-node src/create-reminder-signup/lambda/local.ts",
     "package": "ARTEFACT_PATH=$PWD/target VERBOSE=true riffraff-artefact"
   }
 }
