@@ -7,10 +7,12 @@
   "riffraffFile": "./riff-raff.yaml",
   "dependencies": {
     "@types/aws-sdk": "^2.7.0",
+    "@types/joi": "^17.2.3",
     "@types/pg": "^7.4.14",
     "@types/pg-format": "^1.0.0",
     "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.264.1",
+    "joi": "^17.3.0",
     "node-fetch": "^2.1.2",
     "pg": "^7.9.0",
     "pg-format": "^1.0.4",

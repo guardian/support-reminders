@@ -10,7 +10,13 @@ function run() {
 	process.env.Stage = 'DEV';
 
 	const event = {
-		body: 'hello',
+		body: JSON.stringify({
+			email: 'user@example.com',
+			reminderPeriod: '2021-01',
+			reminderPlatform: 'WEB',
+			reminderComponent: 'EPIC',
+			reminderStage: 'PRE',
+		}),
 	};
 
 	handler(event)
