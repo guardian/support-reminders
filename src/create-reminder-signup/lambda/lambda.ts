@@ -1,8 +1,19 @@
 import type { APIGatewayProxyResult } from 'aws-lambda';
+import * as AWS from 'aws-sdk';
+import type * as SSM from 'aws-sdk/clients/ssm';
+import { getParamFromSSM, ssmStage } from '../../lib/ssm';
+import { getIdentityIdByEmail } from '../lib/identity';
 import type { APIGatewayEvent, OneOffSignup } from './models';
 import { schema } from './models';
 
-export const handler = (
+const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
+
+const identityAccessTokenPromise: Promise<string> = getParamFromSSM(
+	ssm,
+	`/support-reminders/idapi/${ssmStage}/accessToken`,
+);
+
+export const handler = async (
 	event: APIGatewayEvent,
 ): Promise<APIGatewayProxyResult> => {
 	console.log('received event: ', event);
@@ -20,8 +31,14 @@ export const handler = (
 
 	const signup = body as OneOffSignup;
 
+	const identityAccessToken = await identityAccessTokenPromise;
+	const identityId = await getIdentityIdByEmail(
+		signup.email,
+		identityAccessToken,
+	);
+
 	return Promise.resolve({
 		statusCode: 200,
-		body: JSON.stringify(signup),
+		body: JSON.stringify({ ...signup, identityId }),
 	});
 };
