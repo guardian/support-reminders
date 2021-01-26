@@ -1,0 +1,18 @@
+stacks: [support]
+regions: [eu-west-1]
+
+deployments:
+  support-reminders:
+    type: aws-lambda
+    parameters:
+      prefixStack: false
+      bucket: membership-dist
+      fileName: support-reminders.zip
+      functionNames:
+        - support-reminders-create-reminder-signup-
+    dependencies: [support-reminders-cloudformation]
+  support-reminders-cloudformation:
+    type: cloud-formation
+    app: support-reminders
+    parameters:
+      templatePath: cloudformation/cfn.yaml
