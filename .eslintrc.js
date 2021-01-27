@@ -7,7 +7,9 @@ module.exports = {
 	overrides: [{
 		files: ["*.ts"],
 		rules: {
-			"@typescript-eslint/no-unsafe-member-access": "off"
+			"@typescript-eslint/no-unsafe-member-access": "off",
+			"@typescript-eslint/consistent-type-imports": "off",
+			"@typescript-eslint/prefer-optional-chain": "off"
 		}
 
 	}]

@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "ESNEXT",
     "module": "commonjs",
     "outDir": "./target",
     "sourceMap": true,
     "strict": true,
     "allowJs": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
   },
   "include": [
     "./src/**/*.ts",
