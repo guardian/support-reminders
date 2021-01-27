@@ -1,4 +1,3 @@
-import type { Response as FetchResponse } from 'node-fetch';
 import fetch from 'node-fetch';
 import { isProd } from '../../lib/stage';
 
@@ -9,35 +8,41 @@ const idapiBaseUrl = isProd()
 const encodeEmail = (email: string): string =>
 	encodeURI(email).replace('+', '%2B');
 
-export function getIdentityIdByEmail(
+interface IdentitySuccess {
+	name: 'success';
+	identityId: string;
+}
+interface IdentityFailure {
+	name: 'failure';
+	status: number;
+}
+const fail = (status: number): IdentityFailure => ({ name: 'failure', status });
+
+export type IdentityResult = IdentitySuccess | IdentityFailure;
+
+export const getIdentityIdByEmail = async (
 	email: string,
 	accessToken: string,
-): Promise<string> {
-	return fetch(`${idapiBaseUrl}/user?emailAddress=${encodeEmail(email)}`, {
-		headers: { 'X-GU-ID-Client-Access-Token': `Bearer ${accessToken}` },
-	})
-		.then((response: FetchResponse) => {
-			if (response.status == 404) {
-				return Promise.reject(new Error(`Email not found: ${email}`));
-			}
-			if (!response.ok) {
-				return Promise.reject(
-					new Error(
-						`Identity API user endpoint responded with status: ${response.status}`,
-					),
-				);
-			}
-			return response.json();
-		})
-		.then((identityResponse) => {
-			if (identityResponse.user?.id) {
-				return Promise.resolve(identityResponse?.user?.id as string);
-			} else {
-				return Promise.reject(
-					`Missing brazeUuid in identity API response: ${JSON.stringify(
-						identityResponse,
-					)}`,
-				);
-			}
-		});
-}
+): Promise<IdentityResult> => {
+	const response = await fetch(
+		`${idapiBaseUrl}/user?emailAddress=${encodeEmail(email)}`,
+		{
+			headers: { 'X-GU-ID-Client-Access-Token': `Bearer ${accessToken}` },
+		},
+	);
+
+	if (!response.ok) {
+		return fail(response.status);
+	}
+
+	return response.json().then((identityResponse) => {
+		if (identityResponse.user?.id) {
+			return {
+				name: 'success',
+				identityId: identityResponse?.user?.id as string,
+			};
+		} else {
+			return fail(500);
+		}
+	});
+};

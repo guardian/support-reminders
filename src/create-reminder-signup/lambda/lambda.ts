@@ -2,6 +2,7 @@ import type { APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import type * as SSM from 'aws-sdk/clients/ssm';
 import { getParamFromSSM, ssmStage } from '../../lib/ssm';
+import type { IdentityResult } from '../lib/identity';
 import { getIdentityIdByEmail } from '../lib/identity';
 import type { APIGatewayEvent, OneOffSignup } from './models';
 import { schema } from './models';
@@ -33,12 +34,29 @@ export const handler = (
 
 	return identityAccessTokenPromise
 		.then((token) => getIdentityIdByEmail(signup.email, token))
-		.then((identityId) => ({
-			statusCode: 200,
-			body: JSON.stringify({ ...signup, identityId }),
-		}))
-		.catch((err) => ({
-			statusCode: 400,
-			body: JSON.stringify(err.message),
-		}));
+		.then((result: IdentityResult) => {
+			if (result.name === 'success') {
+				//TODO - write db
+				return {
+					statusCode: 200,
+					body: JSON.stringify({
+						...signup,
+						identityId: result.identityId,
+					}),
+				};
+			} else {
+				const statusCode = result.status === 404 ? 400 : 500;
+				return {
+					statusCode,
+					body: statusCode.toString(),
+				};
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+			return {
+				statusCode: 500,
+				body: 'Internal Server Error',
+			};
+		});
 };
