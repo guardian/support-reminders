@@ -3,5 +3,12 @@ module.exports = {
 	plugins: [
 		'@typescript-eslint',
 	],
-    extends: "@guardian/eslint-config-typescript"
+	extends: "@guardian/eslint-config-typescript",
+	overrides: [{
+		files: ["*.ts"],
+		rules: {
+			"@typescript-eslint/no-unsafe-member-access": "off"
+		}
+
+	}]
 }
