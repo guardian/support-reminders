@@ -1,11 +1,9 @@
-import type { APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
-import type * as SSM from 'aws-sdk/clients/ssm';
+import * as SSM from 'aws-sdk/clients/ssm';
 import { getParamFromSSM, ssmStage } from '../../lib/ssm';
-import type { IdentityResult } from '../lib/identity';
-import { getIdentityIdByEmail } from '../lib/identity';
-import type { APIGatewayEvent, OneOffSignup } from './models';
-import { schema } from './models';
+import { getOrCreateIdentityIdByEmail, IdentityResult } from '../lib/identity';
+import { APIGatewayEvent, OneOffSignup, schema } from './models';
 
 const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
 
@@ -33,7 +31,13 @@ export const handler = (
 	const signup = body as OneOffSignup;
 
 	return identityAccessTokenPromise
-		.then((token) => getIdentityIdByEmail(signup.email, token))
+		.then((token) =>
+			getOrCreateIdentityIdByEmail(
+				signup.email,
+				signup.reminderStage,
+				token,
+			),
+		)
 		.then((result: IdentityResult) => {
 			if (result.name === 'success') {
 				//TODO - write db

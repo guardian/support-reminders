@@ -22,7 +22,8 @@ export async function getDatabaseParamsFromSSM(ssm: SSM): Promise<DBConfig> {
 		const username = p.find(({ Name }) => Name === `${dbPath}/username`);
 
 		if (
-			url?.Value &&
+			url &&
+			url.Value &&
 			password &&
 			password.Value &&
 			username &&
@@ -49,7 +50,7 @@ export async function getParamFromSSM(ssm: SSM, path: string): Promise<string> {
 		})
 		.promise();
 
-	if (ssmResponse.Parameter?.Value) {
+	if (ssmResponse.Parameter && ssmResponse.Parameter.Value) {
 		return ssmResponse.Parameter.Value;
 	}
 
