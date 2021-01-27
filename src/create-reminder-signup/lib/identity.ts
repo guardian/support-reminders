@@ -31,8 +31,6 @@ export function getIdentityIdByEmail(
 		})
 		.then((identityResponse) => {
 			if (identityResponse.user?.id) {
-				console.log('identityResponse: ', identityResponse as string);
-
 				return Promise.resolve(identityResponse?.user?.id as string);
 			} else {
 				return Promise.reject(

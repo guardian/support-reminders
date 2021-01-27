@@ -13,7 +13,7 @@ const identityAccessTokenPromise: Promise<string> = getParamFromSSM(
 	`/support-reminders/idapi/${ssmStage}/accessToken`,
 );
 
-export const handler = async (
+export const handler = (
 	event: APIGatewayEvent,
 ): Promise<APIGatewayProxyResult> => {
 	console.log('received event: ', event);
@@ -31,14 +31,14 @@ export const handler = async (
 
 	const signup = body as OneOffSignup;
 
-	const identityAccessToken = await identityAccessTokenPromise;
-	const identityId = await getIdentityIdByEmail(
-		signup.email,
-		identityAccessToken,
-	);
-
-	return Promise.resolve({
-		statusCode: 200,
-		body: JSON.stringify({ ...signup, identityId }),
-	});
+	return identityAccessTokenPromise
+		.then((token) => getIdentityIdByEmail(signup.email, token))
+		.then((identityId) => ({
+			statusCode: 200,
+			body: JSON.stringify({ ...signup, identityId }),
+		}))
+		.catch((err) => ({
+			statusCode: 400,
+			body: JSON.stringify(err.message),
+		}));
 };
