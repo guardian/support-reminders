@@ -34,9 +34,9 @@ export const handler = async (
 
 	const signupRequest: unknown = JSON.parse(event.body);
 
-	const validationError: ValidationErrors = [];
-	if (!oneOffSignupValidator(signupRequest, validationError)) {
-		console.log('Validation of signup failed', validationError);
+	const validationErrors: ValidationErrors = [];
+	if (!oneOffSignupValidator(signupRequest, validationErrors)) {
+		console.log('Validation of signup failed', validationErrors);
 		return Promise.resolve({
 			statusCode: 400,
 			body: 'Invalid body',
