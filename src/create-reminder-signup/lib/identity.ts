@@ -41,11 +41,7 @@ const getIdentityIdByEmail = async (
 	}
 
 	return response.json().then((identityResponse) => {
-		if (
-			identityResponse &&
-			identityResponse.user &&
-			identityResponse.user.id
-		) {
+		if (identityResponse?.user?.id) {
 			return {
 				name: 'success',
 				identityId: identityResponse.user.id as string,
@@ -79,11 +75,7 @@ const createIdentityAccount = async (
 	}
 
 	return response.json().then((identityResponse) => {
-		if (
-			identityResponse &&
-			identityResponse.guestRegistrationRequest &&
-			identityResponse.guestRegistrationRequest.userId
-		) {
+		if (identityResponse?.guestRegistrationRequest?.userId) {
 			return success(
 				identityResponse.guestRegistrationRequest.userId as string,
 			);

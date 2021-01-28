@@ -1,24 +1,21 @@
-import * as Joi from 'joi';
+import {createDetailedValidator, registerType} from "typecheck.macro/dist/typecheck.macro";
 
-export enum ReminderPlatform {
-	WEB = 'WEB',
-	AMP = 'AMP',
-	MMA = 'MMA',
-	SUPPORT = 'SUPPORT',
-}
+export type ReminderPlatform =
+	'WEB' |
+	'AMP' |
+	'MMA' |
+	'SUPPORT';
 
-export enum ReminderComponent {
-	EPIC = 'EPIC',
-	BANNER = 'BANNER',
-	THANKYOU = 'THANKYOU',
-	CANCELLATION = 'CANCELLATION',
-}
+export type ReminderComponent =
+	'EPIC' |
+	'BANNER' |
+	'THANKYOU' |
+	'CANCELLATION';
 
-export enum ReminderStage {
-	PRE = 'PRE',
-	POST = 'POST',
-	WINBACK = 'WINBACK',
-}
+export type ReminderStage =
+	'PRE' |
+	'POST' |
+	'WINBACK';
 
 export interface OneOffSignup {
 	email: string;
@@ -33,17 +30,6 @@ export interface APIGatewayEvent {
 	body: string;
 }
 
-export const schema = Joi.object({
-	email: Joi.string().email().required(),
-	reminderPeriod: Joi.date().required(),
-	reminderPlatform: Joi.string()
-		.valid(...Object.keys(ReminderPlatform))
-		.required(),
-	reminderComponent: Joi.string()
-		.valid(...Object.keys(ReminderComponent))
-		.required(),
-	reminderStage: Joi.string()
-		.valid(...Object.keys(ReminderStage))
-		.required(),
-	reminderOption: Joi.string(),
-});
+// Use macro to generate validator
+registerType('OneOffSignup');
+export const oneOffSignupValidator = createDetailedValidator<OneOffSignup>();

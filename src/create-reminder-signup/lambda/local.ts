@@ -11,7 +11,7 @@ function run() {
 
 	const event = {
 		body: JSON.stringify({
-			email: 'example@example.com',
+			email: 'test-reminders10@theguardian.com',
 			reminderPeriod: '2021-01',
 			reminderPlatform: 'WEB',
 			reminderComponent: 'EPIC',

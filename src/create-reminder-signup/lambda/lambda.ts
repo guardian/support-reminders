@@ -3,7 +3,7 @@ import * as AWS from 'aws-sdk';
 import * as SSM from 'aws-sdk/clients/ssm';
 import { getParamFromSSM, ssmStage } from '../../lib/ssm';
 import { getOrCreateIdentityIdByEmail, IdentityResult } from '../lib/identity';
-import { APIGatewayEvent, OneOffSignup, schema } from './models';
+import {APIGatewayEvent, oneOffSignupValidator} from './models';
 
 const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
 
@@ -18,17 +18,16 @@ export const handler = (
 	console.log('received event: ', event);
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Application boundary
-	const body = JSON.parse(event.body);
-	const validation = schema.validate(body);
+	const signup: unknown = JSON.parse(event.body);
 
-	if (validation.error) {
+	const validationError: any[] = [];
+	if (!oneOffSignupValidator(signup, validationError)) {
+		console.log('Validation of signup failed', validationError);
 		return Promise.resolve({
 			statusCode: 400,
-			body: validation.error.message,
+			body: 'Invalid body',
 		});
 	}
-
-	const signup = body as OneOffSignup;
 
 	return identityAccessTokenPromise
 		.then((token) =>
