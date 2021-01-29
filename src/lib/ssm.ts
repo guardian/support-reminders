@@ -6,7 +6,7 @@ import { isProd, isRunningLocally } from './stage';
 export const ssmStage = isProd() ? 'PROD' : 'CODE';
 
 export async function getDatabaseParamsFromSSM(ssm: SSM): Promise<DBConfig> {
-	const dbPath = `/contributions-store/reminders-lambda/db-config/${ssmStage}`;
+	const dbPath = `/support-reminders/db-config/${ssmStage}`;
 
 	const ssmResponse = await ssm
 		.getParametersByPath({
