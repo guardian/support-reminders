@@ -1,5 +1,5 @@
 import { Pool, QueryConfig, QueryResult } from 'pg';
-import { handleQuery } from '../../lib/db';
+import { runWithLogging } from '../../lib/db';
 import { OneOffSignup } from '../lambda/models';
 
 export function writeOneOffSignup(
@@ -40,5 +40,5 @@ export function writeOneOffSignup(
 		],
 	};
 
-	return handleQuery(pool.query(query), query);
+	return runWithLogging(query, pool);
 }

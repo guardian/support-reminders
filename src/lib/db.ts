@@ -24,17 +24,13 @@ export function createDatabaseConnectionPool(dbConfig: DBConfig): Pool {
 	throw new Error(`Could not parse DB config ${JSON.stringify(dbConfig)}`);
 }
 
-function queryToString(queryConfig: QueryConfig): string {
-	return `Query: ${JSON.stringify(queryConfig)}`;
-}
-
-export function handleQuery(
-	queryPromise: Promise<QueryResult>,
+export function runWithLogging(
 	queryConfig: QueryConfig,
+	pool: Pool,
 ): Promise<QueryResult> {
-	return queryPromise.then((result: QueryResult) => {
+	return pool.query(queryConfig).then((result: QueryResult) => {
 		logInfo(
-			`${queryToString(queryConfig)}. Affected ${
+			`Query: ${JSON.stringify(queryConfig)}. Affected ${
 				result.rowCount
 			} row(s): `,
 			result.rows,
