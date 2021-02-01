@@ -1,4 +1,4 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyCallback, APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool } from 'pg';
@@ -81,7 +81,7 @@ export const run = async (
 export const handler = (
 	event: APIGatewayEvent,
 	context: unknown,
-	callback: (err: Error | null, result?: APIGatewayProxyResult) => void,
+	callback: APIGatewayProxyCallback,
 ): void => {
 	// setTimeout is necessary because of a bug in the node lambda runtime which can break requests to ssm
 	setTimeout(() => {
