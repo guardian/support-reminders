@@ -1,4 +1,4 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyCallback, APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool } from 'pg';
@@ -27,7 +27,7 @@ const identityAccessTokenPromise: Promise<string> = getParamFromSSM(
 	`/support-reminders/idapi/${ssmStage}/accessToken`,
 );
 
-export const handler = async (
+export const run = async (
 	event: APIGatewayEvent,
 ): Promise<APIGatewayProxyResult> => {
 	console.log('received event: ', event);
@@ -76,4 +76,17 @@ export const handler = async (
 			body: statusCode.toString(),
 		};
 	}
+};
+
+export const handler = (
+	event: APIGatewayEvent,
+	context: unknown,
+	callback: APIGatewayProxyCallback,
+): void => {
+	// setTimeout is necessary because of a bug in the node lambda runtime which can break requests to ssm
+	setTimeout(() => {
+		run(event)
+			.then((result) => callback(null, result))
+			.catch((err) => callback(err));
+	});
 };
