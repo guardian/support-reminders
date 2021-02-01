@@ -32,8 +32,8 @@ function isValidEmail(email: string): boolean {
 type ReminderPeriod = string;
 
 function isValidReminderPeriod(reminderPeriod: string): boolean {
-    const date = Date.parse(reminderPeriod);
-    return !isNaN(date);
+	const date = Date.parse(reminderPeriod);
+	return !isNaN(date);
 }
 
 export interface OneOffSignupRequest {
