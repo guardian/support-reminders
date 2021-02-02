@@ -1,16 +1,16 @@
 {
-  "compilerOptions": {
-    "target": "ESNEXT",
-    "module": "commonjs",
-    "outDir": "./target",
-    "sourceMap": true,
-    "strict": true,
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "node"
-  },
-  "include": [
-    "./src/**/*.ts",
-    "./**/gen-nodejs/*.js"
-  ]
+	"compilerOptions": {
+		"noEmit": true,
+		"target": "ESNEXT",
+		"module": "commonjs",
+		"sourceMap": true,
+		"strict": true,
+		"allowJs": true,
+		"resolveJsonModule": true,
+		"moduleResolution": "node"
+	},
+	"include": [
+		"./src/**/*.ts",
+		"./**/gen-nodejs/*.js"
+	]
 }
