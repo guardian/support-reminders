@@ -26,6 +26,9 @@ Parameters:
   CertificateArn:
     Description: ARN of the certificate
     Type: String
+  DatalakeBucket:
+    Description: Bucket to upload data for ingestion into BigQuery
+    Type: String
 
 Mappings:
   StageMap:
@@ -86,6 +89,47 @@ Resources:
           Properties:
             Path: '/remind-me'
             Method: post
+
+  NextRemindersLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub support-reminders-next-reminders-${Stage}
+      Description: A lambda for getting next reminders data
+      Runtime: nodejs10.x
+      Handler: next-reminders/lambda/lambda.handler
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+          Bucket: !Ref DatalakeBucket
+      CodeUri:
+        Bucket: !Ref DeployBucket
+        Key: !Sub ${Stack}/${Stage}/support-reminders/support-reminders.zip
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref SecurityGroupToAccessPostgres
+        SubnetIds: !Ref VpcSubnets
+      Policies:
+        # there are some extra permissions needed for a lambda to access resources in a VPC
+        # https://docs.aws.amazon.com/lambda/latest/dg/vpc.html
+        # hence this role rather than BasicExecutionRole
+        - AWSLambdaVPCAccessExecutionRole
+        - Statement:
+            Effect: Allow
+            Action:
+              - ssm:GetParametersByPath
+              - ssm:GetParameter
+            Resource:
+              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
+        - Statement:
+            Effect: Allow
+            Action:
+            - s3:PutObject
+            - s3:PutObjectAcl
+            Resource:
+            - !Sub arn:aws:s3:::${DatalakeBucket}
+            - !Sub arn:aws:s3:::${DatalakeBucket}/*
 
   DomainName:
     Type: "AWS::ApiGateway::DomainName"
