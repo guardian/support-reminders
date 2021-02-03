@@ -16,6 +16,6 @@ A client request includes an email address, which the lambda uses to fetch the u
 The sign-up data is then persisted to Postgres.
 
 ### next-reminders
-A lambda for generating the snapshot of next reminders per user. Runs on a daily schedule.
+A lambda for generating the snapshot of reminders for the current month. Runs on a daily schedule.
 
-It populates the `next-reminders` table, which is then exported to an S3 bucket in the ophan account. From there it is sent to a BigQuery table which is used for ingestion into Braze.
+It produces a `next_reminders.csv`, which is exported to an S3 bucket in the ophan account. From there it is sent to a BigQuery table which is used for ingestion into Braze.
