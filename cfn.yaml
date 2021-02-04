@@ -131,6 +131,47 @@ Resources:
             - !Sub arn:aws:s3:::${DatalakeBucket}
             - !Sub arn:aws:s3:::${DatalakeBucket}/*
 
+  SignupExportsLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub support-reminders-signup-exports-${Stage}
+      Description: A lambda for exporting signups data
+      Runtime: nodejs10.x
+      Handler: signup-exports/lambda/lambda.handler
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+          Bucket: !Ref DatalakeBucket
+      CodeUri:
+        Bucket: !Ref DeployBucket
+        Key: !Sub ${Stack}/${Stage}/support-reminders/support-reminders.zip
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref SecurityGroupToAccessPostgres
+        SubnetIds: !Ref VpcSubnets
+      Policies:
+        # there are some extra permissions needed for a lambda to access resources in a VPC
+        # https://docs.aws.amazon.com/lambda/latest/dg/vpc.html
+        # hence this role rather than BasicExecutionRole
+        - AWSLambdaVPCAccessExecutionRole
+        - Statement:
+            Effect: Allow
+            Action:
+              - ssm:GetParametersByPath
+              - ssm:GetParameter
+            Resource:
+              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
+        - Statement:
+            Effect: Allow
+            Action:
+            - s3:PutObject
+            - s3:PutObjectAcl
+            Resource:
+            - !Sub arn:aws:s3:::${DatalakeBucket}
+            - !Sub arn:aws:s3:::${DatalakeBucket}/*
+
   DomainName:
     Type: "AWS::ApiGateway::DomainName"
     Properties:

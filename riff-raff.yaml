@@ -11,6 +11,7 @@ deployments:
       functionNames:
         - support-reminders-create-reminder-signup-
         - support-reminders-next-reminders-
+        - support-reminders-signup-exports-
     dependencies: [support-reminders-cloudformation]
   support-reminders-cloudformation:
     type: cloud-formation
