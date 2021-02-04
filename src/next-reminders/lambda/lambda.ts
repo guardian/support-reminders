@@ -38,7 +38,12 @@ export const handler = async (): Promise<number> =>
 			const body = `${header}${records}`;
 
 			return s3
-				.upload({ Bucket: S3_BUCKET, Key: S3_KEY, Body: body })
+				.upload({
+					Bucket: S3_BUCKET,
+					Key: S3_KEY,
+					Body: body,
+					ACL: 'bucket-owner-full-control',
+				})
 				.promise()
 				.then(() => result.rowCount);
 		});
