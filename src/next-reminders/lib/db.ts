@@ -18,6 +18,7 @@ export function getNextReminders(pool: Pool): Promise<QueryResult> {
 				'ONE_OFF' as reminder_type
 			FROM one_off_reminder_signups
 			WHERE reminder_period = $1
+				AND reminder_cancelled_at IS NULL
         `,
 		values: [currentReminderPeriod],
 	};
