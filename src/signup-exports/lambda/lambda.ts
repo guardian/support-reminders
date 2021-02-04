@@ -14,6 +14,6 @@ const S3_BUCKET = process.env.Bucket ?? '';
 
 export const handler = async (): Promise<number> =>
 	getDatabaseParamsFromSSM(ssm)
-		.then((config) => createDatabaseConnectionPool(config))
-		.then((pool) => getCreatedOrCancelledSignupsFromYesterday(pool))
+		.then(createDatabaseConnectionPool)
+		.then(getCreatedOrCancelledSignupsFromYesterday)
 		.then((result) => uploadAsCsvToS3(result, S3_BUCKET, S3_KEY));
