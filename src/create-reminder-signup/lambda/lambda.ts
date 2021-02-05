@@ -1,19 +1,24 @@
 import { APIGatewayProxyCallback, APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import * as SSM from 'aws-sdk/clients/ssm';
-import { Pool } from 'pg';
+import { Pool, QueryResult } from 'pg';
 import { createDatabaseConnectionPool } from '../../lib/db';
 import {
 	getDatabaseParamsFromSSM,
 	getParamFromSSM,
 	ssmStage,
 } from '../../lib/ssm';
-import { writeOneOffSignup } from '../lib/db';
+import { writeOneOffSignup, writeRecurringSignup } from '../lib/db';
 import { getOrCreateIdentityIdByEmail } from '../lib/identity';
 import {
 	APIGatewayEvent,
+	BaseSignupRequest,
 	oneOffSignupFromRequest,
+	OneOffSignupRequest,
 	oneOffSignupValidator,
+	recurringSignupFromRequest,
+	RecurringSignupRequest,
+	recurringSignupValidator,
 	ValidationErrors,
 } from './models';
 
@@ -34,8 +39,59 @@ export const run = async (
 
 	const signupRequest: unknown = JSON.parse(event.body);
 
+	if (event.path === '/create/one-off') {
+		return runOneOff(signupRequest);
+	} else if (event.path === '/create/recurring') {
+		return runRecurring(signupRequest);
+	}
+
+	return { statusCode: 404, body: 'Not found' };
+};
+
+export const runOneOff = async (
+	signupRequest: unknown,
+): Promise<APIGatewayProxyResult> => {
+	const persist = (
+		signupRequest: OneOffSignupRequest,
+		identityId: string,
+		pool: Pool,
+	) => {
+		const signup = oneOffSignupFromRequest(identityId, signupRequest);
+		return writeOneOffSignup(signup, pool);
+	};
+
+	return createSignup(signupRequest, oneOffSignupValidator, persist);
+};
+
+export const runRecurring = async (
+	signupRequest: unknown,
+): Promise<APIGatewayProxyResult> => {
+	const persist = (
+		signupRequest: RecurringSignupRequest,
+		identityId: string,
+		pool: Pool,
+	) => {
+		const signup = recurringSignupFromRequest(identityId, signupRequest);
+		return writeRecurringSignup(signup, pool);
+	};
+
+	return createSignup(signupRequest, recurringSignupValidator, persist);
+};
+
+const createSignup = async <T extends BaseSignupRequest>(
+	signupRequest: unknown,
+	validator: (
+		signupRequest: unknown,
+		validationErrors: ValidationErrors,
+	) => signupRequest is T,
+	persist: (
+		signupRequest: T,
+		identityId: string,
+		pool: Pool,
+	) => Promise<QueryResult>,
+) => {
 	const validationErrors: ValidationErrors = [];
-	if (!oneOffSignupValidator(signupRequest, validationErrors)) {
+	if (!validator(signupRequest, validationErrors)) {
 		console.log('Validation of signup failed', validationErrors);
 		return Promise.resolve({
 			statusCode: 400,
@@ -53,11 +109,11 @@ export const run = async (
 	);
 
 	if (identityResult.name === 'success') {
-		const signup = oneOffSignupFromRequest(
-			identityResult.identityId,
+		const dbResult = await persist(
 			signupRequest,
+			identityResult.identityId,
+			pool,
 		);
-		const dbResult = await writeOneOffSignup(signup, pool);
 
 		if (dbResult.rowCount !== 1) {
 			return {
