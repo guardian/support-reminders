@@ -7,6 +7,7 @@ import {
 // Database model
 export interface BaseSignup {
 	identity_id: string;
+	country?: string;
 	reminder_created_at: string;
 	reminder_platform: string;
 	reminder_component: string;
@@ -43,6 +44,7 @@ function isValidReminderPeriod(reminderPeriod: string): boolean {
 
 export interface BaseSignupRequest {
 	email: Email;
+	country?: string;
 	reminderPlatform: ReminderPlatform;
 	reminderComponent: ReminderComponent;
 	reminderStage: ReminderStage;
@@ -58,6 +60,7 @@ export interface RecurringSignupRequest extends BaseSignupRequest {
 }
 
 export interface APIGatewayEvent {
+	headers: Record<string, string | undefined>;
 	path: string;
 	body: string;
 }
@@ -101,6 +104,7 @@ export const oneOffSignupFromRequest = (
 	request: OneOffSignupRequest,
 ): OneOffSignup => ({
 	identity_id: identityId,
+	country: request.country,
 	reminder_period: toDate(request.reminderPeriod),
 	reminder_created_at: new Date().toISOString(),
 	reminder_platform: request.reminderPlatform,
@@ -114,6 +118,7 @@ export const recurringSignupFromRequest = (
 	request: RecurringSignupRequest,
 ): RecurringSignup => ({
 	identity_id: identityId,
+	country: request.country,
 	reminder_frequency_months: request.reminderFrequencyMonths,
 	reminder_created_at: new Date().toISOString(),
 	reminder_platform: request.reminderPlatform,

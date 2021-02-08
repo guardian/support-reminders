@@ -37,7 +37,8 @@ export const run = async (
 ): Promise<APIGatewayProxyResult> => {
 	console.log('received event: ', event);
 
-	const signupRequest: unknown = JSON.parse(event.body);
+	const country = event.headers['X-GU-GeoIP-Country-Code'];
+	const signupRequest: unknown = { ...JSON.parse(event.body), country };
 
 	if (event.path === '/create/one-off') {
 		return runOneOff(signupRequest);
