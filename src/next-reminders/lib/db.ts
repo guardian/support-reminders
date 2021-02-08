@@ -7,18 +7,62 @@ export function getNextReminders(pool: Pool): Promise<QueryResult> {
 
 	const query: QueryConfig = {
 		text: `
-			SELECT
-				identity_id,
-				reminder_period::text,
-				reminder_created_at::text,
-				reminder_platform,
-				reminder_component,
-				reminder_stage,
-				reminder_option,
-				'ONE_OFF' as reminder_type
-			FROM one_off_reminder_signups
-			WHERE reminder_period = $1
-				AND reminder_cancelled_at IS NULL
+			WITH one_offs AS (
+				SELECT
+					identity_id,
+					reminder_period::text,
+					reminder_created_at::text,
+					reminder_platform,
+					reminder_component,
+					reminder_stage,
+					reminder_option,
+					'ONE_OFF' as reminder_type
+				FROM
+					one_off_reminder_signups
+				WHERE
+					reminder_cancelled_at IS NULL
+					AND reminder_period = $1
+			),
+			recurrings AS (
+				SELECT
+					identity_id,
+					DATE($1)::text AS reminder_period,
+					reminder_created_at::text,
+					reminder_platform,
+					reminder_component,
+					reminder_stage,
+					reminder_option,
+					'RECURRING' as reminder_type
+				FROM
+					recurring_reminder_signups
+				WHERE
+					reminder_cancelled_at IS NULL
+					AND NOT (
+						DATE_PART('year', DATE($1)) = DATE_PART('year', DATE(reminder_created_at))
+						AND DATE_PART('month', DATE($1)) = DATE_PART('month', DATE(reminder_created_at))
+					)
+					AND CAST(
+						(DATE_PART('year', DATE($1)) - DATE_PART('year', DATE(reminder_created_at))) * 12 +
+						(DATE_PART('month', DATE($1)) - DATE_PART('month', DATE(reminder_created_at)))
+					AS INT) % reminder_frequency_months = 0
+			),
+			combined AS (
+				SELECT
+					*
+				FROM
+					recurrings
+				UNION SELECT
+					*
+				FROM
+					one_offs
+				ORDER BY
+					reminder_type DESC,
+					reminder_created_at ASC
+			)
+			SELECT DISTINCT ON (identity_id)
+				*
+			FROM
+				combined;
         `,
 		values: [currentReminderPeriod],
 	};
