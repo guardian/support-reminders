@@ -84,11 +84,16 @@ Resources:
               - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
               - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
       Events:
-        HttpPost:
-          Type: Api
-          Properties:
-            Path: '/remind-me'
-            Method: post
+        CreateOneOff:
+            Type: Api
+            Properties:
+                Path: '/create/one-off'
+                Method: post
+        CreateRecurring:
+            Type: Api
+            Properties:
+                Path: '/create/recurring'
+                Method: post
 
   NextRemindersLambda:
     Type: AWS::Serverless::Function

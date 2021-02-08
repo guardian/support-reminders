@@ -5,14 +5,19 @@ import {
 } from 'typecheck.macro/dist/typecheck.macro';
 
 // Database model
-export interface OneOffSignup {
+export interface BaseSignup {
 	identity_id: string;
-	reminder_period: string;
 	reminder_created_at: string;
 	reminder_platform: string;
 	reminder_component: string;
 	reminder_stage: string;
 	reminder_option?: string;
+}
+export interface OneOffSignup extends BaseSignup {
+	reminder_period: string;
+}
+export interface RecurringSignup extends BaseSignup {
+	reminder_frequency_months: number;
 }
 
 // API request models
@@ -36,16 +41,24 @@ function isValidReminderPeriod(reminderPeriod: string): boolean {
 	return !isNaN(date);
 }
 
-export interface OneOffSignupRequest {
+export interface BaseSignupRequest {
 	email: Email;
-	reminderPeriod: ReminderPeriod;
 	reminderPlatform: ReminderPlatform;
 	reminderComponent: ReminderComponent;
 	reminderStage: ReminderStage;
 	reminderOption?: string;
 }
 
+export interface OneOffSignupRequest extends BaseSignupRequest {
+	reminderPeriod: ReminderPeriod;
+}
+
+export interface RecurringSignupRequest extends BaseSignupRequest {
+	reminderFrequencyMonths: number;
+}
+
 export interface APIGatewayEvent {
+	path: string;
 	body: string;
 }
 
@@ -59,6 +72,17 @@ export const oneOffSignupValidator = createDetailedValidator<OneOffSignupRequest
 				isValidEmail(email) ? null : 'Invalid email',
 			ReminderPeriod: (reminderPeriod: string) =>
 				isValidReminderPeriod(reminderPeriod) ? null : 'Invalid date',
+		},
+	},
+);
+
+registerType('RecurringSignupRequest');
+export const recurringSignupValidator = createDetailedValidator<RecurringSignupRequest>(
+	undefined,
+	{
+		constraints: {
+			Email: (email: string) =>
+				isValidEmail(email) ? null : 'Invalid email',
 		},
 	},
 );
@@ -78,6 +102,19 @@ export const oneOffSignupFromRequest = (
 ): OneOffSignup => ({
 	identity_id: identityId,
 	reminder_period: toDate(request.reminderPeriod),
+	reminder_created_at: new Date().toISOString(),
+	reminder_platform: request.reminderPlatform,
+	reminder_component: request.reminderComponent,
+	reminder_stage: request.reminderStage,
+	reminder_option: request.reminderOption,
+});
+
+export const recurringSignupFromRequest = (
+	identityId: string,
+	request: RecurringSignupRequest,
+): RecurringSignup => ({
+	identity_id: identityId,
+	reminder_frequency_months: request.reminderFrequencyMonths,
 	reminder_created_at: new Date().toISOString(),
 	reminder_platform: request.reminderPlatform,
 	reminder_component: request.reminderComponent,

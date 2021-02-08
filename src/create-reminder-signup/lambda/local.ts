@@ -10,9 +10,11 @@ function runLocal() {
 	process.env.Stage = 'DEV';
 
 	const event = {
+		path: '/create/one-off',
 		body: JSON.stringify({
 			email: 'test-reminders10@theguardian.com',
 			reminderPeriod: '2021-01-01',
+			reminderFrequencyMonths: 3,
 			reminderPlatform: 'WEB',
 			reminderComponent: 'EPIC',
 			reminderStage: 'PRE',
