@@ -1,0 +1,8 @@
+{
+  "email": "test-reminders10@theguardian.com",
+  "reminderFrequencyMonths": 6,
+  "reminderPlatform": "WEB",
+  "reminderComponent": "THANKYOU",
+  "reminderStage": "POST",
+  "reminderOption": "6-months"
+}
