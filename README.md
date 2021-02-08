@@ -9,7 +9,7 @@ The sign-up data is stored in Postgres and a snapshot of the next reminder per u
 
 
 ### create-reminder-signup
-A lambda integrated with an API gateway POST endpoint.
+A lambda integrated with a couple of API gateway POST endpoints (`/create/one-off`, `/create/recurring`).
 
 A client request includes an email address, which the lambda uses to fetch the user's identity ID if it exists, or creates an identity guest account.
 
@@ -19,3 +19,8 @@ The sign-up data is then persisted to Postgres.
 A lambda for generating the snapshot of reminders for the current month. Runs on a daily schedule.
 
 It produces a `next_reminders.csv`, which is exported to an S3 bucket in the ophan account. From there it is sent to a BigQuery table which is used for ingestion into Braze.
+
+### signup-exports
+A lambda for generating the snapshot of newly created and cancelled signups. Runs on a daily schedule, exporting all created/cancelled signups from the previous day.
+
+It produces a `one-off-signups.csv` and `recurring-signups.csv`, which are exported to an S3 bucket in the ophan account. From there they are sent to a BigQuery table which can be queried for analysis.
