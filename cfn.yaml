@@ -221,3 +221,98 @@ Resources:
       TTL: '120'
       ResourceRecords:
         - !GetAtt [ DomainName, RegionalDomainName ]
+
+  CreateReminderSignupLambdaAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: support-reminders-create-reminder-signup lambda error
+      AlarmDescription: Failed to create a reminder signup
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref CreateReminderSignupLambda
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 60
+      EvaluationPeriods: 1
+      Statistic: Sum
+
+  NextRemindersLambdaAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: support-reminders-next-reminders lambda error
+      AlarmDescription: Failed to create next-reminders snapshot
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref NextRemindersLambda
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 60
+      EvaluationPeriods: 1
+      Statistic: Sum
+
+  SignupExportsLambdaAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: support-reminders-signup-exports lambda error
+      AlarmDescription: Failed to create signups exports
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref NextRemindersLambda
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 60
+      EvaluationPeriods: 1
+      Statistic: Sum
+
+  ApiGateway4XXAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: support-reminders API gateway 4XX response
+      AlarmDescription: Reminders API received an invalid request
+      MetricName: 4XXError
+      Namespace: AWS/ApiGateway
+      Dimensions:
+        - Name: ApiName
+          Value: !Sub support-reminders-${Stage}
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 60
+      EvaluationPeriods: 1
+      Statistic: Sum
+
+  ApiGateway5XXAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: support-reminders API gateway 5XX response
+      AlarmDescription: Reminders API failed to create a signup
+      MetricName: 5XXError
+      Namespace: AWS/ApiGateway
+      Dimensions:
+        - Name: ApiName
+          Value: !Sub support-reminders-${Stage}
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 60
+      EvaluationPeriods: 1
+      Statistic: Sum
