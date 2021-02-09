@@ -94,14 +94,14 @@ const createSignup = async <T extends BaseSignupRequest>(
 	signupRequest: unknown,
 	validator: Validator<T>,
 	persist: Persist<T>,
-) => {
+): Promise<APIGatewayProxyResult> => {
 	const validationErrors: ValidationErrors = [];
 	if (!validator(signupRequest, validationErrors)) {
 		console.log('Validation of signup failed', validationErrors);
-		return Promise.resolve({
+		return {
 			statusCode: 400,
 			body: 'Invalid body',
-		});
+		};
 	}
 
 	const token = await identityAccessTokenPromise;
