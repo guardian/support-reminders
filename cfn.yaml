@@ -237,7 +237,7 @@ Resources:
           Value: !Ref CreateReminderSignupLambda
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Threshold: 1
-      Period: 600
+      Period: 60
       EvaluationPeriods: 1
       Statistic: Sum
 
@@ -256,7 +256,7 @@ Resources:
           Value: !Ref NextRemindersLambda
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Threshold: 1
-      Period: 600
+      Period: 60
       EvaluationPeriods: 1
       Statistic: Sum
 
@@ -275,7 +275,7 @@ Resources:
           Value: !Ref NextRemindersLambda
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Threshold: 1
-      Period: 600
+      Period: 60
       EvaluationPeriods: 1
       Statistic: Sum
 
@@ -294,7 +294,7 @@ Resources:
           Value: !Ref ServerlessRestApi
       ComparisonOperator: GreaterThanThreshold
       Threshold: 1
-      Period: 600
+      Period: 60
       EvaluationPeriods: 1
       Statistic: Sum
 
@@ -313,6 +313,6 @@ Resources:
           Value: !Ref ServerlessRestApi
       ComparisonOperator: GreaterThanThreshold
       Threshold: 1
-      Period: 600
+      Period: 60
       EvaluationPeriods: 1
       Statistic: Sum
