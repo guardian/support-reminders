@@ -9,13 +9,9 @@ export function uploadAsCsvToS3(
 	bucket: string,
 	key: string,
 ): Promise<number> {
-	if (result.rowCount == 0) {
-		return Promise.resolve(0);
-	}
-
-	const header = Object.keys(result.rows[0]).map((key) => ({
-		id: key,
-		title: key,
+	const header = result.fields.map((field) => ({
+		id: field.name,
+		title: field.name,
 	}));
 
 	const csvWriter = createObjectCsvStringifier({
