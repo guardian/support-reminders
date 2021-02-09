@@ -223,39 +223,58 @@ Resources:
         - !GetAtt [ DomainName, RegionalDomainName ]
 
   CreateReminderSignupLambdaAlarm:
-  Type: AWS::CloudWatch::Alarm
-  Condition: IsProd
-  Properties:
-    AlarmActions:
-      - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-    AlarmName: Create reminder signup error
-    AlarmDescription: Failed to create a reminder signup
-    MetricName: Errors
-    Namespace: AWS/Lambda
-    Dimensions:
-      - Name: FunctionName
-        Value: !Ref CreateReminderSignupLambda
-    ComparisonOperator: GreaterThanOrEqualToThreshold
-    Threshold: 1
-    Period: 600
-    EvaluationPeriods: 1
-    Statistic: Sum
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: support-reminders-create-reminder-signup lambda error
+      AlarmDescription: Failed to create a reminder signup
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref CreateReminderSignupLambda
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 600
+      EvaluationPeriods: 1
+      Statistic: Sum
 
   NextRemindersLambdaAlarm:
-  Type: AWS::CloudWatch::Alarm
-  Condition: IsProd
-  Properties:
-    AlarmActions:
-      - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-    AlarmName: Create reminder signup error
-    AlarmDescription: Failed to create a reminder signup
-    MetricName: Errors
-    Namespace: AWS/Lambda
-    Dimensions:
-      - Name: FunctionName
-        Value: !Ref CreateReminderSignupLambda
-    ComparisonOperator: GreaterThanOrEqualToThreshold
-    Threshold: 1
-    Period: 600
-    EvaluationPeriods: 1
-    Statistic: Sum
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: support-reminders-next-reminders lambda error
+      AlarmDescription: Failed to create next-reminders snapshot
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref NextRemindersLambda
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 600
+      EvaluationPeriods: 1
+      Statistic: Sum
+
+  SignupExportsLambdaAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: support-reminders-signup-exports lambda error
+      AlarmDescription: Failed to create signups exports
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref NextRemindersLambda
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 600
+      EvaluationPeriods: 1
+      Statistic: Sum
