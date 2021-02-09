@@ -278,3 +278,41 @@ Resources:
       Period: 600
       EvaluationPeriods: 1
       Statistic: Sum
+
+  ApiGateway4XXAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: Reminders API gateway 4XX response
+      AlarmDescription: Reminders API received an invalid request
+      MetricName: 4XXError
+      Namespace: AWS/ApiGateway
+      Dimensions:
+        - Name: ApiName
+          Value: !Ref ServerlessRestApi
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 1
+      Period: 600
+      EvaluationPeriods: 1
+      Statistic: Sum
+
+  ApiGateway5XXAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: Reminders API gateway 5XX response
+      AlarmDescription: Reminders API failed to create a signup
+      MetricName: 5XXError
+      Namespace: AWS/ApiGateway
+      Dimensions:
+        - Name: ApiName
+          Value: !Ref ServerlessRestApi
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 1
+      Period: 600
+      EvaluationPeriods: 1
+      Statistic: Sum
