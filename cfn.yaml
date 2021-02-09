@@ -130,11 +130,19 @@ Resources:
         - Statement:
             Effect: Allow
             Action:
-            - s3:PutObject
-            - s3:PutObjectAcl
+              - s3:PutObject
+              - s3:PutObjectAcl
             Resource:
-            - !Sub arn:aws:s3:::${DatalakeBucket}
-            - !Sub arn:aws:s3:::${DatalakeBucket}/*
+              - !Sub arn:aws:s3:::${DatalakeBucket}
+              - !Sub arn:aws:s3:::${DatalakeBucket}/*
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(05 00 * * ? *)'
+            Name: NextRemindersSchedule
+            Description: Run next reminders lambda every day at 00:05
+            Enabled: True
 
   SignupExportsLambda:
     Type: AWS::Serverless::Function
@@ -171,11 +179,19 @@ Resources:
         - Statement:
             Effect: Allow
             Action:
-            - s3:PutObject
-            - s3:PutObjectAcl
+              - s3:PutObject
+              - s3:PutObjectAcl
             Resource:
-            - !Sub arn:aws:s3:::${DatalakeBucket}
-            - !Sub arn:aws:s3:::${DatalakeBucket}/*
+              - !Sub arn:aws:s3:::${DatalakeBucket}
+              - !Sub arn:aws:s3:::${DatalakeBucket}/*
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'cron(05 00 * * ? *)'
+            Name: RemindersExportSchedule
+            Description: Run sigup exports lambda every day at 00:05
+            Enabled: True
 
   DomainName:
     Type: "AWS::ApiGateway::DomainName"
