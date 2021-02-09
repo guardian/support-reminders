@@ -37,7 +37,8 @@ export const run = async (
 ): Promise<APIGatewayProxyResult> => {
 	console.log('received event: ', event);
 
-	const signupRequest: unknown = JSON.parse(event.body);
+	const country = event.headers['X-GU-GeoIP-Country-Code'];
+	const signupRequest: unknown = { ...JSON.parse(event.body), country };
 
 	if (event.path === '/create/one-off') {
 		return runOneOff(signupRequest);
@@ -78,17 +79,21 @@ export const runRecurring = async (
 	return createSignup(signupRequest, recurringSignupValidator, persist);
 };
 
+type Validator<T> = (
+	signupRequest: unknown,
+	validationErrors: ValidationErrors,
+) => signupRequest is T;
+
+type Persist<T> = (
+	signupRequest: T,
+	identityId: string,
+	pool: Pool,
+) => Promise<QueryResult>;
+
 const createSignup = async <T extends BaseSignupRequest>(
 	signupRequest: unknown,
-	validator: (
-		signupRequest: unknown,
-		validationErrors: ValidationErrors,
-	) => signupRequest is T,
-	persist: (
-		signupRequest: T,
-		identityId: string,
-		pool: Pool,
-	) => Promise<QueryResult>,
+	validator: Validator<T>,
+	persist: Persist<T>,
 ) => {
 	const validationErrors: ValidationErrors = [];
 	if (!validator(signupRequest, validationErrors)) {

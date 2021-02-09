@@ -11,6 +11,9 @@ function runLocal() {
 
 	const event = {
 		path: '/create/one-off',
+		headers: {
+			'X-GU-GeoIP-Country-Code': 'GB',
+		},
 		body: JSON.stringify({
 			email: 'test-reminders10@theguardian.com',
 			reminderPeriod: '2021-01-01',
