@@ -285,7 +285,7 @@ Resources:
     Properties:
       AlarmActions:
         - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: Reminders API gateway 4XX response
+      AlarmName: support-reminders API gateway 4XX response
       AlarmDescription: Reminders API received an invalid request
       MetricName: 4XXError
       Namespace: AWS/ApiGateway
@@ -304,7 +304,7 @@ Resources:
     Properties:
       AlarmActions:
         - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: Reminders API gateway 5XX response
+      AlarmName: support-reminders API gateway 5XX response
       AlarmDescription: Reminders API failed to create a signup
       MetricName: 5XXError
       Namespace: AWS/ApiGateway
