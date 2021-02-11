@@ -2,8 +2,11 @@ import { Pool, QueryConfig, QueryResult } from 'pg';
 import { runWithLogging } from '../../lib/db';
 import { getCurrentReminderPeriod } from './utils';
 
-export function getNextReminders(pool: Pool): Promise<QueryResult> {
-	const currentReminderPeriod = getCurrentReminderPeriod();
+export function getNextReminders(
+	pool: Pool,
+	now: Date = new Date(),
+): Promise<QueryResult> {
+	const currentReminderPeriod = getCurrentReminderPeriod(now);
 
 	const query: QueryConfig = {
 		text: `

@@ -1,0 +1,7 @@
+GRANT INSERT ON public.one_off_reminder_signups TO contributions_store_reminders_lambda;
+GRANT SELECT ON public.one_off_reminder_signups TO contributions_store_reminders_lambda;
+GRANT UPDATE ON public.one_off_reminder_signups TO contributions_store_reminders_lambda;
+
+GRANT INSERT ON public.recurring_reminder_signups TO contributions_store_reminders_lambda;
+GRANT SELECT ON public.recurring_reminder_signups TO contributions_store_reminders_lambda;
+GRANT UPDATE ON public.recurring_reminder_signups TO contributions_store_reminders_lambda;

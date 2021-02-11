@@ -1,5 +1,4 @@
-export function getCurrentReminderPeriod(): string {
-	const now = new Date();
+export function getCurrentReminderPeriod(now: Date = new Date()): string {
 	const year = now.getFullYear().toString();
 	const month = (now.getMonth() + 1).toString().padStart(2, '0');
 
