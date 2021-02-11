@@ -140,7 +140,7 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: 'cron(05 00 * * ? *)'
-            Name: NextRemindersSchedule
+            Name: !Sub NextRemindersSchedule-${Stage}
             Description: Run next reminders lambda every day at 00:05
             Enabled: True
 
@@ -189,7 +189,7 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: 'cron(05 00 * * ? *)'
-            Name: RemindersExportSchedule
+            Name: !Sub RemindersExportSchedule-${Stage}
             Description: Run sigup exports lambda every day at 00:05
             Enabled: True
 
@@ -228,7 +228,7 @@ Resources:
     Properties:
       AlarmActions:
         - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: support-reminders-create-reminder-signup lambda error
+      AlarmName: !Sub support-reminders-create-reminder-signup-${Stage} lambda error
       AlarmDescription: Failed to create a reminder signup
       MetricName: Errors
       Namespace: AWS/Lambda
@@ -247,7 +247,7 @@ Resources:
     Properties:
       AlarmActions:
         - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: support-reminders-next-reminders lambda error
+      AlarmName: !Sub support-reminders-next-reminders-${Stage} lambda error
       AlarmDescription: Failed to create next-reminders snapshot
       MetricName: Errors
       Namespace: AWS/Lambda
@@ -266,7 +266,7 @@ Resources:
     Properties:
       AlarmActions:
         - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: support-reminders-signup-exports lambda error
+      AlarmName: !Sub support-reminders-signup-exports-${Stage} lambda error
       AlarmDescription: Failed to create signups exports
       MetricName: Errors
       Namespace: AWS/Lambda
@@ -285,7 +285,7 @@ Resources:
     Properties:
       AlarmActions:
         - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: support-reminders API gateway 4XX response
+      AlarmName: !Sub support-reminders-${Stage} API gateway 4XX response
       AlarmDescription: Reminders API received an invalid request
       MetricName: 4XXError
       Namespace: AWS/ApiGateway
@@ -304,7 +304,7 @@ Resources:
     Properties:
       AlarmActions:
         - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: support-reminders API gateway 5XX response
+      AlarmName: !Sub support-reminders-${Stage} API gateway 5XX response
       AlarmDescription: Reminders API failed to create a signup
       MetricName: 5XXError
       Namespace: AWS/ApiGateway
