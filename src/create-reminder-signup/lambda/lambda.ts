@@ -22,6 +22,13 @@ import {
 	ValidationErrors,
 } from './models';
 
+const headers = {
+	'Content-Type': 'application/json',
+	'Access-Control-Allow-Origin': '*',
+	'Access-Control-Allow-Headers': '*',
+	'Access-Control-Allow-Methods': '*',
+};
+
 const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
 
 const dbConnectionPoolPromise: Promise<Pool> = getDatabaseParamsFromSSM(
@@ -46,7 +53,7 @@ export const run = async (
 		return runRecurring(signupRequest);
 	}
 
-	return { statusCode: 404, body: 'Not found' };
+	return { headers, statusCode: 404, body: 'Not found' };
 };
 
 export const runOneOff = async (
@@ -99,6 +106,7 @@ const createSignup = async <T extends BaseSignupRequest>(
 	if (!validator(signupRequest, validationErrors)) {
 		console.log('Validation of signup failed', validationErrors);
 		return {
+			headers,
 			statusCode: 400,
 			body: 'Invalid body',
 		};
@@ -122,17 +130,20 @@ const createSignup = async <T extends BaseSignupRequest>(
 
 		if (dbResult.rowCount !== 1) {
 			return {
+				headers,
 				statusCode: 500,
 				body: 'Internal Server Error',
 			};
 		}
 		return {
+			headers,
 			statusCode: 200,
 			body: 'OK',
 		};
 	} else {
 		const statusCode = identityResult.status === 404 ? 400 : 500;
 		return {
+			headers,
 			statusCode,
 			body: statusCode.toString(),
 		};
