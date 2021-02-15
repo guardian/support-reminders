@@ -1,8 +1,8 @@
-import * as IR from 'typecheck.macro/dist/IR';
 import {
 	createDetailedValidator,
 	registerType,
 } from 'typecheck.macro/dist/typecheck.macro';
+import { isValidEmail } from '../../lib/models';
 
 // Database model
 export interface BaseSignup {
@@ -29,11 +29,6 @@ export type ReminderComponent = 'EPIC' | 'BANNER' | 'THANKYOU' | 'CANCELLATION';
 export type ReminderStage = 'PRE' | 'POST' | 'WINBACK';
 
 type Email = string;
-
-function isValidEmail(email: string): boolean {
-	const re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-	return re.test(email.toLowerCase());
-}
 
 type DateString = string;
 
@@ -62,12 +57,6 @@ export type RecurringSignupRequest = BaseSignupRequest & {
 	reminderFrequencyMonths: number;
 };
 
-export interface APIGatewayEvent {
-	headers: Record<string, string | undefined>;
-	path: string;
-	body: string;
-}
-
 // Use macro to generate validator
 registerType('OneOffSignupRequest');
 export const oneOffSignupValidator = createDetailedValidator<OneOffSignupRequest>(
@@ -94,9 +83,6 @@ export const recurringSignupValidator = createDetailedValidator<RecurringSignupR
 		},
 	},
 );
-
-// The type for validation errors in typecheck.macro
-export type ValidationErrors = Array<[string, unknown, IR.IR | string]>;
 
 const toDate = (s: string): string => {
 	const d = new Date(s);

@@ -1,4 +1,3 @@
-import { readFileSync } from 'fs';
 import {
 	OneOffSignup,
 	RecurringSignup,
@@ -7,20 +6,23 @@ import {
 	writeOneOffSignup,
 	writeRecurringSignup,
 } from '../../create-reminder-signup/lib/db';
-import { createDatabaseConnectionPool, DBConfig } from '../../lib/db';
+import { createDatabaseConnectionPool } from '../../lib/db';
 import {
 	createOneOffReminder,
 	createRecurringReminder,
 } from '../../test/helpers';
+import { config } from '../../test/setup';
 import { getNextReminders } from './db';
 
-const config: DBConfig = {
-	url: process.env.TEST_DB_URL ?? '',
-	username: process.env.TEST_DB_USER ?? '',
-	password: process.env.TEST_DB_PASSWORD ?? '',
-};
-
 const pool = createDatabaseConnectionPool(config);
+
+afterAll(() => {
+	const cleanUpDatabase = async () => {
+		await pool.end();
+	};
+
+	return cleanUpDatabase();
+});
 
 const cancelOneOffReminder = (reminder: OneOffSignup, cancelled_at: string) => {
 	return pool.query({
@@ -50,38 +52,6 @@ const cancelRecurringReminder = (
 		values: [reminder.identity_id, cancelled_at],
 	});
 };
-
-beforeAll(() => {
-	const initDatabase = async (): Promise<void> => {
-		const query = readFileSync(
-			'./sql/create-signups-tables.sql',
-		).toString();
-
-		await pool.query(query);
-	};
-
-	return initDatabase();
-});
-
-afterAll(() => {
-	const cleanUpDatabase = async () => {
-		await pool.end();
-	};
-
-	return cleanUpDatabase();
-});
-
-beforeEach(() => {
-	const cleanUpDatabase = async () => {
-		await pool.query(`
-			TRUNCATE TABLE
-				one_off_reminder_signups,
-				recurring_reminder_signups
-		`);
-	};
-
-	return cleanUpDatabase();
-});
 
 describe('getNextReminders', () => {
 	it('returns one-off reminders in the current reminder period', async () => {
