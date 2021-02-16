@@ -37,6 +37,11 @@ const getIdentityIdByEmail = async (
 	);
 
 	if (!response.ok) {
+		console.log(
+			`Failed to get identity ID for email ${email}`,
+			response.status,
+			response,
+		);
 		return fail(response.status);
 	}
 
@@ -47,6 +52,10 @@ const getIdentityIdByEmail = async (
 				identityId: identityResponse.user.id as string,
 			};
 		} else {
+			console.log(
+				`Missing identity ID in response from identity for email ${email}`,
+				identityResponse,
+			);
 			return fail(500);
 		}
 	});
