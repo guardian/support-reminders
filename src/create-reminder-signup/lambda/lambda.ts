@@ -158,7 +158,13 @@ export const handler = (
 	// setTimeout is necessary because of a bug in the node lambda runtime which can break requests to ssm
 	setTimeout(() => {
 		run(event)
-			.then((result) => callback(null, result))
-			.catch((err) => callback(err));
+			.then((result) => {
+				console.log('Returning to client:', JSON.stringify(result));
+				callback(null, result);
+			})
+			.catch((err) => {
+				console.log(`Error: ${err}`);
+				callback(err);
+			});
 	});
 };
