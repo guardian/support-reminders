@@ -10,6 +10,7 @@ deployments:
       fileName: support-reminders.zip
       functionNames:
         - support-reminders-create-reminder-signup-
+        - support-reminders-cancel-reminders-
         - support-reminders-next-reminders-
         - support-reminders-signup-exports-
     dependencies: [support-reminders-cloudformation]

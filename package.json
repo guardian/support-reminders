@@ -52,9 +52,10 @@
     "lint": "eslint ./src --ext .js,.ts",
     "build": "tsc && babel src --out-dir target --extensions \".ts\"",
     "create-reminder-signup": "yarn build && node target/create-reminder-signup/lambda/local.js",
+    "cancel-reminders": "yarn build && node target/cancel-reminders/lambda/local.js",
     "next-reminders": "yarn build && node target/next-reminders/lambda/local.js",
     "signup-exports": "yarn build && node target/signup-exports/lambda/local.js",
     "package": "ARTEFACT_PATH=$PWD/target VERBOSE=true riffraff-artefact",
-    "test": "jest --maxWorkers=1"
+    "test": "jest --maxWorkers=1 ./src"
   }
 }

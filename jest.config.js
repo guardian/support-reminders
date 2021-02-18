@@ -1,5 +1,8 @@
 module.exports = {
     setupFiles: [
-        'dotenv/config'
+        'dotenv/config',
     ],
+	setupFilesAfterEnv: [
+		'./src/test/setup.ts',
+	]
 }

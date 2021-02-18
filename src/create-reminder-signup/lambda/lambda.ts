@@ -3,6 +3,7 @@ import * as AWS from 'aws-sdk';
 import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool, QueryResult } from 'pg';
 import { createDatabaseConnectionPool } from '../../lib/db';
+import { APIGatewayEvent, ValidationErrors } from '../../lib/models';
 import {
 	getDatabaseParamsFromSSM,
 	getParamFromSSM,
@@ -11,7 +12,6 @@ import {
 import { writeOneOffSignup, writeRecurringSignup } from '../lib/db';
 import { getOrCreateIdentityIdByEmail } from '../lib/identity';
 import {
-	APIGatewayEvent,
 	BaseSignupRequest,
 	oneOffSignupFromRequest,
 	OneOffSignupRequest,
@@ -19,7 +19,6 @@ import {
 	recurringSignupFromRequest,
 	RecurringSignupRequest,
 	recurringSignupValidator,
-	ValidationErrors,
 } from './models';
 
 const headers = {
@@ -163,6 +162,7 @@ export const handler = (
 				callback(null, result);
 			})
 			.catch((err) => {
+				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- any
 				console.log(`Error: ${err}`);
 				callback(err);
 			});

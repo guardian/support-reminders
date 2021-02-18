@@ -1,65 +1,12 @@
 import fetch from 'node-fetch';
-import { isProd } from '../../lib/stage';
+import {
+	fail,
+	getIdentityIdByEmail,
+	idapiBaseUrl,
+	IdentityResult,
+	success,
+} from '../../lib/identity';
 import { ReminderStage } from '../lambda/models';
-
-const idapiBaseUrl = isProd()
-	? 'https://idapi.theguardian.com'
-	: 'https://idapi.code.dev-theguardian.com';
-
-const encodeEmail = (email: string): string =>
-	encodeURI(email).replace('+', '%2B');
-
-interface IdentitySuccess {
-	name: 'success';
-	identityId: string;
-}
-interface IdentityFailure {
-	name: 'failure';
-	status: number;
-}
-export type IdentityResult = IdentitySuccess | IdentityFailure;
-
-const success = (identityId: string): IdentitySuccess => ({
-	name: 'success',
-	identityId,
-});
-const fail = (status: number): IdentityFailure => ({ name: 'failure', status });
-
-const getIdentityIdByEmail = async (
-	email: string,
-	accessToken: string,
-): Promise<IdentityResult> => {
-	const response = await fetch(
-		`${idapiBaseUrl}/user?emailAddress=${encodeEmail(email)}`,
-		{
-			headers: { 'X-GU-ID-Client-Access-Token': `Bearer ${accessToken}` },
-		},
-	);
-
-	if (!response.ok) {
-		console.log(
-			`Failed to get identity ID for email ${email}`,
-			response.status,
-			response,
-		);
-		return fail(response.status);
-	}
-
-	return response.json().then((identityResponse) => {
-		if (identityResponse?.user?.id) {
-			return {
-				name: 'success',
-				identityId: identityResponse.user.id as string,
-			};
-		} else {
-			console.log(
-				`Missing identity ID in response from identity for email ${email}`,
-				identityResponse,
-			);
-			return fail(500);
-		}
-	});
-};
 
 const createIdentityAccount = async (
 	email: string,
