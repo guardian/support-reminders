@@ -44,7 +44,7 @@ export const run = async (
 	console.log('received event: ', event);
 
 	const country = event.headers['X-GU-GeoIP-Country-Code'];
-	const signupRequest: unknown = { ...JSON.parse(event.body), country };
+	const signupRequest: unknown = { country, ...JSON.parse(event.body) };
 
 	if (event.path === '/create/one-off') {
 		return runOneOff(signupRequest);
