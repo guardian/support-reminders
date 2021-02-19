@@ -1,6 +1,6 @@
-import {Pool, QueryConfig, QueryResult} from 'pg';
-import {runWithLogging} from '../../lib/db';
-import {getCurrentReminderPeriod} from './utils';
+import { Pool, QueryConfig, QueryResult } from 'pg';
+import { runWithLogging } from '../../lib/db';
+import { getCurrentReminderPeriod } from './utils';
 
 export function getNextReminders(
 	pool: Pool,
