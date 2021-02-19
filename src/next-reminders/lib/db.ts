@@ -1,6 +1,6 @@
-import { Pool, QueryConfig, QueryResult } from 'pg';
-import { runWithLogging } from '../../lib/db';
-import { getCurrentReminderPeriod } from './utils';
+import {Pool, QueryConfig, QueryResult} from 'pg';
+import {runWithLogging} from '../../lib/db';
+import {getCurrentReminderPeriod} from './utils';
 
 export function getNextReminders(
 	pool: Pool,
@@ -18,8 +18,8 @@ export function getNextReminders(
 					reminder_platform,
 					reminder_component,
 					reminder_stage,
-					reminder_option,
-					'ONE_OFF' as reminder_type
+					'ONE_OFF' as reminder_type,
+					reminder_option
 				FROM
 					one_off_reminder_signups
 				WHERE
@@ -34,8 +34,8 @@ export function getNextReminders(
 					reminder_platform,
 					reminder_component,
 					reminder_stage,
-					reminder_option,
-					'RECURRING' as reminder_type
+					'RECURRING' as reminder_type,
+					reminder_option
 				FROM
 					recurring_reminder_signups
 				WHERE
