@@ -1,5 +1,6 @@
 import { APIGatewayProxyCallback, APIGatewayProxyResult } from 'aws-lambda';
-import { APIGatewayEvent } from '../../lib/models';
+import { APIGatewayEvent, ValidationErrors } from '../../lib/models';
+import { reactivationValidator } from './models';
 
 const headers = {
 	'Content-Type': 'application/json',
@@ -9,6 +10,18 @@ const headers = {
 };
 export const run = (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
 	console.log('received event: ', event);
+
+	const reactivationRequest: unknown = JSON.parse(event.body);
+
+	const validationErrors: ValidationErrors = [];
+	if (!reactivationValidator(reactivationRequest, validationErrors)) {
+		console.log('Validation of cancellation failed', validationErrors);
+		return Promise.resolve({
+			headers,
+			statusCode: 400,
+			body: 'Invalid body',
+		});
+	}
 
 	return Promise.resolve({ headers, statusCode: 200, body: 'OK' });
 };
