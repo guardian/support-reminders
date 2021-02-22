@@ -4,7 +4,7 @@ import {
 } from 'typecheck.macro/dist/typecheck.macro';
 import { isValidEmail } from '../../lib/models';
 
-export interface Reactivationo {
+export interface Reactivation {
 	identity_id: string;
 }
 
