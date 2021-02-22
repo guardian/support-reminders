@@ -19,9 +19,10 @@ export function getCreatedOrCancelledOneOffSignupsFromYesterday(
 				reminder_component,
 				reminder_stage,
 				reminder_option
-			FROM one_off_reminder_signups
-			WHERE DATE(reminder_created_at) = DATE($1)
-				OR DATE(reminder_cancelled_at) = DATE($1)
+			FROM
+				one_off_reminder_signups
+			WHERE
+				DATE(reminder_updated_at) = DATE($1)
         `,
 		values: [yesterday],
 	};
@@ -46,9 +47,10 @@ export function getCreatedOrCancelledRecurringSignupsFromYesterday(
 				reminder_component,
 				reminder_stage,
 				reminder_option
-			FROM recurring_reminder_signups
-			WHERE DATE(reminder_created_at) = DATE($1)
-				OR DATE(reminder_cancelled_at) = DATE($1)
+			FROM
+				recurring_reminder_signups
+			WHERE
+				DATE(reminder_updated_at) = DATE($1)
         `,
 		values: [yesterday],
 	};

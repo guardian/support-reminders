@@ -18,12 +18,13 @@ export async function cancelPendingSignups(
 			UPDATE
 				one_off_reminder_signups
 			SET
-				reminder_cancelled_at = $1
+				reminder_cancelled_at = $2,
+				reminder_updated_at = $2
 			WHERE
-				identity_id = $2
+				identity_id = $1
 				AND reminder_cancelled_at IS NULL
         `,
-		values: [now.toISOString(), cancellation.identity_id],
+		values: [cancellation.identity_id, now.toISOString()],
 	};
 
 	const recurringQuery: QueryConfig = {
@@ -31,12 +32,13 @@ export async function cancelPendingSignups(
 			UPDATE
 				recurring_reminder_signups
 			SET
-				reminder_cancelled_at = $1
+				reminder_cancelled_at = $2,
+				reminder_updated_at = $2
 			WHERE
-				identity_id = $2
+				identity_id = $1
 				AND reminder_cancelled_at IS NULL
         `,
-		values: [now.toISOString(), cancellation.identity_id],
+		values: [cancellation.identity_id, now.toISOString()],
 	};
 
 	return {
