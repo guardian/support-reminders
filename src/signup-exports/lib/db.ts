@@ -22,7 +22,7 @@ export function getCreatedOrCancelledOneOffSignupsFromYesterday(
 			FROM
 				one_off_reminder_signups
 			WHERE
-				DATE(reminder_updated_at) = DATE($1)
+				DATE(updated_at) = DATE($1)
         `,
 		values: [yesterday],
 	};
@@ -50,7 +50,7 @@ export function getCreatedOrCancelledRecurringSignupsFromYesterday(
 			FROM
 				recurring_reminder_signups
 			WHERE
-				DATE(reminder_updated_at) = DATE($1)
+				DATE(updated_at) = DATE($1)
         `,
 		values: [yesterday],
 	};
