@@ -134,6 +134,45 @@ Resources:
                 Path: '/cancel'
                 Method: post
 
+  ReactivateRecurringReminderLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub support-reminders-reactivate-recurring-reminder-${Stage}
+      Description: A lambda for reactivating cancelled recurring support reminders
+      Runtime: nodejs10.x
+      Handler: reactivate-recurring-reminder/lambda/lambda.handler
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+      CodeUri:
+        Bucket: !Ref DeployBucket
+        Key: !Sub ${Stack}/${Stage}/support-reminders/support-reminders.zip
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref SecurityGroupToAccessPostgres
+        SubnetIds: !Ref VpcSubnets
+      Policies:
+        # there are some extra permissions needed for a lambda to access resources in a VPC
+        # https://docs.aws.amazon.com/lambda/latest/dg/vpc.html
+        # hence this role rather than BasicExecutionRole
+        - AWSLambdaVPCAccessExecutionRole
+        - Statement:
+            Effect: Allow
+            Action:
+              - ssm:GetParametersByPath
+              - ssm:GetParameter
+            Resource:
+              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
+              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
+      Events:
+        Reactivate:
+            Type: Api
+            Properties:
+                Path: '/reactivate'
+                Method: post
+
   NextRemindersLambda:
     Type: AWS::Serverless::Function
     Properties:
@@ -293,6 +332,25 @@ Resources:
       Dimensions:
         - Name: FunctionName
           Value: !Ref CancelRemindersLambda
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 60
+      EvaluationPeriods: 1
+      Statistic: Sum
+
+  ReactivateRecurringReminderLambdaAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName: !Sub support-reminders-reactivate-recurring-reminder-${Stage} lambda error
+      AlarmDescription: Failed to reactivate cancelled reminders
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref ReactivateRecurringReminderLambda
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Threshold: 1
       Period: 60
