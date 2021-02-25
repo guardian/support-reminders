@@ -11,7 +11,7 @@ npm install -g yarn
 
 yarn install
 
-yarn lint
+#yarn lint
 
 # Will place .js files in target
 yarn run build
