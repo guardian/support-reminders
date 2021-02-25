@@ -154,7 +154,7 @@ export const handler = (
 	callback: APIGatewayProxyCallback,
 ): void => {
 	// setTimeout is necessary because of a bug in the node lambda runtime which can break requests to ssm
-	setTimeout(() => {
+	// setTimeout(() => {
 		run(event)
 			.then((result) => {
 				console.log('Returning to client:', JSON.stringify(result));
@@ -165,5 +165,5 @@ export const handler = (
 				console.log(`Error: ${err}`);
 				callback(err);
 			});
-	});
+	// });
 };
