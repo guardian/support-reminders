@@ -15,8 +15,8 @@ export const getHandler = (
 	// setTimeout is necessary because of a bug in the node lambda runtime which can break requests to ssm
 	setTimeout(() => {
 		// If we do not set this then the lambda will wait 10secs before completing.
-		// This is because pg starts a 10sec timer for each new client (see idleTimeoutMillis in https://docs.aws.amazon.com/lambda/latest/dg/nodejs-context.html).
-		// `callbackWaitsForEmptyEventLoop = false` ensures the callback runs immediately (https://node-postgres.com/api/pool)
+		// This is because pg starts a 10sec timer for each new client (see idleTimeoutMillis in https://node-postgres.com/api/pool).
+		// `callbackWaitsForEmptyEventLoop = false` ensures the invocation ends immediately (https://docs.aws.amazon.com/lambda/latest/dg/nodejs-context.html)
 		context.callbackWaitsForEmptyEventLoop = false;
 
 		run(event)
