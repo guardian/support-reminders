@@ -1,8 +1,9 @@
-import {APIGatewayProxyCallback, APIGatewayProxyResult, Context} from 'aws-lambda';
+import { APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool, QueryResult } from 'pg';
 import { createDatabaseConnectionPool } from '../../lib/db';
+import { getHandler } from '../../lib/handler';
 import { APIGatewayEvent, ValidationErrors } from '../../lib/models';
 import {
 	getDatabaseParamsFromSSM,
@@ -148,23 +149,4 @@ const createSignup = async <T extends BaseSignupRequest>(
 	}
 };
 
-export const handler = (
-	event: APIGatewayEvent,
-	context: Context,
-	callback: APIGatewayProxyCallback,
-): void => {
-	// setTimeout is necessary because of a bug in the node lambda runtime which can break requests to ssm
-	setTimeout(() => {
-		context.callbackWaitsForEmptyEventLoop = false;
-		run(event)
-			.then((result) => {
-				console.log('Returning to client:', JSON.stringify(result));
-				callback(null, result);
-			})
-			.catch((err) => {
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- any
-				console.log(`Error: ${err}`);
-				callback(err);
-			});
-	});
-};
+export const handler = getHandler(run);
