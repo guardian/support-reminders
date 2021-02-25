@@ -140,11 +140,10 @@ const createSignup = async <T extends BaseSignupRequest>(
 			body: 'OK',
 		};
 	} else {
-		const statusCode = identityResult.status === 404 ? 400 : 500;
 		return {
 			headers,
-			statusCode,
-			body: statusCode.toString(),
+			statusCode: identityResult.status,
+			body: identityResult.status.toString(),
 		};
 	}
 };
