@@ -18,6 +18,7 @@ export function createDatabaseConnectionPool(dbConfig: DBConfig): Pool {
 			password: dbConfig.password,
 
 			port: 5432,
+			idleTimeoutMillis: 0,
 		});
 	}
 
