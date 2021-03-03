@@ -3,15 +3,6 @@ import {
 	RecurringSignup,
 } from '../create-reminder-signup/lambda/models';
 
-type DbOneOffSignup = OneOffSignup & {
-	reminder_code?: string,
-}
-
-type DbRecurringSignup = RecurringSignup & {
-	reminder_code?: string,
-}
-//'2b30dbdd-001f-4031-82e6-0d93e16e19f8'
-
 export const createOneOffReminder = ({
 	identity_id = '0',
 	country = 'GB',
@@ -20,8 +11,7 @@ export const createOneOffReminder = ({
 	reminder_platform = 'WEB',
 	reminder_component = 'EPIC',
 	reminder_stage = 'PRE',
-	reminder_code,
-}: Partial<DbOneOffSignup>): DbOneOffSignup => ({
+}: Partial<OneOffSignup>): OneOffSignup => ({
 	identity_id: identity_id,
 	country: country,
 	reminder_period: reminder_period,
@@ -29,7 +19,6 @@ export const createOneOffReminder = ({
 	reminder_platform: reminder_platform,
 	reminder_component: reminder_component,
 	reminder_stage: reminder_stage,
-	reminder_code,
 });
 
 export const createRecurringReminder = ({
@@ -40,8 +29,7 @@ export const createRecurringReminder = ({
 	reminder_platform = 'WEB',
 	reminder_component = 'EPIC',
 	reminder_stage = 'PRE',
-	reminder_code,
-}: Partial<DbRecurringSignup>): DbRecurringSignup => ({
+}: Partial<RecurringSignup>): RecurringSignup => ({
 	identity_id: identity_id,
 	country: country,
 	reminder_frequency_months: reminder_frequency_months,
@@ -49,5 +37,4 @@ export const createRecurringReminder = ({
 	reminder_platform: reminder_platform,
 	reminder_component: reminder_component,
 	reminder_stage: reminder_stage,
-	reminder_code,
 });

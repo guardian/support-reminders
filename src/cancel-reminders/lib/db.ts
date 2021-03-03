@@ -4,7 +4,7 @@ import { runWithLogging } from '../../lib/db';
 async function getIdentityIdForReminderCode(reminderCode: string, pool: Pool): Promise<string | null> {
 	const recurringQuery: QueryConfig = {
 		text: `
-			SELECT identity_id FROM recurring_reminder_signups
+			SELECT identity_id::text FROM recurring_reminder_signups
 			WHERE reminder_code = $1
 		`,
 		values: [reminderCode],
@@ -17,7 +17,7 @@ async function getIdentityIdForReminderCode(reminderCode: string, pool: Pool): P
 	} else {
 		const oneOffQuery: QueryConfig = {
 			text: `
-			SELECT identity_id FROM one_off_reminder_signups
+			SELECT identity_id::text FROM one_off_reminder_signups
 			WHERE reminder_code = $1
 		`,
 			values: [reminderCode],
@@ -43,7 +43,7 @@ export async function cancelPendingSignups(
 	// Find the signup for the given reminder_code, then use the identity_id to cancel all reminders for that user
 	const identityId = await getIdentityIdForReminderCode(reminderCode, pool);
 
-	if (identityId) {
+	if (identityId !== null) {
 		const oneOffQuery: QueryConfig = {
 			text: `
 			UPDATE
@@ -54,7 +54,7 @@ export async function cancelPendingSignups(
 				identity_id = $2
 				AND reminder_cancelled_at IS NULL
         `,
-			values: [now.toISOString(), reminderCode],
+			values: [now.toISOString(), identityId],
 		};
 
 		const recurringQuery: QueryConfig = {
@@ -67,14 +67,14 @@ export async function cancelPendingSignups(
 				identity_id = $2
 				AND reminder_cancelled_at IS NULL
         `,
-			values: [now.toISOString(), reminderCode],
+			values: [now.toISOString(), identityId],
 		};
 
 		return Promise.all([
 			runWithLogging(oneOffQuery, pool),
 			runWithLogging(recurringQuery, pool)
 		]).then(([oneOffResult, recurringResult]) =>
-			oneOffResult.rows.length + recurringResult.rows.length
+			oneOffResult.rowCount + recurringResult.rowCount
 		)
 	}
 	return Promise.resolve(0);

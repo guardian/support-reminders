@@ -57,6 +57,6 @@
     "next-reminders": "yarn build && node target/next-reminders/lambda/local.js",
     "signup-exports": "yarn build && node target/signup-exports/lambda/local.js",
     "package": "ARTEFACT_PATH=$PWD/target VERBOSE=true riffraff-artefact",
-    "test": "jest --maxWorkers=1 "
+    "test": "jest --maxWorkers=1 ./src"
   }
 }
