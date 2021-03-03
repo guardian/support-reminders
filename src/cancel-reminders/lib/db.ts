@@ -1,7 +1,10 @@
 import { Pool, QueryConfig } from 'pg';
 import { runWithLogging } from '../../lib/db';
 
-async function getIdentityIdForReminderCode(reminderCode: string, pool: Pool): Promise<string | null> {
+async function getIdentityIdForReminderCode(
+	reminderCode: string,
+	pool: Pool,
+): Promise<string | null> {
 	const recurringQuery: QueryConfig = {
 		text: `
 			SELECT identity_id::text FROM recurring_reminder_signups
@@ -13,7 +16,7 @@ async function getIdentityIdForReminderCode(reminderCode: string, pool: Pool): P
 	const recurringResult = await runWithLogging(recurringQuery, pool);
 
 	if (recurringResult.rows.length > 0) {
-		return recurringResult.rows[0].identity_id;
+		return recurringResult.rows[0].identity_id as string;
 	} else {
 		const oneOffQuery: QueryConfig = {
 			text: `
@@ -26,7 +29,7 @@ async function getIdentityIdForReminderCode(reminderCode: string, pool: Pool): P
 		const oneOffResult = await runWithLogging(oneOffQuery, pool);
 
 		if (oneOffResult.rows.length > 0) {
-			return oneOffResult.rows[0].identity_id;
+			return oneOffResult.rows[0].identity_id as string;
 		}
 	}
 
@@ -72,10 +75,11 @@ export async function cancelPendingSignups(
 
 		return Promise.all([
 			runWithLogging(oneOffQuery, pool),
-			runWithLogging(recurringQuery, pool)
-		]).then(([oneOffResult, recurringResult]) =>
-			oneOffResult.rowCount + recurringResult.rowCount
-		)
+			runWithLogging(recurringQuery, pool),
+		]).then(
+			([oneOffResult, recurringResult]) =>
+				oneOffResult.rowCount + recurringResult.rowCount,
+		);
 	}
 	return Promise.resolve(0);
 }

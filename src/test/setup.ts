@@ -10,15 +10,12 @@ export const config: DBConfig = {
 const pool = createDatabaseConnectionPool(config);
 
 beforeAll(() => {
-	console.log("before")
 	const initDatabase = async (): Promise<void> => {
 		const query = readFileSync(
 			'./sql/create-signups-tables.sql',
 		).toString();
 
-		console.log('querying')
 		await pool.query(query);
-		console.log('completed')
 	};
 
 	return initDatabase();

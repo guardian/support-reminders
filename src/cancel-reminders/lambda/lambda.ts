@@ -5,9 +5,7 @@ import { Pool } from 'pg';
 import { createDatabaseConnectionPool } from '../../lib/db';
 import { getHandler } from '../../lib/handler';
 import { APIGatewayEvent, ValidationErrors } from '../../lib/models';
-import {
-	getDatabaseParamsFromSSM,
-} from '../../lib/ssm';
+import { getDatabaseParamsFromSSM } from '../../lib/ssm';
 import { cancelPendingSignups } from '../lib/db';
 import { cancellationValidator } from './models';
 

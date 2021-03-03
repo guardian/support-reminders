@@ -18,7 +18,7 @@ export function createDatabaseConnectionPool(dbConfig: DBConfig): Pool {
 			password: dbConfig.password,
 
 			port: 5432,
-		})
+		});
 		return new Pool({
 			host,
 			database,

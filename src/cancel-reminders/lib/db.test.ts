@@ -1,4 +1,8 @@
 import {
+	OneOffSignup,
+	RecurringSignup,
+} from '../../create-reminder-signup/lambda/models';
+import {
 	writeOneOffSignup,
 	writeRecurringSignup,
 } from '../../create-reminder-signup/lib/db';
@@ -9,7 +13,6 @@ import {
 } from '../../test/helpers';
 import { config } from '../../test/setup';
 import { cancelPendingSignups } from './db';
-import {OneOffSignup, RecurringSignup} from "../../create-reminder-signup/lambda/models";
 
 const pool = createDatabaseConnectionPool(config);
 
@@ -21,13 +24,17 @@ afterAll(() => {
 	return cleanUpDatabase();
 });
 
-const writeOneOffReminderAndGetCode = async (signup: OneOffSignup): Promise<string> => {
+const writeOneOffReminderAndGetCode = async (
+	signup: OneOffSignup,
+): Promise<string> => {
 	const result = await writeOneOffSignup(signup, pool);
-	return result.rows[0].reminder_code;
+	return result.rows[0].reminder_code as string;
 };
-const writeRecurringReminderAndGetCode = async (signup: RecurringSignup): Promise<string> => {
+const writeRecurringReminderAndGetCode = async (
+	signup: RecurringSignup,
+): Promise<string> => {
 	const result = await writeRecurringSignup(signup, pool);
-	return result.rows[0].reminder_code;
+	return result.rows[0].reminder_code as string;
 };
 
 describe('cancelPendingReminders', () => {
@@ -45,7 +52,6 @@ describe('cancelPendingReminders', () => {
 		});
 		const reminderCode = await writeOneOffReminderAndGetCode(r1);
 		await writeOneOffSignup(r2, pool);
-
 
 		const cancelledReminders = await cancelPendingSignups(
 			reminderCode,
