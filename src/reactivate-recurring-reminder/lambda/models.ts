@@ -4,7 +4,7 @@ import {
 } from 'typecheck.macro/dist/typecheck.macro';
 
 export interface ReactivationRequest {
-	reminder_code: string;
+	reminderCode: string;
 }
 
 registerType('ReactivationRequest');
