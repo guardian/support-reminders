@@ -41,7 +41,7 @@ export const run = async (
 
 	const pool = await dbConnectionPoolPromise;
 
-	await reactivateRecurringReminder(reactivationRequest.reminder_code, pool);
+	await reactivateRecurringReminder(reactivationRequest.reminderCode, pool);
 
 	return Promise.resolve({ headers, statusCode: 200, body: 'OK' });
 };

@@ -41,7 +41,7 @@ export const run = async (
 
 	const pool = await dbConnectionPoolPromise;
 
-	await cancelPendingSignups(cancellationRequest.reminder_code, pool);
+	await cancelPendingSignups(cancellationRequest.reminderCode, pool);
 
 	return { headers, statusCode: 200, body: 'OK' };
 };
