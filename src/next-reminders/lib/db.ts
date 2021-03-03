@@ -19,7 +19,8 @@ export function getNextReminders(
 					reminder_component,
 					reminder_stage,
 					'ONE_OFF' as reminder_type,
-					reminder_option
+					reminder_option,
+					reminder_code
 				FROM
 					one_off_reminder_signups
 				WHERE
@@ -35,7 +36,8 @@ export function getNextReminders(
 					reminder_component,
 					reminder_stage,
 					'RECURRING' as reminder_type,
-					reminder_option
+					reminder_option,
+					reminder_code
 				FROM
 					recurring_reminder_signups
 				WHERE
