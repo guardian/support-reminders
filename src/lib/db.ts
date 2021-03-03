@@ -11,6 +11,14 @@ export function createDatabaseConnectionPool(dbConfig: DBConfig): Pool {
 	const match = /\/\/(.*)\/(.*)/.exec(dbConfig.url);
 	if (match !== null) {
 		const [, host, database] = match;
+		console.log({
+			host,
+			database,
+			user: dbConfig.username,
+			password: dbConfig.password,
+
+			port: 5432,
+		})
 		return new Pool({
 			host,
 			database,
