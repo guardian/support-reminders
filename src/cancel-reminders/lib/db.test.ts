@@ -41,13 +41,10 @@ describe('cancelPendingReminders', () => {
 	it('cancels all pending one-off reminders', async () => {
 		expect.assertions(1);
 
-		const identityId = '0';
 		const r1 = createOneOffReminder({
-			identity_id: identityId,
 			reminder_period: '2021-01-01',
 		});
 		const r2 = createOneOffReminder({
-			identity_id: identityId,
 			reminder_period: '2021-02-01',
 		});
 		const reminderCode = await writeOneOffReminderAndGetCode(r1);
@@ -64,16 +61,13 @@ describe('cancelPendingReminders', () => {
 	it('doesnt cancel reminders that have already been cancelled', async () => {
 		expect.assertions(1);
 
-		const identityId = '0';
 		const r1 = createOneOffReminder({
-			identity_id: identityId,
 			reminder_period: '2021-01-01',
 		});
 		const reminderCode = await writeOneOffReminderAndGetCode(r1);
 		await cancelPendingSignups(reminderCode, pool);
 
 		const r2 = createOneOffReminder({
-			identity_id: identityId,
 			reminder_period: '2021-02-01',
 		});
 		await writeOneOffSignup(r2, pool);
@@ -89,8 +83,7 @@ describe('cancelPendingReminders', () => {
 	it('cancels a recurring reminder', async () => {
 		expect.assertions(1);
 
-		const identityId = '0';
-		const reminder = createRecurringReminder({ identity_id: identityId });
+		const reminder = createRecurringReminder({});
 		const reminderCode = await writeRecurringReminderAndGetCode(reminder);
 
 		const cancelledReminders = await cancelPendingSignups(
@@ -104,8 +97,7 @@ describe('cancelPendingReminders', () => {
 	it('doesnt cancel a recurring reminder that has already been cancelled', async () => {
 		expect.assertions(1);
 
-		const identityId = '0';
-		const reminder = createRecurringReminder({ identity_id: identityId });
+		const reminder = createRecurringReminder({});
 		const reminderCode = await writeRecurringReminderAndGetCode(reminder);
 		await cancelPendingSignups(reminderCode, pool);
 
