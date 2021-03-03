@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 DROP TABLE IF EXISTS one_off_reminder_signups;
 CREATE TABLE one_off_reminder_signups(
   identity_id TEXT NOT NULL,
@@ -9,10 +11,13 @@ CREATE TABLE one_off_reminder_signups(
   reminder_stage TEXT NOT NULL,
   reminder_period DATE NOT NULL,
   reminder_option TEXT,
+  reminder_code uuid NOT NULL UNIQUE DEFAULT uuid_generate_v4 (),
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   PRIMARY KEY (identity_id, reminder_period)
 );
+
+CREATE INDEX one_off_reminder_signups_reminder_code ON one_off_reminder_signups (reminder_code);
 
 DROP TABLE IF EXISTS recurring_reminder_signups;
 CREATE TABLE recurring_reminder_signups(
@@ -25,10 +30,12 @@ CREATE TABLE recurring_reminder_signups(
   reminder_stage TEXT NOT NULL,
   reminder_frequency_months INT NOT NULL,
   reminder_option TEXT,
+  reminder_code uuid NOT NULL UNIQUE DEFAULT uuid_generate_v4 (),
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+CREATE INDEX recurring_reminder_signups_reminder_code ON recurring_reminder_signups (reminder_code);
 
 CREATE OR REPLACE FUNCTION set_updated_at_column()
 RETURNS TRIGGER AS $$
