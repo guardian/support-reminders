@@ -50,7 +50,7 @@ psql
 followed by (you can actually call the database whatever you'd like)
 
 ```sql
-CREATE DATABASE support-reminders-test;
+CREATE DATABASE "support-reminders-test";
 ```
 
 Finally to set up your environment variables, make a copy of the `.env.example`
@@ -64,3 +64,5 @@ and fill it in. The default user through homebrew will be your macos name, the p
 ```sh
 TEST_DB_URL='postgresql://localhost/support-reminders-test'
 ```
+
+Remember to run `nvm use` before running the tests.
