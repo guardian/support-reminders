@@ -4,15 +4,10 @@ import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool } from 'pg';
 import { createDatabaseConnectionPool } from '../../lib/db';
 import { getHandler } from '../../lib/handler';
-import { getIdentityIdByEmail } from '../../lib/identity';
 import { APIGatewayEvent, ValidationErrors } from '../../lib/models';
-import {
-	getDatabaseParamsFromSSM,
-	getParamFromSSM,
-	ssmStage,
-} from '../../lib/ssm';
+import { getDatabaseParamsFromSSM } from '../../lib/ssm';
 import { reactivateRecurringReminder } from '../lib/db';
-import { Reactivation, reactivationValidator } from './models';
+import { reactivationValidator } from './models';
 
 const headers = {
 	'Content-Type': 'application/json',
@@ -26,11 +21,6 @@ const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
 const dbConnectionPoolPromise: Promise<Pool> = getDatabaseParamsFromSSM(
 	ssm,
 ).then(createDatabaseConnectionPool);
-
-const identityAccessTokenPromise: Promise<string> = getParamFromSSM(
-	ssm,
-	`/support-reminders/idapi/${ssmStage}/accessToken`,
-);
 
 export const run = async (
 	event: APIGatewayEvent,
@@ -50,27 +40,8 @@ export const run = async (
 	}
 
 	const pool = await dbConnectionPoolPromise;
-	const token = await identityAccessTokenPromise;
 
-	const identityResult = await getIdentityIdByEmail(
-		reactivationRequest.email,
-		token,
-	);
-
-	if (identityResult.name === 'failure') {
-		const statusCode = identityResult.status === 404 ? 400 : 500;
-		return {
-			headers,
-			statusCode,
-			body: statusCode.toString(),
-		};
-	}
-
-	const reactivation: Reactivation = {
-		identity_id: identityResult.identityId,
-	};
-
-	await reactivateRecurringReminder(reactivation, pool);
+	await reactivateRecurringReminder(reactivationRequest.reminderCode, pool);
 
 	return Promise.resolve({ headers, statusCode: 200, body: 'OK' });
 };

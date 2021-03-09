@@ -1,4 +1,8 @@
 import {
+	OneOffSignup,
+	RecurringSignup,
+} from '../../create-reminder-signup/lambda/models';
+import {
 	writeOneOffSignup,
 	writeRecurringSignup,
 } from '../../create-reminder-signup/lib/db';
@@ -20,87 +24,88 @@ afterAll(() => {
 	return cleanUpDatabase();
 });
 
+const writeOneOffReminderAndGetCode = async (
+	signup: OneOffSignup,
+): Promise<string> => {
+	const result = await writeOneOffSignup(signup, pool);
+	return result.rows[0].reminder_code as string;
+};
+const writeRecurringReminderAndGetCode = async (
+	signup: RecurringSignup,
+): Promise<string> => {
+	const result = await writeRecurringSignup(signup, pool);
+	return result.rows[0].reminder_code as string;
+};
+
 describe('cancelPendingReminders', () => {
 	it('cancels all pending one-off reminders', async () => {
 		expect.assertions(1);
 
-		const identityId = '0';
 		const r1 = createOneOffReminder({
-			identity_id: identityId,
 			reminder_period: '2021-01-01',
 		});
 		const r2 = createOneOffReminder({
-			identity_id: identityId,
 			reminder_period: '2021-02-01',
 		});
-		await writeOneOffSignup(r1, pool);
+		const reminderCode = await writeOneOffReminderAndGetCode(r1);
 		await writeOneOffSignup(r2, pool);
 
-		const result = await cancelPendingSignups(
-			{ identity_id: identityId },
+		const cancelledReminders = await cancelPendingSignups(
+			reminderCode,
 			pool,
 		);
-		const cancelledReminders = result.oneOffQueryResult;
 
-		expect(cancelledReminders.rowCount).toBe(2);
+		expect(cancelledReminders).toBe(2);
 	});
 
 	it('doesnt cancel reminders that have already been cancelled', async () => {
 		expect.assertions(1);
 
-		const identityId = '0';
 		const r1 = createOneOffReminder({
-			identity_id: identityId,
 			reminder_period: '2021-01-01',
 		});
-		await writeOneOffSignup(r1, pool);
-		await cancelPendingSignups({ identity_id: identityId }, pool);
+		const reminderCode = await writeOneOffReminderAndGetCode(r1);
+		await cancelPendingSignups(reminderCode, pool);
 
 		const r2 = createOneOffReminder({
-			identity_id: identityId,
 			reminder_period: '2021-02-01',
 		});
 		await writeOneOffSignup(r2, pool);
 
-		const result = await cancelPendingSignups(
-			{ identity_id: identityId },
+		const cancelledReminders = await cancelPendingSignups(
+			reminderCode,
 			pool,
 		);
-		const cancelledReminders = result.oneOffQueryResult;
 
-		expect(cancelledReminders.rowCount).toBe(1);
+		expect(cancelledReminders).toBe(1);
 	});
 
 	it('cancels a recurring reminder', async () => {
 		expect.assertions(1);
 
-		const identityId = '0';
-		const reminder = createRecurringReminder({ identity_id: identityId });
-		await writeRecurringSignup(reminder, pool);
+		const reminder = createRecurringReminder({});
+		const reminderCode = await writeRecurringReminderAndGetCode(reminder);
 
-		const result = await cancelPendingSignups(
-			{ identity_id: identityId },
+		const cancelledReminders = await cancelPendingSignups(
+			reminderCode,
 			pool,
 		);
-		const cancelledReminders = result.recurringQueryResult;
 
-		expect(cancelledReminders.rowCount).toBe(1);
+		expect(cancelledReminders).toBe(1);
 	});
 
 	it('doesnt cancel a recurring reminder that has already been cancelled', async () => {
 		expect.assertions(1);
 
-		const identityId = '0';
-		const reminder = createRecurringReminder({ identity_id: identityId });
-		await writeRecurringSignup(reminder, pool);
-		await cancelPendingSignups({ identity_id: identityId }, pool);
+		const reminder = createRecurringReminder({});
+		const reminderCode = await writeRecurringReminderAndGetCode(reminder);
+		await cancelPendingSignups(reminderCode, pool);
 
-		const result = await cancelPendingSignups(
-			{ identity_id: identityId },
+		const cancelledReminders = await cancelPendingSignups(
+			reminderCode,
 			pool,
 		);
-		const cancelledReminders = result.recurringQueryResult;
 
-		expect(cancelledReminders.rowCount).toBe(0);
+		expect(cancelledReminders).toBe(0);
 	});
 });
