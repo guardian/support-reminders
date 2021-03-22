@@ -4,12 +4,9 @@ export async function fetchWithRetry(
 	fetcher: () => Promise<Response>,
 	maxTries: number,
 ): Promise<Response> {
-	let response = await fetcher();
-	let numTries = 1;
-
-	while (!response.ok && numTries < maxTries) {
-		response = await fetcher();
-		numTries++;
+	const response = await fetcher();
+	if (!response.ok && maxTries > 1) {
+		return fetchWithRetry(fetcher, maxTries - 1);
 	}
 	return response;
 }
