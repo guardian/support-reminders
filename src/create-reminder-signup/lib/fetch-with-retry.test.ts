@@ -4,22 +4,22 @@ import { fetchWithRetry } from './fetch-with-retry';
 describe('fetchWithRetry', () => {
 	it('retries the fetcher if it fails', async () => {
 		const numFails = 1;
-		const maxTries = 5;
+		const maxRetries = 5;
 		const expectedNumTries = 2;
 		const fetcher = getMockFetcher(numFails);
 
-		await fetchWithRetry(fetcher, maxTries);
+		await fetchWithRetry(fetcher, maxRetries);
 
 		expect(fetcher).toHaveBeenCalledTimes(expectedNumTries);
 	});
 
-	it('only retries maxTries times', async () => {
+	it('only retries maxRetries times', async () => {
 		const numFails = 5;
-		const maxTries = 1;
-		const expectedNumTries = 1;
+		const maxRetries = 1;
+		const expectedNumTries = 2;
 		const fetcher = getMockFetcher(numFails);
 
-		await fetchWithRetry(fetcher, maxTries);
+		await fetchWithRetry(fetcher, maxRetries);
 
 		expect(fetcher).toHaveBeenCalledTimes(expectedNumTries);
 	});

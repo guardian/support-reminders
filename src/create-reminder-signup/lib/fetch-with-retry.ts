@@ -2,11 +2,11 @@ import { Response } from 'node-fetch';
 
 export async function fetchWithRetry(
 	fetcher: () => Promise<Response>,
-	maxTries: number,
+	maxRetries: number,
 ): Promise<Response> {
 	const response = await fetcher();
-	if (!response.ok && maxTries > 1) {
-		return fetchWithRetry(fetcher, maxTries - 1);
+	if (!response.ok && maxRetries > 0) {
+		return fetchWithRetry(fetcher, maxRetries - 1);
 	}
 	return response;
 }

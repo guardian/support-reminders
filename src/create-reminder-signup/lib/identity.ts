@@ -9,7 +9,7 @@ import {
 import { ReminderStage } from '../lambda/models';
 import { fetchWithRetry } from './fetch-with-retry';
 
-const IDENTITY_ACCOUNT_CREATION_MAX_TRIES = 2;
+const IDENTITY_ACCOUNT_CREATION_MAX_RETRIES = 1;
 
 const createIdentityAccount = async (
 	email: string,
@@ -27,7 +27,7 @@ const createIdentityAccount = async (
 
 	const response = await fetchWithRetry(
 		() => fetch(`${idapiBaseUrl}/guest`, identityGuestRequest),
-		IDENTITY_ACCOUNT_CREATION_MAX_TRIES,
+		IDENTITY_ACCOUNT_CREATION_MAX_RETRIES,
 	);
 	if (!response.ok) {
 		console.log(
