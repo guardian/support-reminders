@@ -230,7 +230,7 @@ Resources:
       Runtime: nodejs10.x
       Handler: signup-exports/lambda/lambda.handler
       MemorySize: 128
-      Timeout: 30
+      Timeout: 900
       Environment:
         Variables:
           Stage: !Ref Stage
