@@ -388,7 +388,7 @@ Resources:
       Namespace: AWS/Lambda
       Dimensions:
         - Name: FunctionName
-          Value: !Ref NextRemindersLambda
+          Value: !Ref SignupExportsLambda
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Threshold: 1
       Period: 60
