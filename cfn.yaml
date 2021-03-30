@@ -229,7 +229,7 @@ Resources:
       Description: A lambda for exporting signups data
       Runtime: nodejs10.x
       Handler: signup-exports/lambda/lambda.handler
-      MemorySize: 128
+      MemorySize: 512
       Timeout: 900
       Environment:
         Variables:
