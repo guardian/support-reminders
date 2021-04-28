@@ -56,7 +56,7 @@ Resources:
     Properties:
       FunctionName: !Sub support-reminders-create-reminder-signup-${Stage}
       Description: A lambda for creating support reminders
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Handler: create-reminder-signup/lambda/lambda.handler
       MemorySize: 128
       Timeout: 30
@@ -100,7 +100,7 @@ Resources:
     Properties:
       FunctionName: !Sub support-reminders-cancel-reminders-${Stage}
       Description: A lambda for cancelling pending support reminders
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Handler: cancel-reminders/lambda/lambda.handler
       MemorySize: 128
       Timeout: 30
@@ -139,7 +139,7 @@ Resources:
     Properties:
       FunctionName: !Sub support-reminders-reactivate-recurring-reminder-${Stage}
       Description: A lambda for reactivating cancelled recurring support reminders
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Handler: reactivate-recurring-reminder/lambda/lambda.handler
       MemorySize: 128
       Timeout: 30
@@ -178,7 +178,7 @@ Resources:
     Properties:
       FunctionName: !Sub support-reminders-next-reminders-${Stage}
       Description: A lambda for getting next reminders data
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Handler: next-reminders/lambda/lambda.handler
       MemorySize: 128
       Timeout: 30
@@ -227,7 +227,7 @@ Resources:
     Properties:
       FunctionName: !Sub support-reminders-signup-exports-${Stage}
       Description: A lambda for exporting signups data
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Handler: signup-exports/lambda/lambda.handler
       MemorySize: 512
       Timeout: 900
