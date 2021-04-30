@@ -409,7 +409,7 @@ Resources:
         - Name: ApiName
           Value: !Sub support-reminders-${Stage}
       ComparisonOperator: GreaterThanOrEqualToThreshold
-      Threshold: 4
+      Threshold: 8
       Period: 300
       EvaluationPeriods: 1
       Statistic: Sum
