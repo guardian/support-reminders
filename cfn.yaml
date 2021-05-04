@@ -83,6 +83,11 @@ Resources:
             Resource:
               - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
               - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
+        - Statement:
+            Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              - arn:aws:s3::*:membership-dist/*
       Events:
         CreateOneOff:
             Type: Api
@@ -127,6 +132,11 @@ Resources:
             Resource:
               - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
               - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
+        - Statement:
+            Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              - arn:aws:s3::*:membership-dist/*
       Events:
         CreateOneOff:
             Type: Api
@@ -166,6 +176,11 @@ Resources:
             Resource:
               - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
               - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
+        - Statement:
+            Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              - arn:aws:s3::*:membership-dist/*
       Events:
         Reactivate:
             Type: Api
@@ -213,6 +228,11 @@ Resources:
             Resource:
               - !Sub arn:aws:s3:::${DatalakeBucket}
               - !Sub arn:aws:s3:::${DatalakeBucket}/*
+        - Statement:
+            Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              - arn:aws:s3::*:membership-dist/*
       Events:
         Schedule:
           Type: Schedule
@@ -262,6 +282,11 @@ Resources:
             Resource:
               - !Sub arn:aws:s3:::${DatalakeBucket}
               - !Sub arn:aws:s3:::${DatalakeBucket}/*
+        - Statement:
+            Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              - arn:aws:s3::*:membership-dist/*
       Events:
         Schedule:
           Type: Schedule
