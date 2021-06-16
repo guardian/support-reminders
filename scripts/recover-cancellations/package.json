@@ -1,0 +1,10 @@
+{
+	"name": "support-reminders",
+	"dependencies": {
+		"node-fetch": "^2.1.2",
+		"pg": "^7.9.0",
+		"pg-format": "^1.0.4"
+	},
+	"devDependencies": {},
+	"scripts": {}
+}
