@@ -41,12 +41,14 @@ export const getIdentityIdByEmail = async (
 	);
 
 	if (!response.ok) {
-		console.log(
-			`Failed to get identity ID for email ${email}`,
-			response.status,
-			response,
-		);
-		return fail(response.status);
+		return response.text().then((body) => {
+			console.log(
+				`Failed to get identity ID for email ${email}`,
+				response.status,
+				body,
+			);
+			return fail(response.status);
+		});
 	}
 
 	return response.json().then((identityResponse) => {
