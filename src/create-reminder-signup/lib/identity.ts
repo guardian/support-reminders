@@ -31,7 +31,9 @@ const createIdentityAccount = async (
 	);
 	if (!response.ok) {
 		console.log(
-			`Identity guest account creation failed with status ${response.status}`,
+			'Identity guest account creation failed',
+			response.status,
+			response,
 		);
 		return fail(response.status);
 	}
