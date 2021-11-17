@@ -1,5 +1,6 @@
 import { Pool, QueryConfig } from 'pg';
 import { runWithLogging } from '../../lib/db';
+import { getCurrentReminderPeriod } from '../../lib/utils';
 
 async function getIdentityIdForReminderCode(
 	reminderCode: string,
@@ -40,11 +41,11 @@ async function getIdentityIdForReminderCode(
 export async function cancelPendingSignups(
 	reminderCode: string,
 	pool: Pool,
+	now: Date = new Date(),
 ): Promise<number> {
-	const now = new Date();
-
 	// Find the signup for the given reminder_code, then use the identity_id to cancel all reminders for that user
 	const identityId = await getIdentityIdForReminderCode(reminderCode, pool);
+	const reminderPeriod = getCurrentReminderPeriod(now);
 
 	if (identityId !== null) {
 		const oneOffQuery: QueryConfig = {
@@ -56,8 +57,9 @@ export async function cancelPendingSignups(
 			WHERE
 				identity_id = $2
 				AND reminder_cancelled_at IS NULL
+				AND DATE(reminder_period) >= Date($3)
         `,
-			values: [now.toISOString(), identityId],
+			values: [now.toISOString(), identityId, reminderPeriod],
 		};
 
 		const recurringQuery: QueryConfig = {

@@ -38,6 +38,8 @@ const writeRecurringReminderAndGetCode = async (
 };
 
 describe('cancelPendingReminders', () => {
+	const now = new Date('2021-01-01');
+
 	it('cancels all pending one-off reminders', async () => {
 		expect.assertions(1);
 
@@ -53,9 +55,27 @@ describe('cancelPendingReminders', () => {
 		const cancelledReminders = await cancelPendingSignups(
 			reminderCode,
 			pool,
+			now,
 		);
 
 		expect(cancelledReminders).toBe(2);
+	});
+
+	it('doesnt cancel reminders that have already been sent', async () => {
+		expect.assertions(1);
+
+		const reminder = createOneOffReminder({
+			reminder_period: '2020-12-01',
+		});
+		const reminderCode = await writeOneOffReminderAndGetCode(reminder);
+
+		const cancelledReminders = await cancelPendingSignups(
+			reminderCode,
+			pool,
+			now,
+		);
+
+		expect(cancelledReminders).toBe(0);
 	});
 
 	it('doesnt cancel reminders that have already been cancelled', async () => {
@@ -65,7 +85,7 @@ describe('cancelPendingReminders', () => {
 			reminder_period: '2021-01-01',
 		});
 		const reminderCode = await writeOneOffReminderAndGetCode(r1);
-		await cancelPendingSignups(reminderCode, pool);
+		await cancelPendingSignups(reminderCode, pool, now);
 
 		const r2 = createOneOffReminder({
 			reminder_period: '2021-02-01',
@@ -75,6 +95,7 @@ describe('cancelPendingReminders', () => {
 		const cancelledReminders = await cancelPendingSignups(
 			reminderCode,
 			pool,
+			now,
 		);
 
 		expect(cancelledReminders).toBe(1);
