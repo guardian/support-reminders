@@ -66,3 +66,7 @@ TEST_DB_URL='postgresql://localhost/support-reminders-test'
 ```
 
 Remember to run `nvm use` before running the tests.
+
+## Connecting to the contributions store database
+
+Follow set up instructions in the [contributions-platform](https://github.com/guardian/contributions-platform/tree/master/contributions-store) repo.
