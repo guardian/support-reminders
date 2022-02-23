@@ -2,7 +2,6 @@ import {
 	createDetailedValidator,
 	registerType,
 } from 'typecheck.macro/dist/typecheck.macro';
-import { OneOffSignup } from '../../create-reminder-signup/lambda/models';
 
 export interface SearchRequest {
 	identityId: string;
