@@ -16,12 +16,14 @@ export interface OneOffReminder {
 	period: string;
 	createdAt: string;
 	cancelledAt: string;
+	code: string;
 }
 
 export interface OneOffQueryRow {
 	reminder_period: string;
 	reminder_created_at: string;
 	reminder_cancelled_at: string;
+	reminder_code: string;
 }
 
 export function oneOffReminderFromQueryRow(
@@ -32,5 +34,6 @@ export function oneOffReminderFromQueryRow(
 		period: row.reminder_period,
 		createdAt: row.reminder_created_at,
 		cancelledAt: row.reminder_cancelled_at,
+		code: row.reminder_code,
 	};
 }
