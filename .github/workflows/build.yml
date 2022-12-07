@@ -29,6 +29,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
+      - name: Install yarn
+        uses: npm install -g yarn
+
       # (Respects .nvmrc)
       - name: Setup Node
         uses: guardian/actions-setup-node@v2.4.1
@@ -38,7 +41,7 @@ jobs:
             yarn.lock
             cdk/yarn.lock
 
-      - name: Install
+      - name: Install dependencies
         run: yarn
 
       - name: Lint
