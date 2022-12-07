@@ -29,9 +29,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Install yarn
-        run: npm install -g yarn
-
       # (Respects .nvmrc)
       - name: Setup Node
         uses: guardian/actions-setup-node@v2.4.1
@@ -46,6 +43,9 @@ jobs:
 
       - name: Lint
         run: yarn lint
+
+      - name: Type check
+        run: yarn tsc
 
       - name: Build CFN from CDK
         run: ./script/ci
