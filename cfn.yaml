@@ -1,18 +1,13 @@
-AWSTemplateFormatVersion: 2010-09-09
-Transform: 'AWS::Serverless-2016-10-31'
+---
+AWSTemplateFormatVersion: '2010-09-09'
 Description: The lambdas for supporter reminders
-
 Parameters:
-  Stack:
-    Description: Stack name
+  CertificateArn:
+    Description: ARN of the certificate
     Type: String
-    Default: support
-  Stage:
-    Description: Set by RiffRaff on each deploy
+  DatalakeBucket:
+    Description: Bucket to upload data for ingestion into BigQuery
     Type: String
-    AllowedValues:
-      - CODE
-      - PROD
   DeployBucket:
     Description: Bucket to copy files to
     Type: String
@@ -20,16 +15,19 @@ Parameters:
   SecurityGroupToAccessPostgres:
     Description: Security group to access the RDS instance
     Type: String
+  Stage:
+    Description: Set by RiffRaff on each deploy
+    Type: String
+    AllowedValues:
+      - CODE
+      - PROD
+  Stack:
+    Description: Stack name
+    Type: String
+    Default: support
   VpcSubnets:
     Description: Subnets for RDS access
     Type: List<AWS::EC2::Subnet::Id>
-  CertificateArn:
-    Description: ARN of the certificate
-    Type: String
-  DatalakeBucket:
-    Description: Bucket to upload data for ingestion into BigQuery
-    Type: String
-
 Mappings:
   StageMap:
     CODE:
@@ -38,422 +36,973 @@ Mappings:
     PROD:
       DomainName: reminders.support.guardianapis.com
       CorsOrigin: "'*'"
-
-Conditions:
-  IsProd: !Equals [ !Ref Stage, "PROD" ]
-
-Globals:
-  Api:
-    Cors:
-      AllowOrigin: !FindInMap [ StageMap, !Ref Stage, CorsOrigin ]
-      AllowHeaders: "'Content-Type'"
-      AllowMethods: "'*'"
-
 Resources:
-
-  CreateReminderSignupLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub support-reminders-create-reminder-signup-${Stage}
-      Description: A lambda for creating support reminders
-      Runtime: nodejs12.x
-      Handler: create-reminder-signup/lambda/lambda.handler
-      MemorySize: 128
-      Timeout: 30
-      Environment:
-        Variables:
-          Stage: !Ref Stage
-      CodeUri:
-        Bucket: !Ref DeployBucket
-        Key: !Sub ${Stack}/${Stage}/support-reminders/support-reminders.zip
-      VpcConfig:
-        SecurityGroupIds:
-          - !Ref SecurityGroupToAccessPostgres
-        SubnetIds: !Ref VpcSubnets
-      Policies:
-        # there are some extra permissions needed for a lambda to access resources in a VPC
-        # https://docs.aws.amazon.com/lambda/latest/dg/vpc.html
-        # hence this role rather than BasicExecutionRole
-        - AWSLambdaVPCAccessExecutionRole
-        - Statement:
-            Effect: Allow
-            Action:
-              - ssm:GetParametersByPath
-              - ssm:GetParameter
-            Resource:
-              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
-              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
-        - Statement:
-            Effect: Allow
-            Action: s3:GetObject
-            Resource:
-              - arn:aws:s3::*:membership-dist/*
-      Events:
-        CreateOneOff:
-            Type: Api
-            Properties:
-                Path: '/create/one-off'
-                Method: post
-        CreateRecurring:
-            Type: Api
-            Properties:
-                Path: '/create/recurring'
-                Method: post
-
-  CancelRemindersLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub support-reminders-cancel-reminders-${Stage}
-      Description: A lambda for cancelling pending support reminders
-      Runtime: nodejs12.x
-      Handler: cancel-reminders/lambda/lambda.handler
-      MemorySize: 128
-      Timeout: 30
-      Environment:
-        Variables:
-          Stage: !Ref Stage
-      CodeUri:
-        Bucket: !Ref DeployBucket
-        Key: !Sub ${Stack}/${Stage}/support-reminders/support-reminders.zip
-      VpcConfig:
-        SecurityGroupIds:
-          - !Ref SecurityGroupToAccessPostgres
-        SubnetIds: !Ref VpcSubnets
-      Policies:
-        # there are some extra permissions needed for a lambda to access resources in a VPC
-        # https://docs.aws.amazon.com/lambda/latest/dg/vpc.html
-        # hence this role rather than BasicExecutionRole
-        - AWSLambdaVPCAccessExecutionRole
-        - Statement:
-            Effect: Allow
-            Action:
-              - ssm:GetParametersByPath
-              - ssm:GetParameter
-            Resource:
-              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
-              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
-        - Statement:
-            Effect: Allow
-            Action: s3:GetObject
-            Resource:
-              - arn:aws:s3::*:membership-dist/*
-      Events:
-        CreateOneOff:
-            Type: Api
-            Properties:
-                Path: '/cancel'
-                Method: post
-
-  ReactivateRecurringReminderLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub support-reminders-reactivate-recurring-reminder-${Stage}
-      Description: A lambda for reactivating cancelled recurring support reminders
-      Runtime: nodejs12.x
-      Handler: reactivate-recurring-reminder/lambda/lambda.handler
-      MemorySize: 128
-      Timeout: 30
-      Environment:
-        Variables:
-          Stage: !Ref Stage
-      CodeUri:
-        Bucket: !Ref DeployBucket
-        Key: !Sub ${Stack}/${Stage}/support-reminders/support-reminders.zip
-      VpcConfig:
-        SecurityGroupIds:
-          - !Ref SecurityGroupToAccessPostgres
-        SubnetIds: !Ref VpcSubnets
-      Policies:
-        # there are some extra permissions needed for a lambda to access resources in a VPC
-        # https://docs.aws.amazon.com/lambda/latest/dg/vpc.html
-        # hence this role rather than BasicExecutionRole
-        - AWSLambdaVPCAccessExecutionRole
-        - Statement:
-            Effect: Allow
-            Action:
-              - ssm:GetParametersByPath
-              - ssm:GetParameter
-            Resource:
-              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
-              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
-        - Statement:
-            Effect: Allow
-            Action: s3:GetObject
-            Resource:
-              - arn:aws:s3::*:membership-dist/*
-      Events:
-        Reactivate:
-            Type: Api
-            Properties:
-                Path: '/reactivate'
-                Method: post
-
-  NextRemindersLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub support-reminders-next-reminders-${Stage}
-      Description: A lambda for getting next reminders data
-      Runtime: nodejs12.x
-      Handler: next-reminders/lambda/lambda.handler
-      MemorySize: 128
-      Timeout: 30
-      Environment:
-        Variables:
-          Stage: !Ref Stage
-          Bucket: !Ref DatalakeBucket
-      CodeUri:
-        Bucket: !Ref DeployBucket
-        Key: !Sub ${Stack}/${Stage}/support-reminders/support-reminders.zip
-      VpcConfig:
-        SecurityGroupIds:
-          - !Ref SecurityGroupToAccessPostgres
-        SubnetIds: !Ref VpcSubnets
-      Policies:
-        # there are some extra permissions needed for a lambda to access resources in a VPC
-        # https://docs.aws.amazon.com/lambda/latest/dg/vpc.html
-        # hence this role rather than BasicExecutionRole
-        - AWSLambdaVPCAccessExecutionRole
-        - Statement:
-            Effect: Allow
-            Action:
-              - ssm:GetParametersByPath
-              - ssm:GetParameter
-            Resource:
-              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
-        - Statement:
-            Effect: Allow
-            Action:
-              - s3:PutObject
-              - s3:PutObjectAcl
-            Resource:
-              - !Sub arn:aws:s3:::${DatalakeBucket}
-              - !Sub arn:aws:s3:::${DatalakeBucket}/*
-        - Statement:
-            Effect: Allow
-            Action: s3:GetObject
-            Resource:
-              - arn:aws:s3::*:membership-dist/*
-      Events:
-        Schedule:
-          Type: Schedule
-          Properties:
-            Schedule: 'cron(05 00 * * ? *)'
-            Name: !Sub NextRemindersSchedule-${Stage}
-            Description: Run next reminders lambda every day at 00:05
-            Enabled: True
-
-  SignupExportsLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub support-reminders-signup-exports-${Stage}
-      Description: A lambda for exporting signups data
-      Runtime: nodejs12.x
-      Handler: signup-exports/lambda/lambda.handler
-      MemorySize: 512
-      Timeout: 900
-      Environment:
-        Variables:
-          Stage: !Ref Stage
-          Bucket: !Ref DatalakeBucket
-      CodeUri:
-        Bucket: !Ref DeployBucket
-        Key: !Sub ${Stack}/${Stage}/support-reminders/support-reminders.zip
-      VpcConfig:
-        SecurityGroupIds:
-          - !Ref SecurityGroupToAccessPostgres
-        SubnetIds: !Ref VpcSubnets
-      Policies:
-        # there are some extra permissions needed for a lambda to access resources in a VPC
-        # https://docs.aws.amazon.com/lambda/latest/dg/vpc.html
-        # hence this role rather than BasicExecutionRole
-        - AWSLambdaVPCAccessExecutionRole
-        - Statement:
-            Effect: Allow
-            Action:
-              - ssm:GetParametersByPath
-              - ssm:GetParameter
-            Resource:
-              - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
-        - Statement:
-            Effect: Allow
-            Action:
-              - s3:PutObject
-              - s3:PutObjectAcl
-            Resource:
-              - !Sub arn:aws:s3:::${DatalakeBucket}
-              - !Sub arn:aws:s3:::${DatalakeBucket}/*
-        - Statement:
-            Effect: Allow
-            Action: s3:GetObject
-            Resource:
-              - arn:aws:s3::*:membership-dist/*
-      Events:
-        Schedule:
-          Type: Schedule
-          Properties:
-            Schedule: 'cron(05 00 * * ? *)'
-            Name: !Sub RemindersExportSchedule-${Stage}
-            Description: Run sigup exports lambda every day at 00:05
-            Enabled: True
-
-  DomainName:
-    Type: "AWS::ApiGateway::DomainName"
-    Properties:
-      RegionalCertificateArn: # only for *.support.guardianapis.com
-        !Ref CertificateArn
-      DomainName: !FindInMap [ StageMap, !Ref Stage, DomainName ]
-      EndpointConfiguration:
-        Types:
-          - REGIONAL
-
-  BasePathMapping:
-    Type: "AWS::ApiGateway::BasePathMapping"
-    Properties:
-      RestApiId: !Ref ServerlessRestApi # auto generated by the Transform
-      DomainName: !Ref DomainName
-      Stage: !Sub Prod
-    DependsOn: ServerlessRestApiProdStage # auto generated by the Transform
-
-  DNSRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneName: support.guardianapis.com.
-      Name: !FindInMap [ StageMap, !Ref Stage, DomainName ]
-      Comment: !Sub CNAME for contributions reminders endpoint ${Stage}
-      Type: CNAME
-      TTL: '120'
-      ResourceRecords:
-        - !GetAtt [ DomainName, RegionalDomainName ]
-
-  CreateReminderSignupLambdaAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Condition: IsProd
-    Properties:
-      AlarmActions:
-        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: !Sub support-reminders-create-reminder-signup-${Stage} lambda error
-      AlarmDescription: Failed to create a reminder signup
-      MetricName: Errors
-      Namespace: AWS/Lambda
-      Dimensions:
-        - Name: FunctionName
-          Value: !Ref CreateReminderSignupLambda
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      Threshold: 1
-      Period: 60
-      EvaluationPeriods: 1
-      Statistic: Sum
-
-  CancelRemindersLambdaAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Condition: IsProd
-    Properties:
-      AlarmActions:
-        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: !Sub support-reminders-cancel-reminders-${Stage} lambda error
-      AlarmDescription: Failed to cancel pending reminders
-      MetricName: Errors
-      Namespace: AWS/Lambda
-      Dimensions:
-        - Name: FunctionName
-          Value: !Ref CancelRemindersLambda
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      Threshold: 1
-      Period: 60
-      EvaluationPeriods: 1
-      Statistic: Sum
-
-  ReactivateRecurringReminderLambdaAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Condition: IsProd
-    Properties:
-      AlarmActions:
-        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: !Sub support-reminders-reactivate-recurring-reminder-${Stage} lambda error
-      AlarmDescription: Failed to reactivate cancelled reminders
-      MetricName: Errors
-      Namespace: AWS/Lambda
-      Dimensions:
-        - Name: FunctionName
-          Value: !Ref ReactivateRecurringReminderLambda
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      Threshold: 1
-      Period: 60
-      EvaluationPeriods: 1
-      Statistic: Sum
-
   NextRemindersLambdaAlarm:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
     Properties:
       AlarmActions:
-        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: !Sub support-reminders-next-reminders-${Stage} lambda error
+        - Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName:
+        Fn::Sub: support-reminders-next-reminders-${Stage} lambda error
       AlarmDescription: Failed to create next-reminders snapshot
       MetricName: Errors
       Namespace: AWS/Lambda
       Dimensions:
         - Name: FunctionName
-          Value: !Ref NextRemindersLambda
+          Value:
+            Ref: NextRemindersLambda
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Threshold: 1
       Period: 60
       EvaluationPeriods: 1
       Statistic: Sum
-
-  SignupExportsLambdaAlarm:
+  CreateReminderSignupLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: CreateReminderSignupLambdaRolePolicy1
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - ssm:GetParametersByPath
+                - ssm:GetParameter
+              Resource:
+                - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
+                - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
+        - PolicyName: CreateReminderSignupLambdaRolePolicy2
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action: s3:GetObject
+              Resource:
+                - arn:aws:s3::*:membership-dist/*
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  SignupExportsLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: SignupExportsLambdaRolePolicy1
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - ssm:GetParametersByPath
+                - ssm:GetParameter
+              Resource:
+                - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
+        - PolicyName: SignupExportsLambdaRolePolicy2
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:PutObjectAcl
+              Resource:
+                - Fn::Sub: arn:aws:s3:::${DatalakeBucket}
+                - Fn::Sub: arn:aws:s3:::${DatalakeBucket}/*
+        - PolicyName: SignupExportsLambdaRolePolicy3
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action: s3:GetObject
+              Resource:
+                - arn:aws:s3::*:membership-dist/*
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  SearchRemindersLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DeployBucket
+        S3Key:
+          Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
+      Description: A lambda for searching for reminders
+      FunctionName:
+        Fn::Sub: support-reminders-search-reminders-${Stage}
+      Handler: search-reminders/lambda/lambda.handler
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+          - SearchRemindersLambdaRole
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 30
+      VpcConfig:
+        SecurityGroupIds:
+          - Ref: SecurityGroupToAccessPostgres
+        SubnetIds:
+          Ref: VpcSubnets
+      Environment:
+        Variables:
+          Stage:
+            Ref: Stage
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  SignupExportsLambdaSchedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Run sigup exports lambda every day at 00:05
+      Name:
+        Fn::Sub: RemindersExportSchedule-${Stage}
+      ScheduleExpression: cron(05 00 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - SignupExportsLambda
+              - Arn
+          Id: SignupExportsLambdaScheduleLambdaTarget
+  ServerlessRestApiProdStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId:
+        Ref: ServerlessRestApiDeployment35164ab9c6
+      RestApiId:
+        Ref: ServerlessRestApi
+      StageName: Prod
+  NextRemindersLambdaSchedulePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: NextRemindersLambda
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - NextRemindersLambdaSchedule
+          - Arn
+  DomainName:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      RegionalCertificateArn:
+        Ref: CertificateArn
+      DomainName:
+        Fn::FindInMap:
+          - StageMap
+          - Ref: Stage
+          - DomainName
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+  NextRemindersLambdaSchedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Run next reminders lambda every day at 00:05
+      Name:
+        Fn::Sub: NextRemindersSchedule-${Stage}
+      ScheduleExpression: cron(05 00 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - NextRemindersLambda
+              - Arn
+          Id: NextRemindersLambdaScheduleLambdaTarget
+  ReactivateRecurringReminderLambdaAlarm:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
     Properties:
       AlarmActions:
-        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: !Sub support-reminders-signup-exports-${Stage} lambda error
-      AlarmDescription: Failed to create signups exports
+        - Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName:
+        Fn::Sub: support-reminders-reactivate-recurring-reminder-${Stage} lambda error
+      AlarmDescription: Failed to reactivate cancelled reminders
       MetricName: Errors
       Namespace: AWS/Lambda
       Dimensions:
         - Name: FunctionName
-          Value: !Ref SignupExportsLambda
+          Value:
+            Ref: ReactivateRecurringReminderLambda
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Threshold: 1
       Period: 60
       EvaluationPeriods: 1
       Statistic: Sum
-
   ApiGateway4XXAlarm:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
     Properties:
       AlarmActions:
-        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: !Sub support-reminders-${Stage} API gateway 4XX response
+        - Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName:
+        Fn::Sub: support-reminders-${Stage} API gateway 4XX response
       AlarmDescription: Reminders API received an invalid request
       MetricName: 4XXError
       Namespace: AWS/ApiGateway
       Dimensions:
         - Name: ApiName
-          Value: !Sub support-reminders-${Stage}
+          Value:
+            Fn::Sub: support-reminders-${Stage}
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Threshold: 8
       Period: 300
       EvaluationPeriods: 1
       Statistic: Sum
-
-  ApiGateway5XXAlarm:
+  CancelRemindersLambdaCreateOneOffPermissionProd:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: CancelRemindersLambda
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub:
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/POST/cancel
+          - __ApiId__:
+              Ref: ServerlessRestApi
+            __Stage__: "*"
+  CreateReminderSignupLambdaAlarm:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
     Properties:
       AlarmActions:
-        - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
-      AlarmName: !Sub support-reminders-${Stage} API gateway 5XX response
-      AlarmDescription: Reminders API failed to create a signup
-      MetricName: 5XXError
-      Namespace: AWS/ApiGateway
+        - Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName:
+        Fn::Sub: support-reminders-create-reminder-signup-${Stage} lambda error
+      AlarmDescription: Failed to create a reminder signup
+      MetricName: Errors
+      Namespace: AWS/Lambda
       Dimensions:
-        - Name: ApiName
-          Value: !Sub support-reminders-${Stage}
+        - Name: FunctionName
+          Value:
+            Ref: CreateReminderSignupLambda
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Threshold: 1
       Period: 60
       EvaluationPeriods: 1
       Statistic: Sum
+  CreateReminderSignupLambdaCreateOneOffPermissionProd:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: CreateReminderSignupLambda
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub:
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/POST/create/one-off
+          - __ApiId__:
+              Ref: ServerlessRestApi
+            __Stage__: "*"
+  SignupExportsLambdaSchedulePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: SignupExportsLambda
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - SignupExportsLambdaSchedule
+          - Arn
+  ApiGateway5XXAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName:
+        Fn::Sub: support-reminders-${Stage} API gateway 5XX response
+      AlarmDescription: Reminders API failed to create a signup
+      MetricName: 5XXError
+      Namespace: AWS/ApiGateway
+      Dimensions:
+        - Name: ApiName
+          Value:
+            Fn::Sub: support-reminders-${Stage}
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 60
+      EvaluationPeriods: 1
+      Statistic: Sum
+  NextRemindersLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DeployBucket
+        S3Key:
+          Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
+      Description: A lambda for getting next reminders data
+      FunctionName:
+        Fn::Sub: support-reminders-next-reminders-${Stage}
+      Handler: next-reminders/lambda/lambda.handler
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+          - NextRemindersLambdaRole
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 30
+      VpcConfig:
+        SecurityGroupIds:
+          - Ref: SecurityGroupToAccessPostgres
+        SubnetIds:
+          Ref: VpcSubnets
+      Environment:
+        Variables:
+          Stage:
+            Ref: Stage
+          Bucket:
+            Ref: DatalakeBucket
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  DNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: support.guardianapis.com.
+      Name:
+        Fn::FindInMap:
+          - StageMap
+          - Ref: Stage
+          - DomainName
+      Comment:
+        Fn::Sub: CNAME for contributions reminders endpoint ${Stage}
+      Type: CNAME
+      TTL: '120'
+      ResourceRecords:
+        - Fn::GetAtt:
+            - DomainName
+            - RegionalDomainName
+  ServerlessRestApiDeployment35164ab9c6:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      Description: 'RestApi deployment id: 35164ab9c69e7ad25b481304f695a6fca30e4980'
+      RestApiId:
+        Ref: ServerlessRestApi
+      StageName: Stage
+  SearchRemindersLambdaSearchPermissionProd:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: SearchRemindersLambda
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub:
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/POST/search
+          - __ApiId__:
+              Ref: ServerlessRestApi
+            __Stage__: "*"
+  CreateReminderSignupLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DeployBucket
+        S3Key:
+          Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
+      Description: A lambda for creating support reminders
+      FunctionName:
+        Fn::Sub: support-reminders-create-reminder-signup-${Stage}
+      Handler: create-reminder-signup/lambda/lambda.handler
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+          - CreateReminderSignupLambdaRole
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 30
+      VpcConfig:
+        SecurityGroupIds:
+          - Ref: SecurityGroupToAccessPostgres
+        SubnetIds:
+          Ref: VpcSubnets
+      Environment:
+        Variables:
+          Stage:
+            Ref: Stage
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  NextRemindersLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: NextRemindersLambdaRolePolicy1
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - ssm:GetParametersByPath
+                - ssm:GetParameter
+              Resource:
+                - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
+        - PolicyName: NextRemindersLambdaRolePolicy2
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:PutObjectAcl
+              Resource:
+                - Fn::Sub: arn:aws:s3:::${DatalakeBucket}
+                - Fn::Sub: arn:aws:s3:::${DatalakeBucket}/*
+        - PolicyName: NextRemindersLambdaRolePolicy3
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action: s3:GetObject
+              Resource:
+                - arn:aws:s3::*:membership-dist/*
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  ReactivateRecurringReminderLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DeployBucket
+        S3Key:
+          Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
+      Description: A lambda for reactivating cancelled recurring support reminders
+      FunctionName:
+        Fn::Sub: support-reminders-reactivate-recurring-reminder-${Stage}
+      Handler: reactivate-recurring-reminder/lambda/lambda.handler
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+          - ReactivateRecurringReminderLambdaRole
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 30
+      VpcConfig:
+        SecurityGroupIds:
+          - Ref: SecurityGroupToAccessPostgres
+        SubnetIds:
+          Ref: VpcSubnets
+      Environment:
+        Variables:
+          Stage:
+            Ref: Stage
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  ReactivateRecurringReminderLambdaReactivatePermissionProd:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: ReactivateRecurringReminderLambda
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub:
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/POST/reactivate
+          - __ApiId__:
+              Ref: ServerlessRestApi
+            __Stage__: "*"
+  CancelRemindersLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DeployBucket
+        S3Key:
+          Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
+      Description: A lambda for cancelling pending support reminders
+      FunctionName:
+        Fn::Sub: support-reminders-cancel-reminders-${Stage}
+      Handler: cancel-reminders/lambda/lambda.handler
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+          - CancelRemindersLambdaRole
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 30
+      VpcConfig:
+        SecurityGroupIds:
+          - Ref: SecurityGroupToAccessPostgres
+        SubnetIds:
+          Ref: VpcSubnets
+      Environment:
+        Variables:
+          Stage:
+            Ref: Stage
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  SearchRemindersLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: SearchRemindersLambdaRolePolicy1
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - ssm:GetParametersByPath
+                - ssm:GetParameter
+              Resource:
+                - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
+                - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
+        - PolicyName: SearchRemindersLambdaRolePolicy2
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action: s3:GetObject
+              Resource:
+                - arn:aws:s3::*:membership-dist/*
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  SignupExportsLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DeployBucket
+        S3Key:
+          Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
+      Description: A lambda for exporting signups data
+      FunctionName:
+        Fn::Sub: support-reminders-signup-exports-${Stage}
+      Handler: signup-exports/lambda/lambda.handler
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+          - SignupExportsLambdaRole
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 900
+      VpcConfig:
+        SecurityGroupIds:
+          - Ref: SecurityGroupToAccessPostgres
+        SubnetIds:
+          Ref: VpcSubnets
+      Environment:
+        Variables:
+          Stage:
+            Ref: Stage
+          Bucket:
+            Ref: DatalakeBucket
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  BasePathMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    Properties:
+      RestApiId:
+        Ref: ServerlessRestApi
+      DomainName:
+        Ref: DomainName
+      Stage:
+        Fn::Sub: Prod
+    DependsOn: ServerlessRestApiProdStage
+  CreateReminderSignupLambdaCreateRecurringPermissionProd:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: CreateReminderSignupLambda
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub:
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/POST/create/recurring
+          - __ApiId__:
+              Ref: ServerlessRestApi
+            __Stage__: "*"
+  SignupExportsLambdaAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName:
+        Fn::Sub: support-reminders-signup-exports-${Stage} lambda error
+      AlarmDescription: Failed to create signups exports
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Ref: SignupExportsLambda
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 60
+      EvaluationPeriods: 1
+      Statistic: Sum
+  CancelRemindersLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: CancelRemindersLambdaRolePolicy1
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - ssm:GetParametersByPath
+                - ssm:GetParameter
+              Resource:
+                - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
+                - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
+        - PolicyName: CancelRemindersLambdaRolePolicy2
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action: s3:GetObject
+              Resource:
+                - arn:aws:s3::*:membership-dist/*
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+  ServerlessRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Body:
+        info:
+          version: '1.0'
+          title:
+            Ref: AWS::StackName
+        paths:
+          "/reactivate":
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ReactivateRecurringReminderLambda.Arn}/invocations
+              responses: {}
+            options:
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: |
+                    {
+                      "statusCode" : 200
+                    }
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseTemplates:
+                      application/json: "{}\n"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin:
+                        Fn::FindInMap:
+                          - StageMap
+                          - Ref: Stage
+                          - CorsOrigin
+                      method.response.header.Access-Control-Allow-Methods: "'*'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+              consumes:
+                - application/json
+              summary: CORS support
+              responses:
+                '200':
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                    Access-Control-Allow-Headers:
+                      type: string
+                    Access-Control-Allow-Methods:
+                      type: string
+                  description: Default response for CORS method
+              produces:
+                - application/json
+          "/create/recurring":
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateReminderSignupLambda.Arn}/invocations
+              responses: {}
+            options:
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: |
+                    {
+                      "statusCode" : 200
+                    }
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseTemplates:
+                      application/json: "{}\n"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin:
+                        Fn::FindInMap:
+                          - StageMap
+                          - Ref: Stage
+                          - CorsOrigin
+                      method.response.header.Access-Control-Allow-Methods: "'*'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+              consumes:
+                - application/json
+              summary: CORS support
+              responses:
+                '200':
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                    Access-Control-Allow-Headers:
+                      type: string
+                    Access-Control-Allow-Methods:
+                      type: string
+                  description: Default response for CORS method
+              produces:
+                - application/json
+          "/search":
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SearchRemindersLambda.Arn}/invocations
+              responses: {}
+            options:
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: |
+                    {
+                      "statusCode" : 200
+                    }
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseTemplates:
+                      application/json: "{}\n"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin:
+                        Fn::FindInMap:
+                          - StageMap
+                          - Ref: Stage
+                          - CorsOrigin
+                      method.response.header.Access-Control-Allow-Methods: "'*'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+              consumes:
+                - application/json
+              summary: CORS support
+              responses:
+                '200':
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                    Access-Control-Allow-Headers:
+                      type: string
+                    Access-Control-Allow-Methods:
+                      type: string
+                  description: Default response for CORS method
+              produces:
+                - application/json
+          "/create/one-off":
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateReminderSignupLambda.Arn}/invocations
+              responses: {}
+            options:
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: |
+                    {
+                      "statusCode" : 200
+                    }
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseTemplates:
+                      application/json: "{}\n"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin:
+                        Fn::FindInMap:
+                          - StageMap
+                          - Ref: Stage
+                          - CorsOrigin
+                      method.response.header.Access-Control-Allow-Methods: "'*'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+              consumes:
+                - application/json
+              summary: CORS support
+              responses:
+                '200':
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                    Access-Control-Allow-Headers:
+                      type: string
+                    Access-Control-Allow-Methods:
+                      type: string
+                  description: Default response for CORS method
+              produces:
+                - application/json
+          "/cancel":
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CancelRemindersLambda.Arn}/invocations
+              responses: {}
+            options:
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: |
+                    {
+                      "statusCode" : 200
+                    }
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseTemplates:
+                      application/json: "{}\n"
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin:
+                        Fn::FindInMap:
+                          - StageMap
+                          - Ref: Stage
+                          - CorsOrigin
+                      method.response.header.Access-Control-Allow-Methods: "'*'"
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+              consumes:
+                - application/json
+              summary: CORS support
+              responses:
+                '200':
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                    Access-Control-Allow-Headers:
+                      type: string
+                    Access-Control-Allow-Methods:
+                      type: string
+                  description: Default response for CORS method
+              produces:
+                - application/json
+        swagger: '2.0'
+  CancelRemindersLambdaAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+        - Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:contributions-dev
+      AlarmName:
+        Fn::Sub: support-reminders-cancel-reminders-${Stage} lambda error
+      AlarmDescription: Failed to cancel pending reminders
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Ref: CancelRemindersLambda
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 1
+      Period: 60
+      EvaluationPeriods: 1
+      Statistic: Sum
+  ReactivateRecurringReminderLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: ReactivateRecurringReminderLambdaRolePolicy1
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - ssm:GetParametersByPath
+                - ssm:GetParameter
+              Resource:
+                - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/db-config/${Stage}
+                - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/support-reminders/idapi/${Stage}/*
+        - PolicyName: ReactivateRecurringReminderLambdaRolePolicy2
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action: s3:GetObject
+              Resource:
+                - arn:aws:s3::*:membership-dist/*
+      Tags:
+        - Key: lambda:createdBy
+          Value: SAM
+Conditions:
+  IsProd:
+    Fn::Equals:
+      - Ref: Stage
+      - PROD
