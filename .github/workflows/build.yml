@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install yarn
-        uses: npm install -g yarn
+        run: npm install -g yarn
 
       # (Respects .nvmrc)
       - name: Setup Node
