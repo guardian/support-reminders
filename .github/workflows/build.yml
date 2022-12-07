@@ -38,7 +38,7 @@ jobs:
           cache-dependency-path: cdk/yarn.lock
 
       - name: Build CFN from CDK
-        run: sudo ./script/ci
+        run: ./script/ci
         working-directory: cdk
 
       # Required by sbt riffRaffUpload
