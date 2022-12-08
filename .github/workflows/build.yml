@@ -51,7 +51,19 @@ jobs:
         run: ./script/ci
         working-directory: cdk
 
-      - name: Build and upload to RiffRaff
+      - name: Build
+        run: yarn build
+
+      - name: Copy additional resources to RiffRaff package
+        run: |
+          cp package.json target
+          cp riff-raff.yaml target
+
+      - name: Install dependencies inside RiffRaff package dir
+        run: yarn
+        working-directory: target
+
+      - name: Upload to RiffRaff
         run: |
           export LAST_TEAMCITY_BUILD=10000
           export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
