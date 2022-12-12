@@ -1,0 +1,60 @@
+name: Build support-reminders
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  support_lambdas_build:
+    if: >-
+      (github.actor != 'dependabot[bot]') &&
+        (github.event.pull_request.head.repo.owner.login == 'guardian' ||
+          github.event_name == 'push')
+    # Required by actions-assume-aws-role
+    permissions:
+      id-token: write
+      contents: read
+
+    name: support-reminders build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Env
+        run: env
+
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      # (Respects .nvmrc)
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Lint code
+        run: yarn lint
+
+      - name: Build
+        run: yarn run build
+
+      - name: Copy additional files to bundle
+        run: |
+          cp package.json target
+          cp riff-raff.yaml target
+
+      - name: Install production dependencies
+        run: yarn
+        working-directory: target
+
+      - name: Build cloudformation
+        run: yarn run build-cfn
+
+      - name: Build and upload to RiffRaff
+        run: yarn run package
