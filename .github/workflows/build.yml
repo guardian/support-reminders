@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  support_lambdas_build:
+  support_reminders_build:
     if: >-
       (github.actor != 'dependabot[bot]') &&
         (github.event.pull_request.head.repo.owner.login == 'guardian' ||
