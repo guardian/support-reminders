@@ -53,5 +53,14 @@ jobs:
         run: yarn
         working-directory: target
 
-      - name: Upload bundle to RiffRaff
-        run: yarn run package
+      - name: Configure AWS credentials
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: eu-west-1
+          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+
+      - name: Upload to Riff-Raff
+      - uses: guardian/actions-riff-raff@v2
+        with:
+          app: support-reminders
+          configPath: ./riff-raff.yaml
