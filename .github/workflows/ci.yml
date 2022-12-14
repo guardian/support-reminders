@@ -40,7 +40,7 @@ jobs:
           cache: 'yarn'
 
       - name: Run script/ci.sh
-        run: ./script/ci.sh.sh
+        run: ./script/ci.sh
 
       - name: Upload to Riff-Raff
         uses: guardian/actions-riff-raff@v2
