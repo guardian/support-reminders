@@ -42,7 +42,6 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
     "jest": "^26.6.3",
-    "node-riffraff-artefact": "^2.0.1",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
     "typecheck.macro": "^0.7.1"
@@ -50,13 +49,12 @@
   "scripts": {
     "clean": "rm -rf target",
     "lint": "eslint ./src --ext .js,.ts",
-    "build": "tsc && babel src --out-dir target --extensions \".ts\"",
+    "build": "babel src --out-dir target --extensions \".ts\"",
     "create-reminder-signup": "yarn build && node target/create-reminder-signup/lambda/local.js",
     "cancel-reminders": "yarn build && node target/cancel-reminders/lambda/local.js",
     "reactivate-recurring-reminder": "yarn build && node target/reactivate-recurring-reminder/lambda/local.js",
     "next-reminders": "yarn build && node target/next-reminders/lambda/local.js",
     "signup-exports": "yarn build && node target/signup-exports/lambda/local.js",
-    "package": "ARTEFACT_PATH=$PWD/target VERBOSE=true riffraff-artefact",
     "test": "jest --maxWorkers=1 ./src"
   }
 }
