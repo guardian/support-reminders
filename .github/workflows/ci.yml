@@ -39,8 +39,8 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'yarn'
 
-      - name: Run script/ci
-        run: ./script/ci.sh
+      - name: Run script/ci.sh
+        run: ./script/ci.sh.sh
 
       - name: Upload to Riff-Raff
         uses: guardian/actions-riff-raff@v2
