@@ -12,4 +12,4 @@ yarn tsc
 yarn lint
 yarn build
 
-zip -FSr "${ROOT_DIR}/support-reminders.zip ./target"
+zip -FSr "${ROOT_DIR}/support-reminders.zip" "${ROOT_DIR}/target"
