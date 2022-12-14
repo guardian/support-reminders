@@ -2,6 +2,12 @@ stacks: [support]
 regions: [eu-west-1]
 
 deployments:
+  support-reminders-cloudformation:
+    type: cloud-formation
+    app: support-reminders
+    parameters:
+      templatePath: cloudformation/cfn.yaml
+
   support-reminders:
     type: aws-lambda
     parameters:
@@ -14,9 +20,4 @@ deployments:
         - support-reminders-reactivate-recurring-reminder-
         - support-reminders-next-reminders-
         - support-reminders-signup-exports-
-    dependencies: [support-reminders-cloudformation]
-  support-reminders-cloudformation:
-    type: cloud-formation
-    app: support-reminders
-    parameters:
-      templatePath: cloudformation/cfn.yaml
+    dependencies: [ support-reminders-cloudformation ]
