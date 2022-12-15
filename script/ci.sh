@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 set -e
-set -x
+#set -x
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 ROOT_DIR="${DIR}/.."
+cd "$ROOT_DIR"
 
 yarn clean
 yarn install
@@ -12,4 +13,4 @@ yarn tsc
 yarn lint
 yarn build
 
-zip -FSr "${ROOT_DIR}/support-reminders.zip" "${ROOT_DIR}/target"
+zip -FSr support-reminders.zip target/*
