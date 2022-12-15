@@ -20,4 +20,6 @@ pushd target
 yarn install --production
 popd
 
-zip -FSr support-reminders.zip target/*
+mv target support-reminders
+
+zip -FSr support-reminders.zip support-reminders/*
