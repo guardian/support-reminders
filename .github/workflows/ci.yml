@@ -49,7 +49,7 @@ jobs:
           configPath: ./riff-raff.yaml
           contentDirectories: |
             support-reminders-cloudformation:
-              - ./cloudformation/cfn.yaml
+              - ./cfn.yaml
             support-reminders:
               - ./support-reminders.zip
 
