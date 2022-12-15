@@ -1,5 +1,6 @@
 dist
 target
+support-reminders
 node_modules
 .idea/
 .vscode/
