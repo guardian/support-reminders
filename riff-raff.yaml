@@ -6,13 +6,13 @@ deployments:
     type: cloud-formation
     app: support-reminders
     parameters:
-      bucketSsmLookup: true
+      templatePath: cfn.yaml
 
   support-reminders:
     type: aws-lambda
     parameters:
       prefixStack: false
-      bucket: membership-dist
+      bucketSsmLookup: true
       fileName: support-reminders.zip
       functionNames:
         - support-reminders-create-reminder-signup-
