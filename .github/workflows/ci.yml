@@ -39,8 +39,11 @@ jobs:
           node-version-file: './.nvmrc'
           cache: 'yarn'
 
-      - name: Run script/ci.sh
+      - name: Build project and generate Riff-Raff artefact
         run: ./script/ci.sh
+
+      - name: Generate CFN templates from GuCDK
+        run: ./script/cfn.sh
 
       - name: Upload to Riff-Raff
         uses: guardian/actions-riff-raff@v2
@@ -49,7 +52,8 @@ jobs:
           configPath: ./riff-raff.yaml
           contentDirectories: |
             support-reminders-cloudformation:
-              - ./cfn.yaml
+              - ./cdk/cdk.out/SupportReminders-CODE.template.json
+              - ./cdk/cdk.out/SupportReminders-PROD.template.json
             support-reminders:
               - ./support-reminders.zip
 
