@@ -237,9 +237,9 @@ Resources:
         Schedule:
           Type: Schedule
           Properties:
-            Schedule: 'cron(06 00 * * ? *)'
+            Schedule: 'cron(05 00 * * ? *)'
             Name: !Sub NextRemindersSchedule-${Stage}
-            Description: Run next reminders lambda every day at 00:06
+            Description: Run next reminders lambda every day at 00:05
             Enabled: True
 
   SignupExportsLambda:
