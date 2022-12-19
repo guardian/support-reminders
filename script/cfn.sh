@@ -9,7 +9,6 @@ cd "$ROOT_DIR/cdk"
 
 yarn clean
 yarn install
-yarn tsc
 yarn lint
 yarn test
 yarn synth
