@@ -1244,7 +1244,7 @@ aws-lambda@^1.0.6:
     js-yaml "^3.13.1"
     watchpack "^2.0.0-beta.10"
 
-aws-sdk@*, aws-sdk@^2.264.1, aws-sdk@^2.519.0:
+aws-sdk@*, aws-sdk@^2.264.1:
   version "2.831.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.831.0.tgz#02607cc911a2136e5aabe624c1282e821830aef2"
   integrity sha512-lrOjbGFpjk2xpESyUx2PGsTZgptCy5xycZazPeakNbFO19cOoxjHx3xyxOHsMCYb3pQwns35UvChQT60B4u6cw==
@@ -3716,16 +3716,6 @@ node-notifier@^8.0.0:
     uuid "^8.3.0"
     which "^2.0.2"
 
-node-riffraff-artefact@^2.0.1:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/node-riffraff-artefact/-/node-riffraff-artefact-2.0.2.tgz#9ec38ef8370c20f3358b310a8f27bc22737d77d7"
-  integrity sha512-UpcnMwuG2FF+WCZmsVcfHJ38zHWM3yFbj1DMkDlTxoAHUOUNs8Ekdl1zkTeHAS7upXoYjt5D1zWq/Q/gFlsiOg==
-  dependencies:
-    aws-sdk "^2.519.0"
-    glob "^7.1.4"
-    js-yaml "^3.13.1"
-    q "^1.5.1"
-
 normalize-package-data@^2.3.2, normalize-package-data@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/normalize-package-data/-/normalize-package-data-2.5.0.tgz#e66db1838b200c1dfc233225d12cb36520e234a8"
@@ -4194,11 +4184,6 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
-
-q@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
-  integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
 qs@~6.5.2:
   version "6.5.2"
