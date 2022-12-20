@@ -6,7 +6,9 @@ deployments:
     type: cloud-formation
     app: support-reminders
     parameters:
-      templatePath: cfn.yaml
+      templateStagePaths:
+        CODE: SupportReminders-CODE.template.json
+        PROD: SupportReminders-PROD.template.json
 
   support-reminders:
     type: aws-lambda
