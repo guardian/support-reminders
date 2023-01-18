@@ -4,7 +4,7 @@ import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
 import { GuStack } from "@guardian/cdk/lib/constructs/core";
 import { GuLambdaFunction } from "@guardian/cdk/lib/constructs/lambda";
 import type { App } from "aws-cdk-lib";
-import { CfnBasePathMapping, CfnDomainName } from "aws-cdk-lib/aws-apigateway";
+import {CfnBasePathMapping, CfnDomainName, Cors} from "aws-cdk-lib/aws-apigateway";
 import { Schedule } from "aws-cdk-lib/aws-events";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { CfnRecordSetGroup } from "aws-cdk-lib/aws-route53";
@@ -19,6 +19,7 @@ export interface SupportRemindersProps extends GuStackProps {
 export class SupportReminders extends GuStack {
 	constructor(scope: App, id: string, props: SupportRemindersProps) {
 		super(scope, id, props);
+
 
 		// ---- Existing CFN template ---- //
 		const yamlTemplateFilePath = join(__dirname, "../..", "cfn.yaml");
@@ -64,6 +65,11 @@ export class SupportReminders extends GuStack {
 		// ---- API gateway ---- //
 		const supportRemindersApi = new GuApiGatewayWithLambdaByPath(this, {
 			app,
+			defaultCorsPreflightOptions: {
+				allowOrigins: Cors.ALL_ORIGINS,
+				allowMethods: Cors.ALL_METHODS,
+				allowHeaders: ["Content-Type"],
+			},
 			monitoringConfiguration: {
 				snsTopicName: "conversion-dev",
 				http5xxAlarm: {
