@@ -1,14 +1,12 @@
-import { join } from "path";
 import { GuApiGatewayWithLambdaByPath, GuScheduledLambda} from "@guardian/cdk";
 import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
-import { GuStack } from "@guardian/cdk/lib/constructs/core";
+import { GuStack, GuStringParameter, GuSubnetListParameter } from "@guardian/cdk/lib/constructs/core";
 import { GuLambdaFunction } from "@guardian/cdk/lib/constructs/lambda";
 import type { App } from "aws-cdk-lib";
-import {CfnBasePathMapping, CfnDomainName, Cors} from "aws-cdk-lib/aws-apigateway";
+import { CfnBasePathMapping, CfnDomainName, Cors} from "aws-cdk-lib/aws-apigateway";
 import { Schedule } from "aws-cdk-lib/aws-events";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
-import { CfnRecordSetGroup } from "aws-cdk-lib/aws-route53";
-import { CfnInclude } from "aws-cdk-lib/cloudformation-include";
+import { CfnRecordSet } from "aws-cdk-lib/aws-route53";
 
 export interface SupportRemindersProps extends GuStackProps {
 	certificateId: string;
@@ -20,13 +18,41 @@ export class SupportReminders extends GuStack {
 	constructor(scope: App, id: string, props: SupportRemindersProps) {
 		super(scope, id, props);
 
+		// ---- Parameters ---- //
+		new GuStringParameter(
+			this,
+			"DatalakeBucket",
+			{
+				description:
+					"Bucket to upload data for ingestion into BigQuery",
+			}
+		);
 
-		// ---- Existing CFN template ---- //
-		const yamlTemplateFilePath = join(__dirname, "../..", "cfn.yaml");
-		new CfnInclude(this, "YamlTemplate", {
-			templateFile: yamlTemplateFilePath,
-		});
+		new GuStringParameter(
+			this,
+			"DeployBucket",
+			{
+				description:
+					"Bucket to copy files to",
+			}
+		);
 
+		new GuStringParameter(
+			this,
+			"SecurityGroupToAccessPostgres",
+			{
+				description:
+					"Security group to access the RDS instance",
+			}
+		);
+
+		new GuSubnetListParameter(
+			this,
+			"VpcSubnets",
+			{
+				description: "Subnets for RDS access"
+			}
+		)
 
 		// ---- Constants ---- //
 		const app = "support-reminders";
@@ -34,28 +60,28 @@ export class SupportReminders extends GuStack {
 
 		// ---- API-triggered lambda functions ---- //
 		const searchRemindersLambda = new GuLambdaFunction(this, "search-reminders", {
-			app: "search-reminders-lambda",
+			app,
 			runtime: Runtime.NODEJS_14_X,
 			handler: "search-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 		});
 
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
-			app: "create-reminders-signup-lambda",
+			app,
 			runtime: Runtime.NODEJS_14_X,
 			handler: "create-reminder-signup/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 		});
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
-			app: "create-reminders-signup-lambda",
+			app,
 			runtime: Runtime.NODEJS_14_X,
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 		});
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
-			app: "cancel-reminders-lambda",
+			app,
 			runtime: Runtime.NODEJS_14_X,
 			handler: "cancel-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
@@ -108,7 +134,7 @@ export class SupportReminders extends GuStack {
 
 		// ---- Scheduled lambda functions ---- //
 		new GuScheduledLambda(this, "signup-exports", {
-			app: "cancel-reminders-lambda",
+			app,
 			runtime: Runtime.NODEJS_14_X,
 			handler: "signup-exports/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
@@ -124,7 +150,7 @@ export class SupportReminders extends GuStack {
 		});
 
 		new GuScheduledLambda(this, "next-reminders", {
-			app: "next-reminders-lambda",
+			app,
 			runtime: Runtime.NODEJS_14_X,
 			handler: "next-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
@@ -143,9 +169,12 @@ export class SupportReminders extends GuStack {
 		// ---- DNS ---- //
 		const certificateArn = `arn:aws:acm:eu-west-1:${this.account}:certificate/${props.certificateId}`;
 
-		const cfnDomainName = new CfnDomainName(this, "ApiDomainName", {
+		const cfnDomainName = new CfnDomainName(this, "DomainName", {
 			domainName: props.domainName,
-			certificateArn,
+			regionalCertificateArn: certificateArn,
+			endpointConfiguration: {
+				types: ["REGIONAL"]
+			}
 		});
 
 		new CfnBasePathMapping(this, "ApiMapping", {
@@ -154,13 +183,13 @@ export class SupportReminders extends GuStack {
 			stage: supportRemindersApi.api.deploymentStage.stageName,
 		});
 
-		new CfnRecordSetGroup(this, "ApiRoute53", {
+		new CfnRecordSet(this, "DNSRecord", {
+			name: props.domainName,
+			type: "CNAME",
 			hostedZoneId: props.hostedZoneId,
-			recordSets: [
-				{
-					name: props.domainName,
-					type: "CNAME",
-				},
+			ttl: "60",
+			resourceRecords: [
+				cfnDomainName.attrRegionalDomainName
 			],
 		});
 	}
