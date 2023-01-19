@@ -5,6 +5,7 @@ import { GuLambdaFunction } from "@guardian/cdk/lib/constructs/lambda";
 import type { App } from "aws-cdk-lib";
 import { CfnBasePathMapping, CfnDomainName, Cors} from "aws-cdk-lib/aws-apigateway";
 import { Schedule } from "aws-cdk-lib/aws-events";
+import { ManagedPolicy } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { CfnRecordSet } from "aws-cdk-lib/aws-route53";
 
@@ -54,8 +55,10 @@ export class SupportReminders extends GuStack {
 			}
 		)
 
-		// ---- Constants ---- //
+		// ---- Misc. constants ---- //
 		const app = "support-reminders";
+		const awsLambdaVpcAccessExecutionRole =
+			ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")
 
 
 		// ---- API-triggered lambda functions ---- //
@@ -65,6 +68,7 @@ export class SupportReminders extends GuStack {
 			handler: "search-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 		});
+		searchRemindersLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			app,
@@ -72,6 +76,7 @@ export class SupportReminders extends GuStack {
 			handler: "create-reminder-signup/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 		});
+		createRemindersSignupLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
 			app,
@@ -79,6 +84,7 @@ export class SupportReminders extends GuStack {
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 		});
+		reactivateRecurringReminderLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
 			app,
@@ -86,6 +92,7 @@ export class SupportReminders extends GuStack {
 			handler: "cancel-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 		});
+		cancelRemindersLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
 
 		// ---- API gateway ---- //
