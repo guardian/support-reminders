@@ -55,7 +55,8 @@ export class SupportReminders extends GuStack {
 			}
 		)
 
-		// ---- Misc. constants ---- //
+
+		// ---- Miscellaneous constants ---- //
 		const app = "support-reminders";
 		const awsLambdaVpcAccessExecutionRole =
 			ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")
@@ -75,6 +76,7 @@ export class SupportReminders extends GuStack {
 			runtime: Runtime.NODEJS_14_X,
 			handler: "create-reminder-signup/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
+			functionName: `support-reminders-create-reminder-signup-${this.stage}`
 		});
 		createRemindersSignupLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
@@ -83,6 +85,7 @@ export class SupportReminders extends GuStack {
 			runtime: Runtime.NODEJS_14_X,
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
+			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`
 		});
 		reactivateRecurringReminderLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
@@ -91,6 +94,7 @@ export class SupportReminders extends GuStack {
 			runtime: Runtime.NODEJS_14_X,
 			handler: "cancel-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
+			functionName: `support-reminders-cancel-reminders-${this.stage}`
 		});
 		cancelRemindersLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
@@ -145,6 +149,7 @@ export class SupportReminders extends GuStack {
 			runtime: Runtime.NODEJS_14_X,
 			handler: "signup-exports/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
+			functionName: `support-reminders-signup-exports-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.expression("cron(05 00 * * ? *)"),
@@ -161,6 +166,7 @@ export class SupportReminders extends GuStack {
 			runtime: Runtime.NODEJS_14_X,
 			handler: "next-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
+			functionName: `support-reminders-next-reminders-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.expression("cron(05 00 * * ? *)"),
