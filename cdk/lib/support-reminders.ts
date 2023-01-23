@@ -1,13 +1,14 @@
-import { GuApiGatewayWithLambdaByPath, GuScheduledLambda} from "@guardian/cdk";
-import type { GuStackProps } from "@guardian/cdk/lib/constructs/core";
-import { GuStack, GuStringParameter, GuSubnetListParameter } from "@guardian/cdk/lib/constructs/core";
-import { GuLambdaFunction } from "@guardian/cdk/lib/constructs/lambda";
-import type { App } from "aws-cdk-lib";
-import { CfnBasePathMapping, CfnDomainName, Cors} from "aws-cdk-lib/aws-apigateway";
-import { Schedule } from "aws-cdk-lib/aws-events";
-import { ManagedPolicy } from "aws-cdk-lib/aws-iam";
-import { Runtime } from "aws-cdk-lib/aws-lambda";
-import { CfnRecordSet } from "aws-cdk-lib/aws-route53";
+import {GuApiGatewayWithLambdaByPath, GuScheduledLambda} from "@guardian/cdk";
+import type {GuStackProps} from "@guardian/cdk/lib/constructs/core";
+import {GuStack, GuStringParameter, GuSubnetListParameter} from "@guardian/cdk/lib/constructs/core";
+import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
+import type {App} from "aws-cdk-lib";
+import {Aws} from "aws-cdk-lib";
+import {CfnBasePathMapping, CfnDomainName, Cors} from "aws-cdk-lib/aws-apigateway";
+import {Schedule} from "aws-cdk-lib/aws-events";
+import {Effect, ManagedPolicy, Policy, PolicyStatement} from "aws-cdk-lib/aws-iam";
+import {Runtime} from "aws-cdk-lib/aws-lambda";
+import {CfnRecordSet} from "aws-cdk-lib/aws-route53";
 
 export interface SupportRemindersProps extends GuStackProps {
 	certificateId: string;
@@ -69,7 +70,6 @@ export class SupportReminders extends GuStack {
 			handler: "search-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 		});
-		searchRemindersLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			app,
@@ -78,7 +78,6 @@ export class SupportReminders extends GuStack {
 			fileName: "support-reminders.zip",
 			functionName: `support-reminders-create-reminder-signup-${this.stage}`
 		});
-		createRemindersSignupLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
 			app,
@@ -87,7 +86,6 @@ export class SupportReminders extends GuStack {
 			fileName: "support-reminders.zip",
 			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`
 		});
-		reactivateRecurringReminderLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
 			app,
@@ -96,7 +94,6 @@ export class SupportReminders extends GuStack {
 			fileName: "support-reminders.zip",
 			functionName: `support-reminders-cancel-reminders-${this.stage}`
 		});
-		cancelRemindersLambda.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 
 
 		// ---- API gateway ---- //
@@ -205,5 +202,35 @@ export class SupportReminders extends GuStack {
 				cfnDomainName.attrRegionalDomainName
 			],
 		});
+
+
+		// ---- Apply policies ---- //
+		const ssmInlinePolicy: Policy = new Policy(this, "Inline policy", {
+			statements: [
+				new PolicyStatement({
+					effect: Effect.ALLOW,
+					actions: [
+						"ssm:GetParametersByPath",
+						"ssm:GetParameter"
+					],
+					resources: [
+						`arn:aws:ssm:${Aws.REGION}:${Aws.ACCOUNT_ID}:parameter/support-reminders/db-config/${props.stage}`,
+						`arn:aws:ssm:${Aws.REGION}:${Aws.ACCOUNT_ID}:parameter/support-reminders/idapi/${props.stage}/*`,
+					]
+				}),
+			],
+		})
+
+		const lambdaFunctions: GuLambdaFunction[] = [
+			searchRemindersLambda,
+			createRemindersSignupLambda,
+			reactivateRecurringReminderLambda,
+			cancelRemindersLambda
+		]
+
+		lambdaFunctions.forEach((l: GuLambdaFunction) => {
+			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
+			l.role?.attachInlinePolicy(ssmInlinePolicy)
+		})
 	}
 }
