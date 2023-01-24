@@ -205,7 +205,7 @@ export class SupportReminders extends GuStack {
 
 
 		// ---- Apply policies ---- //
-		const ssmInlinePolicy: Policy = new Policy(this, "Inline policy", {
+		const ssmInlinePolicy: Policy = new Policy(this, "Custom inline policy", {
 			statements: [
 				new PolicyStatement({
 					effect: Effect.ALLOW,
