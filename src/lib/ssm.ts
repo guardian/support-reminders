@@ -21,12 +21,6 @@ export async function getDatabaseParamsFromSSM(ssm: SSM): Promise<DBConfig> {
 		const password = p.find(({ Name }) => Name === `${dbPath}/password`);
 		const username = p.find(({ Name }) => Name === `${dbPath}/username`);
 
-		console.log('----------------------------------------');
-		console.log('url: ', url);
-		console.log('password?: ', !!password);
-		console.log('username: ', username);
-		console.log('----------------------------------------');
-
 		if (
 			url &&
 			url.Value &&

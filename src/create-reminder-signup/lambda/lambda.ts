@@ -65,7 +65,18 @@ export const runOneOff = async (
 		pool: Pool,
 	) => {
 		const signup = oneOffSignupFromRequest(identityId, signupRequest);
-		return writeOneOffSignup(signup, pool);
+		console.log('------------------ signup ----------------------');
+		console.log(signup);
+		console.log('------------------------------------------------');
+
+		const result = writeOneOffSignup(signup, pool);
+		console.log(
+			'------------------ writeOneOffSignup ----------------------',
+		);
+		console.log(result);
+		console.log('------------------------------------------------');
+
+		return result;
 	};
 
 	return createSignup(signupRequest, oneOffSignupValidator, persist);
