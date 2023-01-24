@@ -113,24 +113,21 @@ const createSignup = async <T extends BaseSignupRequest>(
 	}
 
 	const token = await identityAccessTokenPromise;
-	console.log('token', identityAccessTokenPromise);
 	const pool = await dbConnectionPoolPromise;
-	console.log('pool', dbConnectionPoolPromise);
 
 	const identityResult = await getOrCreateIdentityIdByEmail(
 		signupRequest.email,
 		signupRequest.reminderStage,
 		token,
 	);
-	console.log('identityResult', identityResult);
 
 	if (identityResult.name === 'success') {
-		console.log('inside if success');
 		const dbResult = await persist(
 			signupRequest,
 			identityResult.identityId,
 			pool,
 		);
+		console.log('dbResult: ', dbResult);
 
 		if (dbResult.rowCount !== 1) {
 			return {
@@ -145,7 +142,6 @@ const createSignup = async <T extends BaseSignupRequest>(
 			body: 'OK',
 		};
 	} else {
-		console.log('inside else');
 		return {
 			headers,
 			statusCode: identityResult.status,
