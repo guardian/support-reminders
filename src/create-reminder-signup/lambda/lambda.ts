@@ -65,18 +65,7 @@ export const runOneOff = async (
 		pool: Pool,
 	) => {
 		const signup = oneOffSignupFromRequest(identityId, signupRequest);
-		console.log('------------------ signup ----------------------');
-		console.log(signup);
-		console.log('------------------------------------------------');
-
-		const result = writeOneOffSignup(signup, pool);
-		console.log(
-			'------------------ writeOneOffSignup ----------------------',
-		);
-		console.log(result);
-		console.log('------------------------------------------------');
-
-		return result;
+		return writeOneOffSignup(signup, pool);
 	};
 
 	return createSignup(signupRequest, oneOffSignupValidator, persist);
@@ -124,15 +113,19 @@ const createSignup = async <T extends BaseSignupRequest>(
 	}
 
 	const token = await identityAccessTokenPromise;
+	console.log('token', identityAccessTokenPromise);
 	const pool = await dbConnectionPoolPromise;
+	console.log('pool', dbConnectionPoolPromise);
 
 	const identityResult = await getOrCreateIdentityIdByEmail(
 		signupRequest.email,
 		signupRequest.reminderStage,
 		token,
 	);
+	console.log('identityResult', identityResult);
 
 	if (identityResult.name === 'success') {
+		console.log('inside if success');
 		const dbResult = await persist(
 			signupRequest,
 			identityResult.identityId,
@@ -152,6 +145,7 @@ const createSignup = async <T extends BaseSignupRequest>(
 			body: 'OK',
 		};
 	} else {
+		console.log('inside else');
 		return {
 			headers,
 			statusCode: identityResult.status,
