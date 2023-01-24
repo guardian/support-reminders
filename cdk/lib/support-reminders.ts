@@ -205,7 +205,7 @@ export class SupportReminders extends GuStack {
 
 
 		// ---- Apply policies ---- //
-		const ssmInlinePolicy: Policy = new Policy(this, "Custom inline policy", {
+		const ssmInlinePolicy: Policy = new Policy(this, "SSM inline policy", {
 			statements: [
 				new PolicyStatement({
 					effect: Effect.ALLOW,
@@ -221,6 +221,20 @@ export class SupportReminders extends GuStack {
 			],
 		})
 
+		const s3InlinePolicy: Policy = new Policy(this, "S3 inline policy", {
+			statements: [
+				new PolicyStatement({
+					effect: Effect.ALLOW,
+					actions: [
+						"s3:GetObject"
+					],
+					resources: [
+						"arn:aws:s3::*:membership-dist/*"
+					]
+				}),
+			],
+		})
+
 		const lambdaFunctions: GuLambdaFunction[] = [
 			searchRemindersLambda,
 			createRemindersSignupLambda,
@@ -231,6 +245,7 @@ export class SupportReminders extends GuStack {
 		lambdaFunctions.forEach((l: GuLambdaFunction) => {
 			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 			l.role?.attachInlinePolicy(ssmInlinePolicy)
+			l.role?.attachInlinePolicy(s3InlinePolicy)
 		})
 	}
 }
