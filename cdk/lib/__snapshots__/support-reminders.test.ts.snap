@@ -8,6 +8,8 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "GuStringParameter",
       "GuStringParameter",
       "GuSubnetListParameter",
+      "GuVpcParameter",
+      "GuSubnetListParameter",
       "GuDistributionBucketParameter",
       "GuLambdaFunction",
       "GuLambdaFunction",
@@ -64,9 +66,19 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Description": "SSM parameter containing the S3 bucket name holding distribution artifacts",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
+    "PrivateSubnets": {
+      "Default": "/account/vpc/primary/subnets/private",
+      "Description": "A list of private subnets",
+      "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
+    },
     "SecurityGroupToAccessPostgres": {
       "Description": "Security group to access the RDS instance",
       "Type": "String",
+    },
+    "VpcId": {
+      "Default": "/account/vpc/primary/id",
+      "Description": "Virtual Private Cloud to run EC2 instances within. Should NOT be the account default VPC.",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
     },
     "VpcSubnets": {
       "Description": "Subnets for RDS access",
@@ -310,7 +322,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC5036e53a8c2614b9d768266ceddef25caf6": {
+    "RestApiDeployment180EC503d2cb2be0005db05db147addfa52a7f38": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -345,7 +357,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC5036e53a8c2614b9d768266ceddef25caf6",
+          "Ref": "RestApiDeployment180EC503d2cb2be0005db05db147addfa52a7f38",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -1437,7 +1449,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-cancel-reminders-CODE",
+        "FunctionName": "support-reminders-cancel-reminders-CODE-CDK",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1446,7 +1458,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -1470,6 +1482,16 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -1657,7 +1679,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-create-reminder-signup-CODE",
+        "FunctionName": "support-reminders-create-reminder-signup-CODE-CDK",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1666,7 +1688,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -1690,6 +1712,16 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -1877,7 +1909,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-next-reminders-CODE",
+        "FunctionName": "support-reminders-next-reminders-CODE-CDK",
         "Handler": "next-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1886,7 +1918,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -1910,6 +1942,16 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -2045,6 +2087,18 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                   "Ref": "AWS::Partition",
                 },
                 ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
               ],
             ],
           },
@@ -2230,7 +2284,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-reactivate-recurring-reminder-CODE",
+        "FunctionName": "support-reminders-reactivate-recurring-reminder-CODE-CDK",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2239,7 +2293,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -2263,6 +2317,16 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -2450,6 +2514,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
+        "FunctionName": "support-reminders-search-reminders-CODE-CDK",
         "Handler": "search-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2458,7 +2523,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -2482,6 +2547,16 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -2669,7 +2744,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-signup-exports-CODE",
+        "FunctionName": "support-reminders-signup-exports-CODE-CDK",
         "Handler": "signup-exports/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2678,7 +2753,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -2702,6 +2777,16 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -2837,6 +2922,18 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                   "Ref": "AWS::Partition",
                 },
                 ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
               ],
             ],
           },
@@ -3015,6 +3112,8 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "GuStringParameter",
       "GuStringParameter",
       "GuSubnetListParameter",
+      "GuVpcParameter",
+      "GuSubnetListParameter",
       "GuDistributionBucketParameter",
       "GuLambdaFunction",
       "GuLambdaFunction",
@@ -3071,9 +3170,19 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Description": "SSM parameter containing the S3 bucket name holding distribution artifacts",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
+    "PrivateSubnets": {
+      "Default": "/account/vpc/primary/subnets/private",
+      "Description": "A list of private subnets",
+      "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
+    },
     "SecurityGroupToAccessPostgres": {
       "Description": "Security group to access the RDS instance",
       "Type": "String",
+    },
+    "VpcId": {
+      "Default": "/account/vpc/primary/id",
+      "Description": "Virtual Private Cloud to run EC2 instances within. Should NOT be the account default VPC.",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
     },
     "VpcSubnets": {
       "Description": "Subnets for RDS access",
@@ -3317,7 +3426,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503d4f8837380ca71c069608290d6a0583d": {
+    "RestApiDeployment180EC50325978d599f094bee7f49dcd96a332604": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -3352,7 +3461,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503d4f8837380ca71c069608290d6a0583d",
+          "Ref": "RestApiDeployment180EC50325978d599f094bee7f49dcd96a332604",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -4444,7 +4553,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-cancel-reminders-PROD",
+        "FunctionName": "support-reminders-cancel-reminders-PROD-CDK",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -4453,7 +4562,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -4477,6 +4586,16 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -4664,7 +4783,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-create-reminder-signup-PROD",
+        "FunctionName": "support-reminders-create-reminder-signup-PROD-CDK",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -4673,7 +4792,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -4697,6 +4816,16 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -4884,7 +5013,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-next-reminders-PROD",
+        "FunctionName": "support-reminders-next-reminders-PROD-CDK",
         "Handler": "next-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -4893,7 +5022,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -4917,6 +5046,16 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -5052,6 +5191,18 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                   "Ref": "AWS::Partition",
                 },
                 ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
               ],
             ],
           },
@@ -5237,7 +5388,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-reactivate-recurring-reminder-PROD",
+        "FunctionName": "support-reminders-reactivate-recurring-reminder-PROD-CDK",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5246,7 +5397,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -5270,6 +5421,16 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -5457,6 +5618,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
+        "FunctionName": "support-reminders-search-reminders-PROD-CDK",
         "Handler": "search-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5465,7 +5627,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -5489,6 +5651,16 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -5676,7 +5848,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-signup-exports-PROD",
+        "FunctionName": "support-reminders-signup-exports-PROD-CDK",
         "Handler": "signup-exports/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5685,7 +5857,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs12.x",
+        "Runtime": "nodejs16.x",
         "Tags": [
           {
             "Key": "App",
@@ -5709,6 +5881,16 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           },
         ],
         "Timeout": 30,
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            {
+              "Ref": "SecurityGroupToAccessPostgres",
+            },
+          ],
+          "SubnetIds": {
+            "Ref": "PrivateSubnets",
+          },
+        },
       },
       "Type": "AWS::Lambda::Function",
     },
@@ -5844,6 +6026,18 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                   "Ref": "AWS::Partition",
                 },
                 ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
               ],
             ],
           },
