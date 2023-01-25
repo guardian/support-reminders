@@ -1,4 +1,3 @@
-import { throws } from 'assert';
 import { Pool, QueryConfig, QueryResult } from 'pg';
 import { logInfo } from './log';
 
@@ -29,20 +28,13 @@ export function runWithLogging(
 	queryConfig: QueryConfig,
 	pool: Pool,
 ): Promise<QueryResult> {
-	console.log('------------ Inside runWithLogging ------------');
-	// @ts-expect-error - allow error logging
-	return pool
-		.query(queryConfig)
-		.then((result: QueryResult) => {
-			logInfo(
-				`Query: ${JSON.stringify(queryConfig)}. Affected ${
-					result.rowCount
-				} row(s): `,
-				result.rows,
-			);
-			return result;
-		})
-		.catch((err) => {
-			console.error('Error executing database query', err.stack);
-		});
+	return pool.query(queryConfig).then((result: QueryResult) => {
+		logInfo(
+			`Query: ${JSON.stringify(queryConfig)}. Affected ${
+				result.rowCount
+			} row(s): `,
+			result.rows,
+		);
+		return result;
+	});
 }

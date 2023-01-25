@@ -66,14 +66,14 @@ export class SupportReminders extends GuStack {
 		// ---- API-triggered lambda functions ---- //
 		const searchRemindersLambda = new GuLambdaFunction(this, "search-reminders", {
 			app,
-			runtime: Runtime.NODEJS_14_X,
+			runtime: Runtime.NODEJS_12_X,
 			handler: "search-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 		});
 
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			app,
-			runtime: Runtime.NODEJS_14_X,
+			runtime: Runtime.NODEJS_12_X,
 			handler: "create-reminder-signup/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 			functionName: `support-reminders-create-reminder-signup-${this.stage}`
@@ -81,7 +81,7 @@ export class SupportReminders extends GuStack {
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
 			app,
-			runtime: Runtime.NODEJS_14_X,
+			runtime: Runtime.NODEJS_12_X,
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`
@@ -89,7 +89,7 @@ export class SupportReminders extends GuStack {
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
 			app,
-			runtime: Runtime.NODEJS_14_X,
+			runtime: Runtime.NODEJS_12_X,
 			handler: "cancel-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 			functionName: `support-reminders-cancel-reminders-${this.stage}`
@@ -143,7 +143,7 @@ export class SupportReminders extends GuStack {
 		// ---- Scheduled lambda functions ---- //
 		new GuScheduledLambda(this, "signup-exports", {
 			app,
-			runtime: Runtime.NODEJS_14_X,
+			runtime: Runtime.NODEJS_12_X,
 			handler: "signup-exports/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 			functionName: `support-reminders-signup-exports-${this.stage}`,
@@ -160,7 +160,7 @@ export class SupportReminders extends GuStack {
 
 		new GuScheduledLambda(this, "next-reminders", {
 			app,
-			runtime: Runtime.NODEJS_14_X,
+			runtime: Runtime.NODEJS_12_X,
 			handler: "next-reminders/lambda/lambda.handler",
 			fileName: "support-reminders.zip",
 			functionName: `support-reminders-next-reminders-${this.stage}`,
