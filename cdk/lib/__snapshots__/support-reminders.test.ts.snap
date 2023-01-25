@@ -322,7 +322,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503d2cb2be0005db05db147addfa52a7f38": {
+    "RestApiDeployment180EC5033edbc69159e784c2f6a48e7ddd9af4cf": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -357,7 +357,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503d2cb2be0005db05db147addfa52a7f38",
+          "Ref": "RestApiDeployment180EC5033edbc69159e784c2f6a48e7ddd9af4cf",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -1449,7 +1449,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-cancel-reminders-CODE-CDK",
+        "FunctionName": "support-reminders-cancel-reminders-CODE",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1458,7 +1458,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -1679,7 +1679,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-create-reminder-signup-CODE-CDK",
+        "FunctionName": "support-reminders-create-reminder-signup-CODE",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1688,7 +1688,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -1909,7 +1909,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-next-reminders-CODE-CDK",
+        "FunctionName": "support-reminders-next-reminders-CODE",
         "Handler": "next-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1918,7 +1918,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -2284,7 +2284,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-reactivate-recurring-reminder-CODE-CDK",
+        "FunctionName": "support-reminders-reactivate-recurring-reminder-CODE",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2293,7 +2293,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -2514,7 +2514,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-search-reminders-CODE-CDK",
+        "FunctionName": "support-reminders-search-reminders-CODE",
         "Handler": "search-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2523,7 +2523,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -2744,7 +2744,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-signup-exports-CODE-CDK",
+        "FunctionName": "support-reminders-signup-exports-CODE",
         "Handler": "signup-exports/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2753,7 +2753,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -3426,7 +3426,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC50325978d599f094bee7f49dcd96a332604": {
+    "RestApiDeployment180EC503ac3715588eef6421b86635f3cedf0c9a": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -3461,7 +3461,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC50325978d599f094bee7f49dcd96a332604",
+          "Ref": "RestApiDeployment180EC503ac3715588eef6421b86635f3cedf0c9a",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -4553,7 +4553,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-cancel-reminders-PROD-CDK",
+        "FunctionName": "support-reminders-cancel-reminders-PROD",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -4562,7 +4562,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -4783,7 +4783,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-create-reminder-signup-PROD-CDK",
+        "FunctionName": "support-reminders-create-reminder-signup-PROD",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -4792,7 +4792,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -5013,7 +5013,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-next-reminders-PROD-CDK",
+        "FunctionName": "support-reminders-next-reminders-PROD",
         "Handler": "next-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5022,7 +5022,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -5388,7 +5388,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-reactivate-recurring-reminder-PROD-CDK",
+        "FunctionName": "support-reminders-reactivate-recurring-reminder-PROD",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5397,7 +5397,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -5618,7 +5618,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-search-reminders-PROD-CDK",
+        "FunctionName": "support-reminders-search-reminders-PROD",
         "Handler": "search-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5627,7 +5627,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
@@ -5848,7 +5848,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-signup-exports-PROD-CDK",
+        "FunctionName": "support-reminders-signup-exports-PROD",
         "Handler": "signup-exports/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5857,7 +5857,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs14.x",
         "Tags": [
           {
             "Key": "App",
