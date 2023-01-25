@@ -1446,7 +1446,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -1666,7 +1666,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -1886,7 +1886,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -2239,7 +2239,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -2458,7 +2458,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -2678,7 +2678,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -4453,7 +4453,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -4673,7 +4673,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -4893,7 +4893,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -5246,7 +5246,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -5465,7 +5465,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
@@ -5685,7 +5685,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs12.x",
         "Tags": [
           {
             "Key": "App",
