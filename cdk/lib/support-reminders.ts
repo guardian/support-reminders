@@ -62,7 +62,7 @@ export class SupportReminders extends GuStack {
 		// ---- Miscellaneous constants ---- //
 		const app = "support-reminders";
 		const vpc = GuVpc.fromIdParameter(this, "vpc");
-		const runtime = Runtime.NODEJS_14_X;
+		const runtime = Runtime.NODEJS_16_X;
 		const fileName = "support-reminders.zip";
 		const securityGroups = [SecurityGroup.fromSecurityGroupId(this, "security-group", securityGroupToAccessPostgres.valueAsString)];
 		const vpcSubnets = {
