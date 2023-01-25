@@ -62,6 +62,8 @@ export class SupportReminders extends GuStack {
 		// ---- Miscellaneous constants ---- //
 		const app = "support-reminders";
 		const vpc = GuVpc.fromIdParameter(this, "vpc");
+		const runtime = Runtime.NODEJS_16_X;
+		const fileName = "support-reminders.zip";
 		const securityGroups = [SecurityGroup.fromSecurityGroupId(this, "security-group", securityGroupToAccessPostgres.valueAsString)];
 		const vpcSubnets = {
 			subnets: GuVpc.subnetsFromParameter(this),
@@ -73,46 +75,46 @@ export class SupportReminders extends GuStack {
 		// ---- API-triggered lambda functions ---- //
 		const searchRemindersLambda = new GuLambdaFunction(this, "search-reminders", {
 			app,
-			runtime: Runtime.NODEJS_12_X,
-			handler: "search-reminders/lambda/lambda.handler",
-			fileName: "support-reminders.zip",
-			functionName: `support-reminders-search-reminders-${this.stage}-CDK`,
+			runtime,
+			fileName,
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			handler: "search-reminders/lambda/lambda.handler",
+			functionName: `support-reminders-search-reminders-${this.stage}-CDK`,
 		});
 
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			app,
-			runtime: Runtime.NODEJS_12_X,
-			handler: "create-reminder-signup/lambda/lambda.handler",
-			fileName: "support-reminders.zip",
-			functionName: `support-reminders-create-reminder-signup-${this.stage}-CDK`,
+			runtime,
+			fileName,
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			handler: "create-reminder-signup/lambda/lambda.handler",
+			functionName: `support-reminders-create-reminder-signup-${this.stage}-CDK`,
 		});
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
 			app,
-			runtime: Runtime.NODEJS_12_X,
-			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
-			fileName: "support-reminders.zip",
-			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}-CDK`,
+			runtime,
+			fileName,
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
+			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}-CDK`,
 		});
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
 			app,
-			runtime: Runtime.NODEJS_12_X,
-			handler: "cancel-reminders/lambda/lambda.handler",
-			fileName: "support-reminders.zip",
-			functionName: `support-reminders-cancel-reminders-${this.stage}-CDK`,
+			runtime,
+			fileName,
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			handler: "cancel-reminders/lambda/lambda.handler",
+			functionName: `support-reminders-cancel-reminders-${this.stage}-CDK`,
 		});
 
 
@@ -163,13 +165,13 @@ export class SupportReminders extends GuStack {
 		// ---- Scheduled lambda functions ---- //
 		new GuScheduledLambda(this, "signup-exports", {
 			app,
-			runtime: Runtime.NODEJS_12_X,
-			handler: "signup-exports/lambda/lambda.handler",
-			fileName: "support-reminders.zip",
-			functionName: `support-reminders-signup-exports-${this.stage}-CDK`,
+			runtime,
+			fileName,
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			handler: "signup-exports/lambda/lambda.handler",
+			functionName: `support-reminders-signup-exports-${this.stage}-CDK`,
 			rules: [
 				{
 					schedule: Schedule.expression("cron(05 00 * * ? *)"),
@@ -183,13 +185,13 @@ export class SupportReminders extends GuStack {
 
 		new GuScheduledLambda(this, "next-reminders", {
 			app,
-			runtime: Runtime.NODEJS_12_X,
-			handler: "next-reminders/lambda/lambda.handler",
-			fileName: "support-reminders.zip",
-			functionName: `support-reminders-next-reminders-${this.stage}-CDK`,
+			runtime,
+			fileName,
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			handler: "next-reminders/lambda/lambda.handler",
+			functionName: `support-reminders-next-reminders-${this.stage}-CDK`,
 			rules: [
 				{
 					schedule: Schedule.expression("cron(05 00 * * ? *)"),
