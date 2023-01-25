@@ -29,6 +29,7 @@ export function runWithLogging(
 	queryConfig: QueryConfig,
 	pool: Pool,
 ): Promise<QueryResult> {
+	console.log('------------ Inside runWithLogging ------------');
 	// @ts-expect-error - allow error logging
 	return pool
 		.query(queryConfig)
