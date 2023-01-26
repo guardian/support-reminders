@@ -1,6 +1,6 @@
 import {GuApiGatewayWithLambdaByPath, GuScheduledLambda} from "@guardian/cdk";
 import type {GuStackProps} from "@guardian/cdk/lib/constructs/core";
-import {GuStack, GuStringParameter, GuSubnetListParameter} from "@guardian/cdk/lib/constructs/core";
+import {GuStack, GuStringParameter} from "@guardian/cdk/lib/constructs/core";
 import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
@@ -49,14 +49,6 @@ export class SupportReminders extends GuStack {
 					"Security group to access the RDS instance",
 			}
 		);
-
-		new GuSubnetListParameter(
-			this,
-			"VpcSubnets",
-			{
-				description: "Subnets for RDS access"
-			}
-		)
 
 
 		// ---- Miscellaneous constants ---- //
