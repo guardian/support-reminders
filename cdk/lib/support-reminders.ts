@@ -16,31 +16,15 @@ export interface SupportRemindersProps extends GuStackProps {
 	certificateId: string;
 	domainName: string;
 	hostedZoneId: string;
+	datalakeBucket: string;
 }
 
 export class SupportReminders extends GuStack {
 	constructor(scope: App, id: string, props: SupportRemindersProps) {
 		super(scope, id, props);
 
+
 		// ---- Parameters ---- //
-		new GuStringParameter(
-			this,
-			"DatalakeBucket",
-			{
-				description:
-					"Bucket to upload data for ingestion into BigQuery",
-			}
-		);
-
-		new GuStringParameter(
-			this,
-			"DeployBucket",
-			{
-				description:
-					"Bucket to copy files to",
-			}
-		);
-
 		const securityGroupToAccessPostgres = new GuStringParameter(
 			this,
 			"SecurityGroupToAccessPostgres",
@@ -56,6 +40,9 @@ export class SupportReminders extends GuStack {
 		const vpc = GuVpc.fromIdParameter(this, "vpc");
 		const runtime = Runtime.NODEJS_16_X;
 		const fileName = "support-reminders.zip";
+		const environment = {
+				"Bucket": props.datalakeBucket,
+		};
 		const securityGroups = [SecurityGroup.fromSecurityGroupId(this, "security-group", securityGroupToAccessPostgres.valueAsString)];
 		const vpcSubnets = {
 			subnets: GuVpc.subnetsFromParameter(this),
@@ -72,6 +59,7 @@ export class SupportReminders extends GuStack {
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			environment,
 			handler: "search-reminders/lambda/lambda.handler",
 			functionName: `support-reminders-search-reminders-${this.stage}-CDK`,
 		});
@@ -83,6 +71,7 @@ export class SupportReminders extends GuStack {
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			environment,
 			handler: "create-reminder-signup/lambda/lambda.handler",
 			functionName: `support-reminders-create-reminder-signup-${this.stage}-CDK`,
 		});
@@ -94,6 +83,7 @@ export class SupportReminders extends GuStack {
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			environment,
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
 			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}-CDK`,
 		});
@@ -105,6 +95,7 @@ export class SupportReminders extends GuStack {
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			environment,
 			handler: "cancel-reminders/lambda/lambda.handler",
 			functionName: `support-reminders-cancel-reminders-${this.stage}-CDK`,
 		});
@@ -162,6 +153,7 @@ export class SupportReminders extends GuStack {
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			environment,
 			handler: "signup-exports/lambda/lambda.handler",
 			functionName: `support-reminders-signup-exports-${this.stage}-CDK`,
 			rules: [
@@ -182,6 +174,7 @@ export class SupportReminders extends GuStack {
 			vpc,
 			vpcSubnets,
 			securityGroups,
+			environment,
 			handler: "next-reminders/lambda/lambda.handler",
 			functionName: `support-reminders-next-reminders-${this.stage}-CDK`,
 			rules: [
