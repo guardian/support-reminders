@@ -5,9 +5,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
   "Metadata": {
     "gu:cdk:constructs": [
       "GuStringParameter",
-      "GuStringParameter",
-      "GuStringParameter",
-      "GuSubnetListParameter",
       "GuVpcParameter",
       "GuSubnetListParameter",
       "GuDistributionBucketParameter",
@@ -53,14 +50,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
     },
   },
   "Parameters": {
-    "DatalakeBucket": {
-      "Description": "Bucket to upload data for ingestion into BigQuery",
-      "Type": "String",
-    },
-    "DeployBucket": {
-      "Description": "Bucket to copy files to",
-      "Type": "String",
-    },
     "DistributionBucketName": {
       "Default": "/account/services/artifact.bucket",
       "Description": "SSM parameter containing the S3 bucket name holding distribution artifacts",
@@ -79,10 +68,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Default": "/account/vpc/primary/id",
       "Description": "Virtual Private Cloud to run EC2 instances within. Should NOT be the account default VPC.",
       "Type": "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
-    },
-    "VpcSubnets": {
-      "Description": "Subnets for RDS access",
-      "Type": "List<AWS::EC2::Subnet::Id>",
     },
   },
   "Resources": {
@@ -322,7 +307,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC5033edbc69159e784c2f6a48e7ddd9af4cf": {
+    "RestApiDeployment180EC503d2cb2be0005db05db147addfa52a7f38": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -357,7 +342,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC5033edbc69159e784c2f6a48e7ddd9af4cf",
+          "Ref": "RestApiDeployment180EC503d2cb2be0005db05db147addfa52a7f38",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -1445,11 +1430,12 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "contributions-private",
             "STACK": "support",
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-cancel-reminders-CODE",
+        "FunctionName": "support-reminders-cancel-reminders-CODE-CDK",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1675,11 +1661,12 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "contributions-private",
             "STACK": "support",
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-create-reminder-signup-CODE",
+        "FunctionName": "support-reminders-create-reminder-signup-CODE-CDK",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1905,11 +1892,12 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "contributions-private",
             "STACK": "support",
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-next-reminders-CODE",
+        "FunctionName": "support-reminders-next-reminders-CODE-CDK",
         "Handler": "next-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2280,11 +2268,12 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "contributions-private",
             "STACK": "support",
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-reactivate-recurring-reminder-CODE",
+        "FunctionName": "support-reminders-reactivate-recurring-reminder-CODE-CDK",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2510,11 +2499,12 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "contributions-private",
             "STACK": "support",
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-search-reminders-CODE",
+        "FunctionName": "support-reminders-search-reminders-CODE-CDK",
         "Handler": "search-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2740,11 +2730,12 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "contributions-private",
             "STACK": "support",
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-signup-exports-CODE",
+        "FunctionName": "support-reminders-signup-exports-CODE-CDK",
         "Handler": "signup-exports/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -3109,9 +3100,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
   "Metadata": {
     "gu:cdk:constructs": [
       "GuStringParameter",
-      "GuStringParameter",
-      "GuStringParameter",
-      "GuSubnetListParameter",
       "GuVpcParameter",
       "GuSubnetListParameter",
       "GuDistributionBucketParameter",
@@ -3157,14 +3145,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
     },
   },
   "Parameters": {
-    "DatalakeBucket": {
-      "Description": "Bucket to upload data for ingestion into BigQuery",
-      "Type": "String",
-    },
-    "DeployBucket": {
-      "Description": "Bucket to copy files to",
-      "Type": "String",
-    },
     "DistributionBucketName": {
       "Default": "/account/services/artifact.bucket",
       "Description": "SSM parameter containing the S3 bucket name holding distribution artifacts",
@@ -3183,10 +3163,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Default": "/account/vpc/primary/id",
       "Description": "Virtual Private Cloud to run EC2 instances within. Should NOT be the account default VPC.",
       "Type": "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
-    },
-    "VpcSubnets": {
-      "Description": "Subnets for RDS access",
-      "Type": "List<AWS::EC2::Subnet::Id>",
     },
   },
   "Resources": {
@@ -3426,7 +3402,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503ac3715588eef6421b86635f3cedf0c9a": {
+    "RestApiDeployment180EC50325978d599f094bee7f49dcd96a332604": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -3461,7 +3437,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503ac3715588eef6421b86635f3cedf0c9a",
+          "Ref": "RestApiDeployment180EC50325978d599f094bee7f49dcd96a332604",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -4549,11 +4525,12 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "ophan-raw-support-reminders",
             "STACK": "support",
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-cancel-reminders-PROD",
+        "FunctionName": "support-reminders-cancel-reminders-PROD-CDK",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -4779,11 +4756,12 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "ophan-raw-support-reminders",
             "STACK": "support",
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-create-reminder-signup-PROD",
+        "FunctionName": "support-reminders-create-reminder-signup-PROD-CDK",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5009,11 +4987,12 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "ophan-raw-support-reminders",
             "STACK": "support",
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-next-reminders-PROD",
+        "FunctionName": "support-reminders-next-reminders-PROD-CDK",
         "Handler": "next-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5384,11 +5363,12 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "ophan-raw-support-reminders",
             "STACK": "support",
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-reactivate-recurring-reminder-PROD",
+        "FunctionName": "support-reminders-reactivate-recurring-reminder-PROD-CDK",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5614,11 +5594,12 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "ophan-raw-support-reminders",
             "STACK": "support",
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-search-reminders-PROD",
+        "FunctionName": "support-reminders-search-reminders-PROD-CDK",
         "Handler": "search-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5844,11 +5825,12 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Environment": {
           "Variables": {
             "APP": "support-reminders",
+            "Bucket": "ophan-raw-support-reminders",
             "STACK": "support",
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-signup-exports-PROD",
+        "FunctionName": "support-reminders-signup-exports-PROD-CDK",
         "Handler": "signup-exports/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
