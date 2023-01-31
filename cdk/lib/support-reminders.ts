@@ -4,7 +4,6 @@ import {GuStack, GuStringParameter} from "@guardian/cdk/lib/constructs/core";
 import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
-import {Aws} from "aws-cdk-lib";
 import {CfnBasePathMapping, CfnDomainName, Cors} from "aws-cdk-lib/aws-apigateway";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
@@ -158,7 +157,7 @@ export class SupportReminders extends GuStack {
 			functionName: `support-reminders-signup-exports-${this.stage}`,
 			rules: [
 				{
-					schedule: Schedule.expression("cron(05 00 * * ? *)"),
+					schedule: Schedule.cron({ hour: "00", minute: "05" }),
 				},
 			],
 			monitoringConfiguration: {
@@ -179,7 +178,7 @@ export class SupportReminders extends GuStack {
 			functionName: `support-reminders-next-reminders-${this.stage}`,
 			rules: [
 				{
-					schedule: Schedule.expression("cron(05 00 * * ? *)"),
+					schedule: Schedule.cron({ hour: "00", minute: "05" }),
 				},
 			],
 			monitoringConfiguration: {
@@ -227,8 +226,8 @@ export class SupportReminders extends GuStack {
 						"ssm:GetParameter"
 					],
 					resources: [
-						`arn:aws:ssm:${Aws.REGION}:${Aws.ACCOUNT_ID}:parameter/support-reminders/db-config/${props.stage}`,
-						`arn:aws:ssm:${Aws.REGION}:${Aws.ACCOUNT_ID}:parameter/support-reminders/idapi/${props.stage}/*`,
+						`arn:aws:ssm:${this.region}:${this.account}:parameter/${props.stage}/support/support-reminders/db-config`,
+						`arn:aws:ssm:${this.region}:${this.account}:parameter/${props.stage}/support/support-reminders/idapi/*`,
 					]
 				}),
 			],
