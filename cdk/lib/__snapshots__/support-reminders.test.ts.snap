@@ -1372,7 +1372,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                       {
                         "Ref": "AWS::AccountId",
                       },
-                      ":parameter/support-reminders/db-config/CODE",
+                      ":parameter/CODE/support/support-reminders/db-config",
                     ],
                   ],
                 },
@@ -1388,7 +1388,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                       {
                         "Ref": "AWS::AccountId",
                       },
-                      ":parameter/support-reminders/idapi/CODE/*",
+                      ":parameter/CODE/support/support-reminders/idapi/*",
                     ],
                   ],
                 },
@@ -4467,7 +4467,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                       {
                         "Ref": "AWS::AccountId",
                       },
-                      ":parameter/support-reminders/db-config/PROD",
+                      ":parameter/PROD/support/support-reminders/db-config",
                     ],
                   ],
                 },
@@ -4483,7 +4483,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                       {
                         "Ref": "AWS::AccountId",
                       },
-                      ":parameter/support-reminders/idapi/PROD/*",
+                      ":parameter/PROD/support/support-reminders/idapi/*",
                     ],
                   ],
                 },
