@@ -61,7 +61,7 @@ export class SupportReminders extends GuStack {
 			securityGroups,
 			environment,
 			handler: "search-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-search-reminders-${this.stage}-CDK`,
+			functionName: `support-reminders-search-reminders-${this.stage}`,
 		});
 
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
@@ -73,7 +73,7 @@ export class SupportReminders extends GuStack {
 			securityGroups,
 			environment,
 			handler: "create-reminder-signup/lambda/lambda.handler",
-			functionName: `support-reminders-create-reminder-signup-${this.stage}-CDK`,
+			functionName: `support-reminders-create-reminder-signup-${this.stage}`,
 		});
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
@@ -85,7 +85,7 @@ export class SupportReminders extends GuStack {
 			securityGroups,
 			environment,
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
-			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}-CDK`,
+			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`,
 		});
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
@@ -97,7 +97,7 @@ export class SupportReminders extends GuStack {
 			securityGroups,
 			environment,
 			handler: "cancel-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-cancel-reminders-${this.stage}-CDK`,
+			functionName: `support-reminders-cancel-reminders-${this.stage}`,
 		});
 
 
@@ -155,7 +155,7 @@ export class SupportReminders extends GuStack {
 			securityGroups,
 			environment,
 			handler: "signup-exports/lambda/lambda.handler",
-			functionName: `support-reminders-signup-exports-${this.stage}-CDK`,
+			functionName: `support-reminders-signup-exports-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.expression("cron(05 00 * * ? *)"),
@@ -176,7 +176,7 @@ export class SupportReminders extends GuStack {
 			securityGroups,
 			environment,
 			handler: "next-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-next-reminders-${this.stage}-CDK`,
+			functionName: `support-reminders-next-reminders-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.expression("cron(05 00 * * ? *)"),
