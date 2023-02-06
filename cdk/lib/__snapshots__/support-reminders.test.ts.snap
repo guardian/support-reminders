@@ -60,7 +60,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Description": "A list of private subnets",
       "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
     },
-    "SecurityGroupToAccessPostgres": {
+    "SecurityGroupToAccessPostgresCDK": {
       "Description": "Security group to access the RDS instance",
       "Type": "String",
     },
@@ -143,78 +143,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "TreatMissingData": "notBreaching",
       },
       "Type": "AWS::CloudWatch::Alarm",
-    },
-    "ApiMapping": {
-      "Properties": {
-        "DomainName": {
-          "Ref": "DomainName",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-        "Stage": {
-          "Ref": "RestApiDeploymentStageprod3855DE66",
-        },
-      },
-      "Type": "AWS::ApiGateway::BasePathMapping",
-    },
-    "DNSRecord": {
-      "Properties": {
-        "HostedZoneId": "Z3KO35ELNWZMSX",
-        "Name": "reminders-code.support.guardianapis.com",
-        "ResourceRecords": [
-          {
-            "Fn::GetAtt": [
-              "DomainName",
-              "RegionalDomainName",
-            ],
-          },
-        ],
-        "TTL": "60",
-        "Type": "CNAME",
-      },
-      "Type": "AWS::Route53::RecordSet",
-    },
-    "DomainName": {
-      "Properties": {
-        "DomainName": "reminders-code.support.guardianapis.com",
-        "EndpointConfiguration": {
-          "Types": [
-            "REGIONAL",
-          ],
-        },
-        "RegionalCertificateArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:aws:acm:eu-west-1:",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":certificate/b384a6a0-2f54-4874-b99b-96eeff96c009",
-            ],
-          ],
-        },
-        "Tags": [
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "CODE",
-          },
-        ],
-      },
-      "Type": "AWS::ApiGateway::DomainName",
     },
     "RestApi0C43BF4B": {
       "Properties": {
@@ -307,7 +235,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC5033edbc69159e784c2f6a48e7ddd9af4cf": {
+    "RestApiDeployment180EC503d2cb2be0005db05db147addfa52a7f38": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -342,7 +270,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC5033edbc69159e784c2f6a48e7ddd9af4cf",
+          "Ref": "RestApiDeployment180EC503d2cb2be0005db05db147addfa52a7f38",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -1435,7 +1363,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-cancel-reminders-CODE",
+        "FunctionName": "support-reminders-cancel-reminders-CODE-CDK",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1471,7 +1399,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -1666,7 +1594,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-create-reminder-signup-CODE",
+        "FunctionName": "support-reminders-create-reminder-signup-CODE-CDK",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1702,7 +1630,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -1897,7 +1825,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-next-reminders-CODE",
+        "FunctionName": "support-reminders-next-reminders-CODE-CDK",
         "Handler": "next-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -1933,7 +1861,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -2273,7 +2201,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-reactivate-recurring-reminder-CODE",
+        "FunctionName": "support-reminders-reactivate-recurring-reminder-CODE-CDK",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2309,7 +2237,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -2504,7 +2432,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-search-reminders-CODE",
+        "FunctionName": "support-reminders-search-reminders-CODE-CDK",
         "Handler": "search-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2540,7 +2468,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -2735,7 +2663,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "STAGE": "CODE",
           },
         },
-        "FunctionName": "support-reminders-signup-exports-CODE",
+        "FunctionName": "support-reminders-signup-exports-CODE-CDK",
         "Handler": "signup-exports/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -2771,7 +2699,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -3155,7 +3083,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Description": "A list of private subnets",
       "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
     },
-    "SecurityGroupToAccessPostgres": {
+    "SecurityGroupToAccessPostgresCDK": {
       "Description": "Security group to access the RDS instance",
       "Type": "String",
     },
@@ -3238,78 +3166,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "TreatMissingData": "notBreaching",
       },
       "Type": "AWS::CloudWatch::Alarm",
-    },
-    "ApiMapping": {
-      "Properties": {
-        "DomainName": {
-          "Ref": "DomainName",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-        "Stage": {
-          "Ref": "RestApiDeploymentStageprod3855DE66",
-        },
-      },
-      "Type": "AWS::ApiGateway::BasePathMapping",
-    },
-    "DNSRecord": {
-      "Properties": {
-        "HostedZoneId": "Z3KO35ELNWZMSX",
-        "Name": "reminders.support.guardianapis.com",
-        "ResourceRecords": [
-          {
-            "Fn::GetAtt": [
-              "DomainName",
-              "RegionalDomainName",
-            ],
-          },
-        ],
-        "TTL": "60",
-        "Type": "CNAME",
-      },
-      "Type": "AWS::Route53::RecordSet",
-    },
-    "DomainName": {
-      "Properties": {
-        "DomainName": "reminders.support.guardianapis.com",
-        "EndpointConfiguration": {
-          "Types": [
-            "REGIONAL",
-          ],
-        },
-        "RegionalCertificateArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:aws:acm:eu-west-1:",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":certificate/b384a6a0-2f54-4874-b99b-96eeff96c009",
-            ],
-          ],
-        },
-        "Tags": [
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-      },
-      "Type": "AWS::ApiGateway::DomainName",
     },
     "RestApi0C43BF4B": {
       "Properties": {
@@ -3402,7 +3258,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503ac3715588eef6421b86635f3cedf0c9a": {
+    "RestApiDeployment180EC50325978d599f094bee7f49dcd96a332604": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -3437,7 +3293,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503ac3715588eef6421b86635f3cedf0c9a",
+          "Ref": "RestApiDeployment180EC50325978d599f094bee7f49dcd96a332604",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -4530,7 +4386,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-cancel-reminders-PROD",
+        "FunctionName": "support-reminders-cancel-reminders-PROD-CDK",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -4566,7 +4422,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -4761,7 +4617,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-create-reminder-signup-PROD",
+        "FunctionName": "support-reminders-create-reminder-signup-PROD-CDK",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -4797,7 +4653,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -4992,7 +4848,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-next-reminders-PROD",
+        "FunctionName": "support-reminders-next-reminders-PROD-CDK",
         "Handler": "next-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5028,7 +4884,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -5368,7 +5224,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-reactivate-recurring-reminder-PROD",
+        "FunctionName": "support-reminders-reactivate-recurring-reminder-PROD-CDK",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5404,7 +5260,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -5599,7 +5455,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-search-reminders-PROD",
+        "FunctionName": "support-reminders-search-reminders-PROD-CDK",
         "Handler": "search-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5635,7 +5491,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
@@ -5830,7 +5686,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "STAGE": "PROD",
           },
         },
-        "FunctionName": "support-reminders-signup-exports-PROD",
+        "FunctionName": "support-reminders-signup-exports-PROD-CDK",
         "Handler": "signup-exports/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5866,7 +5722,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "VpcConfig": {
           "SecurityGroupIds": [
             {
-              "Ref": "SecurityGroupToAccessPostgres",
+              "Ref": "SecurityGroupToAccessPostgresCDK",
             },
           ],
           "SubnetIds": {
