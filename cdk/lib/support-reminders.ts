@@ -46,7 +46,7 @@ export class SupportReminders extends GuStack {
 		// ---- Miscellaneous constants ---- //
 		const app = "support-reminders";
 		const vpc = GuVpc.fromIdParameter(this, "vpc");
-		const runtime = Runtime.NODEJS_12_X;
+		const runtime = Runtime.NODEJS_16_X;
 		const fileName = "support-reminders.zip";
 		const environment = {
 				"Bucket": props.datalakeBucket,
