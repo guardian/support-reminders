@@ -48,55 +48,40 @@ export class SupportReminders extends GuStack {
 		};
 		const awsLambdaVpcAccessExecutionRole =
 			ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")
+		const sharedLambdaProps = {
+			app,
+			runtime,
+			fileName,
+			vpc,
+			vpcSubnets,
+			securityGroups,
+			environment,
+		};
 
 
 		// ---- API-triggered lambda functions ---- //
 		const searchRemindersLambda = new GuLambdaFunction(this, "search-reminders", {
-			app,
-			runtime,
-			fileName,
-			vpc,
-			vpcSubnets,
-			securityGroups,
-			environment,
 			handler: "search-reminders/lambda/lambda.handler",
 			functionName: `support-reminders-search-reminders-${this.stage}`,
+			...sharedLambdaProps,
 		});
 
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
-			app,
-			runtime,
-			fileName,
-			vpc,
-			vpcSubnets,
-			securityGroups,
-			environment,
 			handler: "create-reminder-signup/lambda/lambda.handler",
 			functionName: `support-reminders-create-reminder-signup-${this.stage}`,
+			...sharedLambdaProps,
 		});
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
-			app,
-			runtime,
-			fileName,
-			vpc,
-			vpcSubnets,
-			securityGroups,
-			environment,
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
 			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`,
+			...sharedLambdaProps,
 		});
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
-			app,
-			runtime,
-			fileName,
-			vpc,
-			vpcSubnets,
-			securityGroups,
-			environment,
 			handler: "cancel-reminders/lambda/lambda.handler",
 			functionName: `support-reminders-cancel-reminders-${this.stage}`,
+			...sharedLambdaProps,
 		});
 
 
@@ -146,13 +131,6 @@ export class SupportReminders extends GuStack {
 
 		// ---- Scheduled lambda functions ---- //
 		new GuScheduledLambda(this, "signup-exports", {
-			app,
-			runtime,
-			fileName,
-			vpc,
-			vpcSubnets,
-			securityGroups,
-			environment,
 			handler: "signup-exports/lambda/lambda.handler",
 			functionName: `support-reminders-signup-exports-${this.stage}`,
 			rules: [
@@ -164,16 +142,10 @@ export class SupportReminders extends GuStack {
 				snsTopicName: "conversion-dev",
 				toleratedErrorPercentage: 1,
 			},
+			...sharedLambdaProps,
 		});
 
 		new GuScheduledLambda(this, "next-reminders", {
-			app,
-			runtime,
-			fileName,
-			vpc,
-			vpcSubnets,
-			securityGroups,
-			environment,
 			handler: "next-reminders/lambda/lambda.handler",
 			functionName: `support-reminders-next-reminders-${this.stage}`,
 			rules: [
@@ -185,6 +157,7 @@ export class SupportReminders extends GuStack {
 				snsTopicName: "conversion-dev",
 				toleratedErrorPercentage: 1,
 			},
+			...sharedLambdaProps,
 		});
 
 
