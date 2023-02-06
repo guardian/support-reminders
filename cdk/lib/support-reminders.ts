@@ -26,10 +26,10 @@ export class SupportReminders extends GuStack {
 
 
 		// ---- CFN template resources ---- //
-		// const yamlTemplateFilePath = path.join(__dirname, "../..", "cfn.yaml");
-		// new CfnInclude(this, "YamlTemplate", {
-		// 	templateFile: yamlTemplateFilePath,
-		// });
+		const yamlTemplateFilePath = path.join(__dirname, "../..", "cfn.yaml");
+		new CfnInclude(this, "YamlTemplate", {
+			templateFile: yamlTemplateFilePath,
+		});
 
 
 		// ---- Parameters ---- //
@@ -46,7 +46,7 @@ export class SupportReminders extends GuStack {
 		// ---- Miscellaneous constants ---- //
 		const app = "support-reminders";
 		const vpc = GuVpc.fromIdParameter(this, "vpc");
-		const runtime = Runtime.NODEJS_16_X;
+		const runtime = Runtime.NODEJS_12_X;
 		const fileName = "support-reminders.zip";
 		const environment = {
 				"Bucket": props.datalakeBucket,
@@ -210,6 +210,8 @@ export class SupportReminders extends GuStack {
 					resources: [
 						`arn:aws:ssm:${this.region}:${this.account}:parameter/support-reminders/db-config/${props.stage}`,
 						`arn:aws:ssm:${this.region}:${this.account}:parameter/support-reminders/idapi/${props.stage}/*`,
+						`arn:aws:ssm:${this.region}:${this.account}:parameter/${props.stage}/support/support-reminders/db-config`,
+						`arn:aws:ssm:${this.region}:${this.account}:parameter/${props.stage}/support/support-reminders/idapi/*`,
 					]
 				}),
 			],
