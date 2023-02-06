@@ -36,7 +36,7 @@ const dbConnectionPoolPromise: Promise<Pool> = getDatabaseParamsFromSSM(
 ).then(createDatabaseConnectionPool);
 const identityAccessTokenPromise: Promise<string> = getParamFromSSM(
 	ssm,
-	`/${ssmStage}/support/support-reminders/idapi/accessToken`,
+	`/support-reminders/idapi/${ssmStage}/accessToken`,
 );
 
 export const run = async (
