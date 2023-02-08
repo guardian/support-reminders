@@ -1,4 +1,3 @@
-import path from "path";
 import {GuApiGatewayWithLambdaByPath, GuScheduledLambda} from "@guardian/cdk";
 import type {GuStackProps} from "@guardian/cdk/lib/constructs/core";
 import {GuStack, GuStringParameter} from "@guardian/cdk/lib/constructs/core";
@@ -11,7 +10,6 @@ import {Schedule} from "aws-cdk-lib/aws-events";
 import {Effect, ManagedPolicy, Policy, PolicyStatement} from "aws-cdk-lib/aws-iam";
 import {Runtime} from "aws-cdk-lib/aws-lambda";
 import {CfnRecordSet} from "aws-cdk-lib/aws-route53";
-import {CfnInclude} from "aws-cdk-lib/cloudformation-include";
 
 export interface SupportRemindersProps extends GuStackProps {
 	certificateId: string;
@@ -23,13 +21,6 @@ export interface SupportRemindersProps extends GuStackProps {
 export class SupportReminders extends GuStack {
 	constructor(scope: App, id: string, props: SupportRemindersProps) {
 		super(scope, id, props);
-
-
-		// ---- CFN template resources ---- //
-		const yamlTemplateFilePath = path.join(__dirname, "../..", "cfn.yaml");
-		new CfnInclude(this, "YamlTemplate", {
-			templateFile: yamlTemplateFilePath,
-		});
 
 
 		// ---- Parameters ---- //
