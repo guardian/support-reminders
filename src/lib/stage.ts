@@ -3,5 +3,5 @@ export function isRunningLocally(): boolean {
 }
 
 export function isProd(): boolean {
-	return process.env.Stage === 'PROD';
+	return process.env.Stage === 'PROD' || process.env.STAGE === 'PROD';
 }
