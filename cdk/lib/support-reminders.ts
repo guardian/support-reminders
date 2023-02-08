@@ -49,7 +49,8 @@ export class SupportReminders extends GuStack {
 		const runtime = Runtime.NODEJS_12_X;
 		const fileName = "support-reminders.zip";
 		const environment = {
-				"Bucket": props.datalakeBucket,
+			"Bucket": props.datalakeBucket,
+			"Stage": this.stage,
 		};
 		const securityGroups = [SecurityGroup.fromSecurityGroupId(this, "security-group", securityGroupToAccessPostgres.valueAsString)];
 		const vpcSubnets = {
