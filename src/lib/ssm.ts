@@ -6,20 +6,24 @@ import { isProd, isRunningLocally } from './stage';
 export const ssmStage = isProd() ? 'PROD' : 'CODE';
 
 export async function getDatabaseParamsFromSSM(ssm: SSM): Promise<DBConfig> {
-	const dbPath = `/support-reminders/db-config/${ssmStage}`;
+	const dbConfigPath = `/support-reminders/db-config/${ssmStage}`;
 
 	const ssmResponse = await ssm
 		.getParametersByPath({
-			Path: dbPath,
+			Path: dbConfigPath,
 			WithDecryption: true,
 		})
 		.promise();
 
 	if (ssmResponse.Parameters) {
 		const p = ssmResponse.Parameters;
-		const url = p.find(({ Name }) => Name === `${dbPath}/url`);
-		const password = p.find(({ Name }) => Name === `${dbPath}/password`);
-		const username = p.find(({ Name }) => Name === `${dbPath}/username`);
+		const url = p.find(({ Name }) => Name === `${dbConfigPath}/url`);
+		const password = p.find(
+			({ Name }) => Name === `${dbConfigPath}/password`,
+		);
+		const username = p.find(
+			({ Name }) => Name === `${dbConfigPath}/username`,
+		);
 
 		if (
 			url &&
@@ -39,7 +43,7 @@ export async function getDatabaseParamsFromSSM(ssm: SSM): Promise<DBConfig> {
 		}
 	}
 
-	throw new Error(`Could not get config from SSM path ${dbPath}`);
+	throw new Error(`Could not get config from SSM path ${dbConfigPath}`);
 }
 
 export async function getParamFromSSM(ssm: SSM, path: string): Promise<string> {

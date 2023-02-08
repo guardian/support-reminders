@@ -127,6 +127,7 @@ const createSignup = async <T extends BaseSignupRequest>(
 			identityResult.identityId,
 			pool,
 		);
+		console.log('dbResult: ', dbResult);
 
 		if (dbResult.rowCount !== 1) {
 			return {
