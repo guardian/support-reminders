@@ -202,19 +202,19 @@ Resources:
         Fn::GetAtt:
           - NextRemindersLambdaSchedule
           - Arn
-  DomainName:
-    Type: AWS::ApiGateway::DomainName
-    Properties:
-      RegionalCertificateArn:
-        Ref: CertificateArn
-      DomainName:
-        Fn::FindInMap:
-          - StageMap
-          - Ref: Stage
-          - DomainName
-      EndpointConfiguration:
-        Types:
-          - REGIONAL
+#  DomainName:
+#    Type: AWS::ApiGateway::DomainName
+#    Properties:
+#      RegionalCertificateArn:
+#        Ref: CertificateArn
+#      DomainName:
+#        Fn::FindInMap:
+#          - StageMap
+#          - Ref: Stage
+#          - DomainName
+#      EndpointConfiguration:
+#        Types:
+#          - REGIONAL
   NextRemindersLambdaSchedule:
     Type: AWS::Events::Rule
     Properties:
@@ -379,23 +379,23 @@ Resources:
       Tags:
         - Key: lambda:createdBy
           Value: SAM
-  DNSRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneName: support.guardianapis.com.
-      Name:
-        Fn::FindInMap:
-          - StageMap
-          - Ref: Stage
-          - DomainName
-      Comment:
-        Fn::Sub: CNAME for contributions reminders endpoint ${Stage}
-      Type: CNAME
-      TTL: '120'
-      ResourceRecords:
-        - Fn::GetAtt:
-            - DomainName
-            - RegionalDomainName
+#  DNSRecord:
+#    Type: AWS::Route53::RecordSet
+#    Properties:
+#      HostedZoneName: support.guardianapis.com.
+#      Name:
+#        Fn::FindInMap:
+#          - StageMap
+#          - Ref: Stage
+#          - DomainName
+#      Comment:
+#        Fn::Sub: CNAME for contributions reminders endpoint ${Stage}
+#      Type: CNAME
+#      TTL: '120'
+#      ResourceRecords:
+#        - Fn::GetAtt:
+#            - DomainName
+#            - RegionalDomainName
   ServerlessRestApiDeployment35164ab9c6:
     Type: AWS::ApiGateway::Deployment
     Properties:
@@ -636,16 +636,16 @@ Resources:
       Tags:
         - Key: lambda:createdBy
           Value: SAM
-  BasePathMapping:
-    Type: AWS::ApiGateway::BasePathMapping
-    Properties:
-      RestApiId:
-        Ref: ServerlessRestApi
-      DomainName:
-        Ref: DomainName
-      Stage:
-        Fn::Sub: Prod
-    DependsOn: ServerlessRestApiProdStage
+#  BasePathMapping:
+#    Type: AWS::ApiGateway::BasePathMapping
+#    Properties:
+#      RestApiId:
+#        Ref: ServerlessRestApi
+#      DomainName:
+#        Ref: DomainName
+#      Stage:
+#        Fn::Sub: Prod
+#    DependsOn: ServerlessRestApiProdStage
   CreateReminderSignupLambdaCreateRecurringPermissionProd:
     Type: AWS::Lambda::Permission
     Properties:

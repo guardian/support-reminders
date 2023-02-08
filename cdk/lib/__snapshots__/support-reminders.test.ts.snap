@@ -263,18 +263,15 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::CloudWatch::Alarm",
     },
     "BasePathMapping": {
-      "DependsOn": [
-        "ServerlessRestApiProdStage",
-      ],
       "Properties": {
         "DomainName": {
           "Ref": "DomainName",
         },
         "RestApiId": {
-          "Ref": "ServerlessRestApi",
+          "Ref": "RestApi0C43BF4B",
         },
         "Stage": {
-          "Fn::Sub": "Prod",
+          "Ref": "RestApiDeploymentStageprod3855DE66",
         },
       },
       "Type": "AWS::ApiGateway::BasePathMapping",
@@ -698,19 +695,8 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
     },
     "DNSRecord": {
       "Properties": {
-        "Comment": {
-          "Fn::Sub": "CNAME for contributions reminders endpoint \${Stage}",
-        },
-        "HostedZoneName": "support.guardianapis.com.",
-        "Name": {
-          "Fn::FindInMap": [
-            "StageMap",
-            {
-              "Ref": "Stage",
-            },
-            "DomainName",
-          ],
-        },
+        "HostedZoneId": "Z3KO35ELNWZMSX",
+        "Name": "reminders-code.support.guardianapis.com",
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
@@ -719,29 +705,30 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             ],
           },
         ],
-        "TTL": "120",
+        "TTL": "60",
         "Type": "CNAME",
       },
       "Type": "AWS::Route53::RecordSet",
     },
     "DomainName": {
       "Properties": {
-        "DomainName": {
-          "Fn::FindInMap": [
-            "StageMap",
-            {
-              "Ref": "Stage",
-            },
-            "DomainName",
-          ],
-        },
+        "DomainName": "reminders-code.support.guardianapis.com",
         "EndpointConfiguration": {
           "Types": [
             "REGIONAL",
           ],
         },
         "RegionalCertificateArn": {
-          "Ref": "CertificateArn",
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:acm:eu-west-1:",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":certificate/b384a6a0-2f54-4874-b99b-96eeff96c009",
+            ],
+          ],
         },
         "Tags": [
           {
@@ -5188,18 +5175,15 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::CloudWatch::Alarm",
     },
     "BasePathMapping": {
-      "DependsOn": [
-        "ServerlessRestApiProdStage",
-      ],
       "Properties": {
         "DomainName": {
           "Ref": "DomainName",
         },
         "RestApiId": {
-          "Ref": "ServerlessRestApi",
+          "Ref": "RestApi0C43BF4B",
         },
         "Stage": {
-          "Fn::Sub": "Prod",
+          "Ref": "RestApiDeploymentStageprod3855DE66",
         },
       },
       "Type": "AWS::ApiGateway::BasePathMapping",
@@ -5623,19 +5607,8 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
     },
     "DNSRecord": {
       "Properties": {
-        "Comment": {
-          "Fn::Sub": "CNAME for contributions reminders endpoint \${Stage}",
-        },
-        "HostedZoneName": "support.guardianapis.com.",
-        "Name": {
-          "Fn::FindInMap": [
-            "StageMap",
-            {
-              "Ref": "Stage",
-            },
-            "DomainName",
-          ],
-        },
+        "HostedZoneId": "Z3KO35ELNWZMSX",
+        "Name": "reminders.support.guardianapis.com",
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
@@ -5644,29 +5617,30 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             ],
           },
         ],
-        "TTL": "120",
+        "TTL": "60",
         "Type": "CNAME",
       },
       "Type": "AWS::Route53::RecordSet",
     },
     "DomainName": {
       "Properties": {
-        "DomainName": {
-          "Fn::FindInMap": [
-            "StageMap",
-            {
-              "Ref": "Stage",
-            },
-            "DomainName",
-          ],
-        },
+        "DomainName": "reminders.support.guardianapis.com",
         "EndpointConfiguration": {
           "Types": [
             "REGIONAL",
           ],
         },
         "RegionalCertificateArn": {
-          "Ref": "CertificateArn",
+          "Fn::Join": [
+            "",
+            [
+              "arn:aws:acm:eu-west-1:",
+              {
+                "Ref": "AWS::AccountId",
+              },
+              ":certificate/b384a6a0-2f54-4874-b99b-96eeff96c009",
+            ],
+          ],
         },
         "Tags": [
           {
