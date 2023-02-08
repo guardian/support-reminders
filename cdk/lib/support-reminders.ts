@@ -181,7 +181,7 @@ export class SupportReminders extends GuStack {
 		// 	}
 		// });
 		//
-		// new CfnBasePathMapping(this, "ApiMapping", {
+		// new CfnBasePathMapping(this, "BasePathMapping", {
 		// 	domainName: cfnDomainName.ref,
 		// 	restApiId: supportRemindersApi.api.restApiId,
 		// 	stage: supportRemindersApi.api.deploymentStage.stageName,
