@@ -140,7 +140,7 @@ export class SupportReminders extends GuStack {
 
 
 		// ---- Scheduled lambda functions ---- //
-		new GuScheduledLambda(this, "signup-exports", {
+		const signupExportsLambda = new GuScheduledLambda(this, "signup-exports", {
 			handler: "signup-exports/lambda/lambda.handler",
 			functionName: `support-reminders-signup-exports-${this.stage}-CDK`,
 			rules: [
@@ -155,7 +155,7 @@ export class SupportReminders extends GuStack {
 			...sharedLambdaProps,
 		});
 
-		new GuScheduledLambda(this, "next-reminders", {
+		const nextRemindersLambda = new GuScheduledLambda(this, "next-reminders", {
 			handler: "next-reminders/lambda/lambda.handler",
 			functionName: `support-reminders-next-reminders-${this.stage}-CDK`,
 			rules: [
@@ -236,7 +236,9 @@ export class SupportReminders extends GuStack {
 			searchRemindersLambda,
 			createRemindersSignupLambda,
 			reactivateRecurringReminderLambda,
-			cancelRemindersLambda
+			cancelRemindersLambda,
+			signupExportsLambda,
+			nextRemindersLambda
 		]
 
 		lambdaFunctions.forEach((l: GuLambdaFunction) => {
