@@ -2313,6 +2313,12 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           {
             "Ref": "cancelremindersServiceRole2D334903",
           },
+          {
+            "Ref": "signupexportsServiceRole7E76A5F3",
+          },
+          {
+            "Ref": "nextremindersServiceRole39CF7574",
+          },
         ],
       },
       "Type": "AWS::IAM::Policy",
@@ -2410,6 +2416,12 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           },
           {
             "Ref": "cancelremindersServiceRole2D334903",
+          },
+          {
+            "Ref": "signupexportsServiceRole7E76A5F3",
+          },
+          {
+            "Ref": "nextremindersServiceRole39CF7574",
           },
         ],
       },
@@ -7231,6 +7243,12 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           {
             "Ref": "cancelremindersServiceRole2D334903",
           },
+          {
+            "Ref": "signupexportsServiceRole7E76A5F3",
+          },
+          {
+            "Ref": "nextremindersServiceRole39CF7574",
+          },
         ],
       },
       "Type": "AWS::IAM::Policy",
@@ -7328,6 +7346,12 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           },
           {
             "Ref": "cancelremindersServiceRole2D334903",
+          },
+          {
+            "Ref": "signupexportsServiceRole7E76A5F3",
+          },
+          {
+            "Ref": "nextremindersServiceRole39CF7574",
           },
         ],
       },
