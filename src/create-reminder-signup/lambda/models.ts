@@ -2,7 +2,7 @@ import {
 	createDetailedValidator,
 	registerType,
 } from 'typecheck.macro/dist/typecheck.macro';
-import { isValidEmail } from '../../lib/models';
+import { emailIsShortEnoughForIdentity, isValidEmail } from '../../lib/models';
 
 // Database model
 export interface BaseSignup {
@@ -64,7 +64,11 @@ export const oneOffSignupValidator = createDetailedValidator<OneOffSignupRequest
 	{
 		constraints: {
 			Email: (email: string) =>
-				isValidEmail(email) ? null : 'Invalid email',
+				!isValidEmail(email)
+					? 'Invalid email address'
+					: !emailIsShortEnoughForIdentity(email)
+					? 'Email address is too long'
+					: null,
 			DateString: (dateString: string) =>
 				isValidDateString(dateString) ? null : 'Invalid date',
 		},
@@ -77,7 +81,11 @@ export const recurringSignupValidator = createDetailedValidator<RecurringSignupR
 	{
 		constraints: {
 			Email: (email: string) =>
-				isValidEmail(email) ? null : 'Invalid email',
+				!isValidEmail(email)
+					? 'Invalid email address'
+					: !emailIsShortEnoughForIdentity(email)
+					? 'Email address is too long'
+					: null,
 			DateString: (dateString: string) =>
 				isValidDateString(dateString) ? null : 'Invalid date',
 		},
