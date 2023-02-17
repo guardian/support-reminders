@@ -11,4 +11,10 @@ export function isValidEmail(email: string): boolean {
 	return re.test(email.toLowerCase());
 }
 
+export function emailIsShortEnoughForIdentity(email: string): boolean {
+	// Identity’s guest creation endpoint errors if the provided email address
+	// is more than 100 characters long
+	return email.length <= 100;
+}
+
 export type ValidationErrors = Array<[string, unknown, IR.IR | string]>;
