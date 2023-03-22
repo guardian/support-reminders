@@ -11,6 +11,18 @@ jobs:
     if: github.actor == 'dependabot[bot]'
     name: test dependabot
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       # ---- Logging ---- #
       - name: Env
@@ -40,10 +52,24 @@ jobs:
         run: yarn
         working-directory: cdk
 
+      # ---- Build ---- #
+      - name: Build - support-reminders
+        run: yarn run build
+        working-directory: /
+
+
+      - name: Build - CDK
+        run: yarn run build
+        working-directory: cdk
+
       # ---- Test ---- #
       - name: Test - support-reminders
         run: yarn run test
         working-directory: /
+        env:
+          TEST_DB_URL: postgresql://localhost/postgres
+          TEST_DB_USER: postgres
+          TEST_DB_PASSWORD: postgres
 
       - name: Test - CDK
         run: yarn run test
