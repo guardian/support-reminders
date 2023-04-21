@@ -22,9 +22,14 @@ export interface RecurringSignup extends BaseSignup {
 }
 
 // API request models
-export type ReminderPlatform = 'WEB' | 'AMP' | 'MMA' | 'SUPPORT';
+export type ReminderPlatform = 'WEB' | 'AMP' | 'MMA' | 'SUPPORT' | 'EMAIL';
 
-export type ReminderComponent = 'EPIC' | 'BANNER' | 'THANKYOU' | 'CANCELLATION';
+export type ReminderComponent =
+	| 'EPIC'
+	| 'BANNER'
+	| 'THANKYOU'
+	| 'CANCELLATION'
+	| 'EMAIL';
 
 export type ReminderStage = 'PRE' | 'POST' | 'WINBACK';
 
