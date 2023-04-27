@@ -35,7 +35,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "GuLambdaFunction",
       "GuLambdaFunction",
       "GuLambdaFunction",
-      "GuLambdaFunction",
       "GuApiGatewayWithLambdaByPath",
       "GuApiGateway5xxPercentageAlarm",
       "GuScheduledLambda",
@@ -1275,7 +1274,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503d2cb2be0005db05db147addfa52a7f38": {
+    "RestApiDeployment180EC5030e5e0446df9a2a08d73b70685fafc452": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -1292,9 +1291,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "RestApireactivateOPTIONS263B776D",
         "RestApireactivatePOSTF57FC066",
         "RestApireactivateDE09DAB5",
-        "RestApisearchOPTIONSDF398734",
-        "RestApisearchPOST5D2A9A4A",
-        "RestApisearchA0D22340",
       ],
       "Properties": {
         "Description": "Automatically created by the RestApi construct",
@@ -1310,7 +1306,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503d2cb2be0005db05db147addfa52a7f38",
+          "Ref": "RestApiDeployment180EC5030e5e0446df9a2a08d73b70685fafc452",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -2115,178 +2111,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       },
       "Type": "AWS::ApiGateway::Method",
     },
-    "RestApisearchA0D22340": {
-      "Properties": {
-        "ParentId": {
-          "Fn::GetAtt": [
-            "RestApi0C43BF4B",
-            "RootResourceId",
-          ],
-        },
-        "PathPart": "search",
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Resource",
-    },
-    "RestApisearchOPTIONSDF398734": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "Integration": {
-          "IntegrationResponses": [
-            {
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-              },
-              "StatusCode": "204",
-            },
-          ],
-          "RequestTemplates": {
-            "application/json": "{ statusCode: 200 }",
-          },
-          "Type": "MOCK",
-        },
-        "MethodResponses": [
-          {
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true,
-              "method.response.header.Access-Control-Allow-Origin": true,
-            },
-            "StatusCode": "204",
-          },
-        ],
-        "ResourceId": {
-          "Ref": "RestApisearchA0D22340",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApisearchPOST5D2A9A4A": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "POST",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "searchreminders4A6FC4FF",
-                    "Arn",
-                  ],
-                },
-                "/invocations",
-              ],
-            ],
-          },
-        },
-        "ResourceId": {
-          "Ref": "RestApisearchA0D22340",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApisearchPOSTApiPermissionSupportRemindersCODERestApi2446198FPOSTsearch072316B8": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "searchreminders4A6FC4FF",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/",
-              {
-                "Ref": "RestApiDeploymentStageprod3855DE66",
-              },
-              "/POST/search",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "RestApisearchPOSTApiPermissionTestSupportRemindersCODERestApi2446198FPOSTsearch11E5F691": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "searchreminders4A6FC4FF",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/test-invoke-stage/POST/search",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
     "S3inlinepolicy3B07399A": {
       "Properties": {
         "PolicyDocument": {
@@ -2301,9 +2125,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         },
         "PolicyName": "S3inlinepolicy3B07399A",
         "Roles": [
-          {
-            "Ref": "searchremindersServiceRole21E2FC67",
-          },
           {
             "Ref": "createreminderssignupServiceRole14AD0F8F",
           },
@@ -2405,9 +2226,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         },
         "PolicyName": "SSMinlinepolicyB56CB2A2",
         "Roles": [
-          {
-            "Ref": "searchremindersServiceRole21E2FC67",
-          },
           {
             "Ref": "createreminderssignupServiceRole14AD0F8F",
           },
@@ -4317,238 +4135,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
-    "searchreminders4A6FC4FF": {
-      "DependsOn": [
-        "searchremindersServiceRoleDefaultPolicy16C0FEC5",
-        "searchremindersServiceRole21E2FC67",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Ref": "DistributionBucketName",
-          },
-          "S3Key": "support/CODE/support-reminders/support-reminders.zip",
-        },
-        "Environment": {
-          "Variables": {
-            "APP": "support-reminders",
-            "Bucket": "contributions-private",
-            "STACK": "support",
-            "STAGE": "CODE",
-            "Stage": "CODE",
-          },
-        },
-        "FunctionName": "support-reminders-search-reminders-CODE-CDK",
-        "Handler": "search-reminders/lambda/lambda.handler",
-        "MemorySize": 512,
-        "Role": {
-          "Fn::GetAtt": [
-            "searchremindersServiceRole21E2FC67",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs12.x",
-        "Tags": [
-          {
-            "Key": "App",
-            "Value": "support-reminders",
-          },
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "CODE",
-          },
-        ],
-        "Timeout": 30,
-        "VpcConfig": {
-          "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
-          ],
-          "SubnetIds": {
-            "Ref": "PrivateSubnets",
-          },
-        },
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "searchremindersServiceRole21E2FC67": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
-              ],
-            ],
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "App",
-            "Value": "support-reminders",
-          },
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "CODE",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "searchremindersServiceRoleDefaultPolicy16C0FEC5": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":s3:::",
-                      {
-                        "Ref": "DistributionBucketName",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":s3:::",
-                      {
-                        "Ref": "DistributionBucketName",
-                      },
-                      "/support/CODE/support-reminders/support-reminders.zip",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": "ssm:GetParametersByPath",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:aws:ssm:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":parameter/CODE/support/support-reminders",
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": [
-                "ssm:GetParameters",
-                "ssm:GetParameter",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:aws:ssm:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":parameter/CODE/support/support-reminders/*",
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "searchremindersServiceRoleDefaultPolicy16C0FEC5",
-        "Roles": [
-          {
-            "Ref": "searchremindersServiceRole21E2FC67",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
     "signupexportsDBFAB572": {
       "DependsOn": [
         "signupexportsServiceRoleDefaultPolicy7B14F7DA",
@@ -4962,7 +4548,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "GuVpcParameter",
       "GuSubnetListParameter",
       "GuDistributionBucketParameter",
-      "GuLambdaFunction",
       "GuLambdaFunction",
       "GuLambdaFunction",
       "GuLambdaFunction",
@@ -6205,7 +5790,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC50325978d599f094bee7f49dcd96a332604": {
+    "RestApiDeployment180EC50371cf2929c8a835d679b76c4f7c707919": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -6222,9 +5807,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "RestApireactivateOPTIONS263B776D",
         "RestApireactivatePOSTF57FC066",
         "RestApireactivateDE09DAB5",
-        "RestApisearchOPTIONSDF398734",
-        "RestApisearchPOST5D2A9A4A",
-        "RestApisearchA0D22340",
       ],
       "Properties": {
         "Description": "Automatically created by the RestApi construct",
@@ -6240,7 +5822,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC50325978d599f094bee7f49dcd96a332604",
+          "Ref": "RestApiDeployment180EC50371cf2929c8a835d679b76c4f7c707919",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -7045,178 +6627,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       },
       "Type": "AWS::ApiGateway::Method",
     },
-    "RestApisearchA0D22340": {
-      "Properties": {
-        "ParentId": {
-          "Fn::GetAtt": [
-            "RestApi0C43BF4B",
-            "RootResourceId",
-          ],
-        },
-        "PathPart": "search",
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Resource",
-    },
-    "RestApisearchOPTIONSDF398734": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "Integration": {
-          "IntegrationResponses": [
-            {
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-              },
-              "StatusCode": "204",
-            },
-          ],
-          "RequestTemplates": {
-            "application/json": "{ statusCode: 200 }",
-          },
-          "Type": "MOCK",
-        },
-        "MethodResponses": [
-          {
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true,
-              "method.response.header.Access-Control-Allow-Origin": true,
-            },
-            "StatusCode": "204",
-          },
-        ],
-        "ResourceId": {
-          "Ref": "RestApisearchA0D22340",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApisearchPOST5D2A9A4A": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "POST",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "searchreminders4A6FC4FF",
-                    "Arn",
-                  ],
-                },
-                "/invocations",
-              ],
-            ],
-          },
-        },
-        "ResourceId": {
-          "Ref": "RestApisearchA0D22340",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApisearchPOSTApiPermissionSupportRemindersPRODRestApi318F04F5POSTsearchF4AED988": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "searchreminders4A6FC4FF",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/",
-              {
-                "Ref": "RestApiDeploymentStageprod3855DE66",
-              },
-              "/POST/search",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "RestApisearchPOSTApiPermissionTestSupportRemindersPRODRestApi318F04F5POSTsearch947A3EAB": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "searchreminders4A6FC4FF",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/test-invoke-stage/POST/search",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
     "S3inlinepolicy3B07399A": {
       "Properties": {
         "PolicyDocument": {
@@ -7231,9 +6641,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         },
         "PolicyName": "S3inlinepolicy3B07399A",
         "Roles": [
-          {
-            "Ref": "searchremindersServiceRole21E2FC67",
-          },
           {
             "Ref": "createreminderssignupServiceRole14AD0F8F",
           },
@@ -7335,9 +6742,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         },
         "PolicyName": "SSMinlinepolicyB56CB2A2",
         "Roles": [
-          {
-            "Ref": "searchremindersServiceRole21E2FC67",
-          },
           {
             "Ref": "createreminderssignupServiceRole14AD0F8F",
           },
@@ -9242,238 +8646,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Roles": [
           {
             "Ref": "reactivaterecurringreminderServiceRoleA9652C4C",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "searchreminders4A6FC4FF": {
-      "DependsOn": [
-        "searchremindersServiceRoleDefaultPolicy16C0FEC5",
-        "searchremindersServiceRole21E2FC67",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Ref": "DistributionBucketName",
-          },
-          "S3Key": "support/PROD/support-reminders/support-reminders.zip",
-        },
-        "Environment": {
-          "Variables": {
-            "APP": "support-reminders",
-            "Bucket": "ophan-raw-support-reminders",
-            "STACK": "support",
-            "STAGE": "PROD",
-            "Stage": "PROD",
-          },
-        },
-        "FunctionName": "support-reminders-search-reminders-PROD-CDK",
-        "Handler": "search-reminders/lambda/lambda.handler",
-        "MemorySize": 512,
-        "Role": {
-          "Fn::GetAtt": [
-            "searchremindersServiceRole21E2FC67",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs12.x",
-        "Tags": [
-          {
-            "Key": "App",
-            "Value": "support-reminders",
-          },
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-        "Timeout": 30,
-        "VpcConfig": {
-          "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
-          ],
-          "SubnetIds": {
-            "Ref": "PrivateSubnets",
-          },
-        },
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "searchremindersServiceRole21E2FC67": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
-              ],
-            ],
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "App",
-            "Value": "support-reminders",
-          },
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "searchremindersServiceRoleDefaultPolicy16C0FEC5": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":s3:::",
-                      {
-                        "Ref": "DistributionBucketName",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":s3:::",
-                      {
-                        "Ref": "DistributionBucketName",
-                      },
-                      "/support/PROD/support-reminders/support-reminders.zip",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": "ssm:GetParametersByPath",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:aws:ssm:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":parameter/PROD/support/support-reminders",
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": [
-                "ssm:GetParameters",
-                "ssm:GetParameter",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:aws:ssm:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":parameter/PROD/support/support-reminders/*",
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "searchremindersServiceRoleDefaultPolicy16C0FEC5",
-        "Roles": [
-          {
-            "Ref": "searchremindersServiceRole21E2FC67",
           },
         ],
       },

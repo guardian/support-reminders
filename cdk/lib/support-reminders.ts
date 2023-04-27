@@ -70,12 +70,6 @@ export class SupportReminders extends GuStack {
 
 
 		// ---- API-triggered lambda functions ---- //
-		const searchRemindersLambda = new GuLambdaFunction(this, "search-reminders", {
-			handler: "search-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-search-reminders-${this.stage}-CDK`,
-			...sharedLambdaProps,
-		});
-
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			handler: "create-reminder-signup/lambda/lambda.handler",
 			functionName: `support-reminders-create-reminder-signup-${this.stage}-CDK`,
@@ -119,11 +113,6 @@ export class SupportReminders extends GuStack {
 					path: "/create/recurring",
 					httpMethod: "POST",
 					lambda: createRemindersSignupLambda,
-				},
-				{
-					path: "/search",
-					httpMethod: "POST",
-					lambda: searchRemindersLambda,
 				},
 				{
 					path: "/create/one-off",
@@ -233,7 +222,6 @@ export class SupportReminders extends GuStack {
 		})
 
 		const lambdaFunctions: GuLambdaFunction[] = [
-			searchRemindersLambda,
 			createRemindersSignupLambda,
 			reactivateRecurringReminderLambda,
 			cancelRemindersLambda,
