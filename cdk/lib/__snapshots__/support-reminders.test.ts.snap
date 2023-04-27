@@ -161,7 +161,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
     },
     "ApiGateway4XXAlarm59D14AA2": {
       "Properties": {
-        "ActionsEnabled": true,
+        "ActionsEnabled": false,
         "AlarmActions": [
           {
             "Fn::Join": [
@@ -175,7 +175,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":reader-revenue-dev",
+                ":contributions-dev",
               ],
             ],
           },
@@ -183,6 +183,12 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "AlarmDescription": "Impact - Reminders API received an invalid request. Follow the process in https://docs.google.com/document/d/1_3El3cly9d7u_jPgTcRjLxmdG2e919zCLvmcFCLOYAk/edit",
         "AlarmName": "URGENT 9-5 - CODE API gateway 4XX response",
         "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiName",
+            "Value": "support-reminders-CODE",
+          },
+        ],
         "EvaluationPeriods": 1,
         "MetricName": "4XXError",
         "Namespace": "AWS/ApiGateway",
@@ -4711,7 +4717,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
     },
     "ApiGateway4XXAlarm59D14AA2": {
       "Properties": {
-        "ActionsEnabled": true,
+        "ActionsEnabled": false,
         "AlarmActions": [
           {
             "Fn::Join": [
@@ -4725,7 +4731,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":reader-revenue-dev",
+                ":contributions-dev",
               ],
             ],
           },
@@ -4733,6 +4739,12 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "AlarmDescription": "Impact - Reminders API received an invalid request. Follow the process in https://docs.google.com/document/d/1_3El3cly9d7u_jPgTcRjLxmdG2e919zCLvmcFCLOYAk/edit",
         "AlarmName": "URGENT 9-5 - PROD API gateway 4XX response",
         "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiName",
+            "Value": "support-reminders-PROD",
+          },
+        ],
         "EvaluationPeriods": 1,
         "MetricName": "4XXError",
         "Namespace": "AWS/ApiGateway",

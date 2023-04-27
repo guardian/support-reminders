@@ -15,6 +15,7 @@ import {Effect, ManagedPolicy, Policy, PolicyStatement} from "aws-cdk-lib/aws-ia
 import {Runtime} from "aws-cdk-lib/aws-lambda";
 import {CfnRecordSet} from "aws-cdk-lib/aws-route53";
 import {CfnInclude} from "aws-cdk-lib/cloudformation-include";
+import {isProd} from "../../src/lib/stage";
 
 export interface SupportRemindersProps extends GuStackProps {
 	certificateId: string;
@@ -176,14 +177,17 @@ export class SupportReminders extends GuStack {
 			alarmDescription: alarmDescription("Reminders API received an invalid request"),
 			evaluationPeriods: 1,
 			threshold: 8,
-			snsTopicName: "reader-revenue-dev",
-			actionsEnabled: true,
+			actionsEnabled: isProd(),
+			snsTopicName: "contributions-dev",
 			comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
 			metric: new Metric({
 				metricName: "4XXError",
 				namespace: "AWS/ApiGateway",
 				statistic: "Sum",
 				period: Duration.seconds(300),
+				dimensionsMap: {
+					ApiName: `support-reminders-${this.stage}`,
+				}
 			}),
 		});
 
