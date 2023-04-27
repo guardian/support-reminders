@@ -1,11 +1,14 @@
 import path from "path";
 import {GuApiGatewayWithLambdaByPath, GuScheduledLambda} from "@guardian/cdk";
+import {GuAlarm} from "@guardian/cdk/lib/constructs/cloudwatch";
 import type {GuStackProps} from "@guardian/cdk/lib/constructs/core";
 import {GuStack, GuStringParameter} from "@guardian/cdk/lib/constructs/core";
 import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
+import {Duration} from "aws-cdk-lib";
 import {CfnBasePathMapping, CfnDomainName, Cors} from "aws-cdk-lib/aws-apigateway";
+import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
 import {Effect, ManagedPolicy, Policy, PolicyStatement} from "aws-cdk-lib/aws-iam";
@@ -157,6 +160,31 @@ export class SupportReminders extends GuStack {
 				toleratedErrorPercentage: 1,
 			},
 			...sharedLambdaProps,
+		});
+
+
+		// ---- Alarms ---- //
+		const alarmName = (shortDescription: string) =>
+			`URGENT 9-5 - ${this.stage} ${shortDescription}`;
+
+		const alarmDescription = (description: string) =>
+			`Impact - ${description}. Follow the process in https://docs.google.com/document/d/1_3El3cly9d7u_jPgTcRjLxmdG2e919zCLvmcFCLOYAk/edit`;
+
+		new GuAlarm(this, 'ApiGateway4XXAlarm', {
+			app,
+			alarmName: alarmName("API gateway 4XX response"),
+			alarmDescription: alarmDescription("Reminders API received an invalid request"),
+			evaluationPeriods: 1,
+			threshold: 8,
+			snsTopicName: "reader-revenue-dev",
+			actionsEnabled: true,
+			comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+			metric: new Metric({
+				metricName: "4XXError",
+				namespace: "AWS/ApiGateway",
+				statistic: "Sum",
+				period: Duration.seconds(300),
+			}),
 		});
 
 
