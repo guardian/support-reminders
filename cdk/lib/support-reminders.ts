@@ -76,19 +76,19 @@ export class SupportReminders extends GuStack {
 		// ---- API-triggered lambda functions ---- //
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			handler: "create-reminder-signup/lambda/lambda.handler",
-			functionName: `support-reminders-create-reminder-signup-${this.stage}`,
+			functionName: `support-reminders-create-reminder-signup-new-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
-			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`,
+			functionName: `support-reminders-reactivate-recurring-reminder-new-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
 			handler: "cancel-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-cancel-reminders-${this.stage}`,
+			functionName: `support-reminders-cancel-reminders-new-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
@@ -135,7 +135,7 @@ export class SupportReminders extends GuStack {
 		// ---- Scheduled lambda functions ---- //
 		const signupExportsLambda = new GuScheduledLambda(this, "signup-exports", {
 			handler: "signup-exports/lambda/lambda.handler",
-			functionName: `support-reminders-signup-exports-${this.stage}`,
+			functionName: `support-reminders-signup-exports-new-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.cron({ hour: "00", minute: "05" }),
@@ -150,7 +150,7 @@ export class SupportReminders extends GuStack {
 
 		const nextRemindersLambda = new GuScheduledLambda(this, "next-reminders", {
 			handler: "next-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-next-reminders-${this.stage}`,
+			functionName: `support-reminders-next-reminders-new-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.cron({ hour: "00", minute: "05" }),
