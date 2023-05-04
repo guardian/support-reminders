@@ -1,46 +1,32 @@
-import path from "path";
 import {GuApiGatewayWithLambdaByPath, GuScheduledLambda} from "@guardian/cdk";
+import {GuAlarm} from "@guardian/cdk/lib/constructs/cloudwatch";
 import type {GuStackProps} from "@guardian/cdk/lib/constructs/core";
-import {GuStack, GuStringParameter} from "@guardian/cdk/lib/constructs/core";
+import {GuStack} from "@guardian/cdk/lib/constructs/core";
 import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
+import {Duration} from "aws-cdk-lib";
 import {CfnBasePathMapping, CfnDomainName, Cors} from "aws-cdk-lib/aws-apigateway";
+import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
 import {Effect, ManagedPolicy, Policy, PolicyStatement} from "aws-cdk-lib/aws-iam";
 import {Runtime} from "aws-cdk-lib/aws-lambda";
 import {CfnRecordSet} from "aws-cdk-lib/aws-route53";
-import {CfnInclude} from "aws-cdk-lib/cloudformation-include";
+import {isProd} from "../../src/lib/stage";
 
 export interface SupportRemindersProps extends GuStackProps {
 	certificateId: string;
 	domainName: string;
 	hostedZoneId: string;
 	datalakeBucket: string;
+	deployBucket: string;
+	securityGroupToAccessPostgresId: string;
 }
 
 export class SupportReminders extends GuStack {
 	constructor(scope: App, id: string, props: SupportRemindersProps) {
 		super(scope, id, props);
-
-
-		// ---- CFN template resources ---- //
-		const yamlTemplateFilePath = path.join(__dirname, "../..", "cfn.yaml");
-		new CfnInclude(this, "YamlTemplate", {
-			templateFile: yamlTemplateFilePath,
-		});
-
-
-		// ---- Parameters ---- //
-		const securityGroupToAccessPostgres = new GuStringParameter(
-			this,
-			"SecurityGroupToAccessPostgres-CDK",
-			{
-				description:
-					"Security group to access the RDS instance",
-			}
-		);
 
 
 		// ---- Miscellaneous constants ---- //
@@ -52,7 +38,7 @@ export class SupportReminders extends GuStack {
 			"Bucket": props.datalakeBucket,
 			"Stage": this.stage,
 		};
-		const securityGroups = [SecurityGroup.fromSecurityGroupId(this, "security-group", securityGroupToAccessPostgres.valueAsString)];
+		const securityGroups = [SecurityGroup.fromSecurityGroupId(this, "security-group", props.securityGroupToAccessPostgresId)];
 		const vpcSubnets = {
 			subnets: GuVpc.subnetsFromParameter(this),
 		};
@@ -70,27 +56,21 @@ export class SupportReminders extends GuStack {
 
 
 		// ---- API-triggered lambda functions ---- //
-		const searchRemindersLambda = new GuLambdaFunction(this, "search-reminders", {
-			handler: "search-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-search-reminders-${this.stage}-CDK`,
-			...sharedLambdaProps,
-		});
-
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			handler: "create-reminder-signup/lambda/lambda.handler",
-			functionName: `support-reminders-create-reminder-signup-${this.stage}-CDK`,
+			functionName: `support-reminders-create-reminder-signup-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
-			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}-CDK`,
+			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
 			handler: "cancel-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-cancel-reminders-${this.stage}-CDK`,
+			functionName: `support-reminders-cancel-reminders-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
@@ -121,11 +101,6 @@ export class SupportReminders extends GuStack {
 					lambda: createRemindersSignupLambda,
 				},
 				{
-					path: "/search",
-					httpMethod: "POST",
-					lambda: searchRemindersLambda,
-				},
-				{
 					path: "/create/one-off",
 					httpMethod: "POST",
 					lambda: createRemindersSignupLambda,
@@ -142,7 +117,7 @@ export class SupportReminders extends GuStack {
 		// ---- Scheduled lambda functions ---- //
 		const signupExportsLambda = new GuScheduledLambda(this, "signup-exports", {
 			handler: "signup-exports/lambda/lambda.handler",
-			functionName: `support-reminders-signup-exports-${this.stage}-CDK`,
+			functionName: `support-reminders-signup-exports-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.cron({ hour: "00", minute: "05" }),
@@ -157,7 +132,7 @@ export class SupportReminders extends GuStack {
 
 		const nextRemindersLambda = new GuScheduledLambda(this, "next-reminders", {
 			handler: "next-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-next-reminders-${this.stage}-CDK`,
+			functionName: `support-reminders-next-reminders-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.cron({ hour: "00", minute: "05" }),
@@ -168,6 +143,34 @@ export class SupportReminders extends GuStack {
 				toleratedErrorPercentage: 1,
 			},
 			...sharedLambdaProps,
+		});
+
+
+		// ---- Alarms ---- //
+		const alarmName = (shortDescription: string) =>
+			`URGENT 9-5 - ${this.stage} ${shortDescription}`;
+
+		const alarmDescription = (description: string) =>
+			`Impact - ${description}. Follow the process in https://docs.google.com/document/d/1_3El3cly9d7u_jPgTcRjLxmdG2e919zCLvmcFCLOYAk/edit`;
+
+		new GuAlarm(this, 'ApiGateway4XXAlarm', {
+			app,
+			alarmName: alarmName("API gateway 4XX response"),
+			alarmDescription: alarmDescription("Reminders API received an invalid request"),
+			evaluationPeriods: 1,
+			threshold: 8,
+			actionsEnabled: isProd(),
+			snsTopicName: "contributions-dev",
+			comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+			metric: new Metric({
+				metricName: "4XXError",
+				namespace: "AWS/ApiGateway",
+				statistic: "Sum",
+				period: Duration.seconds(300),
+				dimensionsMap: {
+					ApiName: `support-reminders-${this.stage}`,
+				}
+			}),
 		});
 
 
@@ -218,7 +221,7 @@ export class SupportReminders extends GuStack {
 			],
 		})
 
-		const s3InlinePolicy: Policy = new Policy(this, "S3 inline policy", {
+		const s3GetObjectInlinePolicy: Policy = new Policy(this, "S3 getObject inline policy", {
 			statements: [
 				new PolicyStatement({
 					effect: Effect.ALLOW,
@@ -226,25 +229,50 @@ export class SupportReminders extends GuStack {
 						"s3:GetObject"
 					],
 					resources: [
-						"arn:aws:s3::*:membership-dist/*"
+						`arn:aws:s3::*:${props.deployBucket}/*`
 					]
-				}),
+				})
 			],
 		})
 
-		const lambdaFunctions: GuLambdaFunction[] = [
-			searchRemindersLambda,
+		const s3PutObjectInlinePolicy: Policy = new Policy(this, "S3 putObject inline policy", {
+			statements: [
+				new PolicyStatement({
+					effect: Effect.ALLOW,
+					actions: [
+						"s3:PutObject",
+						"s3:PutObjectAcl"
+					],
+					resources: [
+						`arn:aws:s3:::${props.datalakeBucket}`,
+						`arn:aws:s3:::${props.datalakeBucket}/*`
+					]
+				})
+			]
+		})
+
+		const apiGatewayTriggeredLambdaFunctions: GuLambdaFunction[] = [
 			createRemindersSignupLambda,
 			reactivateRecurringReminderLambda,
 			cancelRemindersLambda,
+		]
+
+		const scheduledLambdaFunctions: GuLambdaFunction[] = [
 			signupExportsLambda,
 			nextRemindersLambda
 		]
 
-		lambdaFunctions.forEach((l: GuLambdaFunction) => {
+		apiGatewayTriggeredLambdaFunctions.forEach((l: GuLambdaFunction) => {
 			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 			l.role?.attachInlinePolicy(ssmInlinePolicy)
-			l.role?.attachInlinePolicy(s3InlinePolicy)
+			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy)
+		})
+
+		scheduledLambdaFunctions.forEach((l: GuLambdaFunction) => {
+			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
+			l.role?.attachInlinePolicy(ssmInlinePolicy)
+			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy)
+			l.role?.attachInlinePolicy(s3PutObjectInlinePolicy)
 		})
 	}
 }

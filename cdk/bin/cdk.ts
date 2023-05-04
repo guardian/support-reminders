@@ -12,6 +12,8 @@ export const codeProps: SupportRemindersProps = {
 	domainName: "reminders-code.support.guardianapis.com",
 	hostedZoneId: "Z3KO35ELNWZMSX",
 	datalakeBucket: "contributions-private",
+	deployBucket: "membership-dist",
+	securityGroupToAccessPostgresId: "sg-aabc6cd7"
 };
 
 export const prodProps: SupportRemindersProps = {
@@ -21,6 +23,9 @@ export const prodProps: SupportRemindersProps = {
 	domainName: "reminders.support.guardianapis.com",
 	hostedZoneId: "Z3KO35ELNWZMSX",
 	datalakeBucket: "ophan-raw-support-reminders",
+	deployBucket: "membership-dist",
+	securityGroupToAccessPostgresId: "sg-98b56ee5"
+
 };
 
 new SupportReminders(app, "SupportReminders-CODE", codeProps);
