@@ -1314,7 +1314,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503c1c6a4dfeb8ac35ff8cef92727876ad9": {
+    "RestApiDeployment180EC5038c6fc6c0583ec80efc709b184b9b210e": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -1346,7 +1346,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503c1c6a4dfeb8ac35ff8cef92727876ad9",
+          "Ref": "RestApiDeployment180EC5038c6fc6c0583ec80efc709b184b9b210e",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -3153,7 +3153,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Stage": "CODE",
           },
         },
-        "FunctionName": "support-reminders-cancel-reminders-CODE",
+        "FunctionName": "support-reminders-cancel-reminders-new-CODE",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -3385,7 +3385,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Stage": "CODE",
           },
         },
-        "FunctionName": "support-reminders-create-reminder-signup-CODE",
+        "FunctionName": "support-reminders-create-reminder-signup-new-CODE",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -3617,7 +3617,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Stage": "CODE",
           },
         },
-        "FunctionName": "support-reminders-next-reminders-CODE",
+        "FunctionName": "support-reminders-next-reminders-new-CODE",
         "Handler": "next-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -3994,7 +3994,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Stage": "CODE",
           },
         },
-        "FunctionName": "support-reminders-reactivate-recurring-reminder-CODE",
+        "FunctionName": "support-reminders-reactivate-recurring-reminder-new-CODE",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -4226,7 +4226,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Stage": "CODE",
           },
         },
-        "FunctionName": "support-reminders-signup-exports-CODE",
+        "FunctionName": "support-reminders-signup-exports-new-CODE",
         "Handler": "signup-exports/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -5900,7 +5900,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC5036c6d30ab953d426d0de7e72d49f91562": {
+    "RestApiDeployment180EC503976da10c8b1a7239582bdc41c8dcd15b": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -5932,7 +5932,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC5036c6d30ab953d426d0de7e72d49f91562",
+          "Ref": "RestApiDeployment180EC503976da10c8b1a7239582bdc41c8dcd15b",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -7739,7 +7739,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Stage": "PROD",
           },
         },
-        "FunctionName": "support-reminders-cancel-reminders-PROD",
+        "FunctionName": "support-reminders-cancel-reminders-new-PROD",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -7971,7 +7971,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Stage": "PROD",
           },
         },
-        "FunctionName": "support-reminders-create-reminder-signup-PROD",
+        "FunctionName": "support-reminders-create-reminder-signup-new-PROD",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -8203,7 +8203,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Stage": "PROD",
           },
         },
-        "FunctionName": "support-reminders-next-reminders-PROD",
+        "FunctionName": "support-reminders-next-reminders-new-PROD",
         "Handler": "next-reminders/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -8580,7 +8580,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Stage": "PROD",
           },
         },
-        "FunctionName": "support-reminders-reactivate-recurring-reminder-PROD",
+        "FunctionName": "support-reminders-reactivate-recurring-reminder-new-PROD",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
@@ -8812,7 +8812,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Stage": "PROD",
           },
         },
-        "FunctionName": "support-reminders-signup-exports-PROD",
+        "FunctionName": "support-reminders-signup-exports-new-PROD",
         "Handler": "signup-exports/lambda/lambda.handler",
         "MemorySize": 512,
         "Role": {
