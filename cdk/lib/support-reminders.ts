@@ -76,19 +76,19 @@ export class SupportReminders extends GuStack {
 		// ---- API-triggered lambda functions ---- //
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			handler: "create-reminder-signup/lambda/lambda.handler",
-			functionName: `support-reminders-create-reminder-signup-${this.stage}-CDK`,
+			functionName: `support-reminders-create-reminder-signup-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
-			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}-CDK`,
+			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
 			handler: "cancel-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-cancel-reminders-${this.stage}-CDK`,
+			functionName: `support-reminders-cancel-reminders-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
@@ -135,7 +135,7 @@ export class SupportReminders extends GuStack {
 		// ---- Scheduled lambda functions ---- //
 		const signupExportsLambda = new GuScheduledLambda(this, "signup-exports", {
 			handler: "signup-exports/lambda/lambda.handler",
-			functionName: `support-reminders-signup-exports-${this.stage}-CDK`,
+			functionName: `support-reminders-signup-exports-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.cron({ hour: "00", minute: "05" }),
@@ -150,7 +150,7 @@ export class SupportReminders extends GuStack {
 
 		const nextRemindersLambda = new GuScheduledLambda(this, "next-reminders", {
 			handler: "next-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-next-reminders-${this.stage}-CDK`,
+			functionName: `support-reminders-next-reminders-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.cron({ hour: "00", minute: "05" }),
@@ -239,7 +239,7 @@ export class SupportReminders extends GuStack {
 			],
 		})
 
-		const s3InlinePolicy: Policy = new Policy(this, "S3 inline policy", {
+		const s3GetObjectInlinePolicy: Policy = new Policy(this, "S3 getObject inline policy", {
 			statements: [
 				new PolicyStatement({
 					effect: Effect.ALLOW,
@@ -249,22 +249,48 @@ export class SupportReminders extends GuStack {
 					resources: [
 						"arn:aws:s3::*:membership-dist/*"
 					]
-				}),
+				})
 			],
 		})
 
-		const lambdaFunctions: GuLambdaFunction[] = [
+		const s3PutObjectInlinePolicy: Policy = new Policy(this, "S3 putObject inline policy", {
+			statements: [
+				new PolicyStatement({
+					effect: Effect.ALLOW,
+					actions: [
+						"s3:PutObject",
+						"s3:PutObjectAcl"
+					],
+					resources: [
+						`arn:aws:s3:::${props.datalakeBucket}`,
+						`arn:aws:s3:::${props.datalakeBucket}/*`
+					]
+				})
+			]
+		})
+
+		const apiGatewayInvokedLambdaFunctions: GuLambdaFunction[] = [
 			createRemindersSignupLambda,
 			reactivateRecurringReminderLambda,
 			cancelRemindersLambda,
+		]
+
+		const scheduledLambdaFunctions: GuLambdaFunction[] = [
 			signupExportsLambda,
 			nextRemindersLambda
 		]
 
-		lambdaFunctions.forEach((l: GuLambdaFunction) => {
+		apiGatewayInvokedLambdaFunctions.forEach((l: GuLambdaFunction) => {
 			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 			l.role?.attachInlinePolicy(ssmInlinePolicy)
-			l.role?.attachInlinePolicy(s3InlinePolicy)
+			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy)
+		})
+
+		scheduledLambdaFunctions.forEach((l: GuLambdaFunction) => {
+			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
+			l.role?.attachInlinePolicy(ssmInlinePolicy)
+			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy)
+			l.role?.attachInlinePolicy(s3PutObjectInlinePolicy)
 		})
 	}
 }

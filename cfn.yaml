@@ -148,7 +148,7 @@ Resources:
           Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
       Description: A lambda for searching for reminders
       FunctionName:
-        Fn::Sub: support-reminders-search-reminders-${Stage}
+        Fn::Sub: support-reminders-search-reminders-old-${Stage}
       Handler: search-reminders/lambda/lambda.handler
       MemorySize: 128
       Role:
@@ -356,7 +356,7 @@ Resources:
           Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
       Description: A lambda for getting next reminders data
       FunctionName:
-        Fn::Sub: support-reminders-next-reminders-${Stage}
+        Fn::Sub: support-reminders-next-reminders-old-${Stage}
       Handler: next-reminders/lambda/lambda.handler
       MemorySize: 128
       Role:
@@ -426,7 +426,7 @@ Resources:
           Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
       Description: A lambda for creating support reminders
       FunctionName:
-        Fn::Sub: support-reminders-create-reminder-signup-${Stage}
+        Fn::Sub: support-reminders-create-reminder-signup-old-${Stage}
       Handler: create-reminder-signup/lambda/lambda.handler
       MemorySize: 128
       Role:
@@ -502,7 +502,7 @@ Resources:
           Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
       Description: A lambda for reactivating cancelled recurring support reminders
       FunctionName:
-        Fn::Sub: support-reminders-reactivate-recurring-reminder-${Stage}
+        Fn::Sub: support-reminders-reactivate-recurring-reminder-old-${Stage}
       Handler: reactivate-recurring-reminder/lambda/lambda.handler
       MemorySize: 128
       Role:
@@ -546,7 +546,7 @@ Resources:
           Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
       Description: A lambda for cancelling pending support reminders
       FunctionName:
-        Fn::Sub: support-reminders-cancel-reminders-${Stage}
+        Fn::Sub: support-reminders-cancel-reminders-old-${Stage}
       Handler: cancel-reminders/lambda/lambda.handler
       MemorySize: 128
       Role:
@@ -613,7 +613,7 @@ Resources:
           Fn::Sub: "${Stack}/${Stage}/support-reminders/support-reminders.zip"
       Description: A lambda for exporting signups data
       FunctionName:
-        Fn::Sub: support-reminders-signup-exports-${Stage}
+        Fn::Sub: support-reminders-signup-exports-old-${Stage}
       Handler: signup-exports/lambda/lambda.handler
       MemorySize: 512
       Role:
