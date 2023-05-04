@@ -28,7 +28,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
   },
   "Metadata": {
     "gu:cdk:constructs": [
-      "GuStringParameter",
       "GuVpcParameter",
       "GuSubnetListParameter",
       "GuDistributionBucketParameter",
@@ -98,10 +97,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
     },
     "SecurityGroupToAccessPostgres": {
-      "Description": "Security group to access the RDS instance",
-      "Type": "String",
-    },
-    "SecurityGroupToAccessPostgresCDK": {
       "Description": "Security group to access the RDS instance",
       "Type": "String",
     },
@@ -186,7 +181,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Dimensions": [
           {
             "Name": "ApiName",
-            "Value": "support-reminders-CODE",
+            "Value": "support-reminders-new-CODE",
           },
         ],
         "EvaluationPeriods": 1,
@@ -3188,9 +3183,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Timeout": 30,
         "VpcConfig": {
           "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
+            "sg-aabc6cd7",
           ],
           "SubnetIds": {
             "Ref": "PrivateSubnets",
@@ -3420,9 +3413,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Timeout": 30,
         "VpcConfig": {
           "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
+            "sg-aabc6cd7",
           ],
           "SubnetIds": {
             "Ref": "PrivateSubnets",
@@ -3652,9 +3643,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Timeout": 30,
         "VpcConfig": {
           "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
+            "sg-aabc6cd7",
           ],
           "SubnetIds": {
             "Ref": "PrivateSubnets",
@@ -4029,9 +4018,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Timeout": 30,
         "VpcConfig": {
           "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
+            "sg-aabc6cd7",
           ],
           "SubnetIds": {
             "Ref": "PrivateSubnets",
@@ -4261,9 +4248,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "Timeout": 30,
         "VpcConfig": {
           "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
+            "sg-aabc6cd7",
           ],
           "SubnetIds": {
             "Ref": "PrivateSubnets",
@@ -4614,7 +4599,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
   },
   "Metadata": {
     "gu:cdk:constructs": [
-      "GuStringParameter",
       "GuVpcParameter",
       "GuSubnetListParameter",
       "GuDistributionBucketParameter",
@@ -4684,10 +4668,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
     },
     "SecurityGroupToAccessPostgres": {
-      "Description": "Security group to access the RDS instance",
-      "Type": "String",
-    },
-    "SecurityGroupToAccessPostgresCDK": {
       "Description": "Security group to access the RDS instance",
       "Type": "String",
     },
@@ -4772,7 +4752,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Dimensions": [
           {
             "Name": "ApiName",
-            "Value": "support-reminders-PROD",
+            "Value": "support-reminders-new-PROD",
           },
         ],
         "EvaluationPeriods": 1,
@@ -7774,9 +7754,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Timeout": 30,
         "VpcConfig": {
           "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
+            "sg-98b56ee5",
           ],
           "SubnetIds": {
             "Ref": "PrivateSubnets",
@@ -8006,9 +7984,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Timeout": 30,
         "VpcConfig": {
           "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
+            "sg-98b56ee5",
           ],
           "SubnetIds": {
             "Ref": "PrivateSubnets",
@@ -8238,9 +8214,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Timeout": 30,
         "VpcConfig": {
           "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
+            "sg-98b56ee5",
           ],
           "SubnetIds": {
             "Ref": "PrivateSubnets",
@@ -8615,9 +8589,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Timeout": 30,
         "VpcConfig": {
           "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
+            "sg-98b56ee5",
           ],
           "SubnetIds": {
             "Ref": "PrivateSubnets",
@@ -8847,9 +8819,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "Timeout": 30,
         "VpcConfig": {
           "SecurityGroupIds": [
-            {
-              "Ref": "SecurityGroupToAccessPostgresCDK",
-            },
+            "sg-98b56ee5",
           ],
           "SubnetIds": {
             "Ref": "PrivateSubnets",

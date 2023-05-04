@@ -2,7 +2,7 @@ import path from "path";
 import {GuApiGatewayWithLambdaByPath, GuScheduledLambda} from "@guardian/cdk";
 import {GuAlarm} from "@guardian/cdk/lib/constructs/cloudwatch";
 import type {GuStackProps} from "@guardian/cdk/lib/constructs/core";
-import {GuStack, GuStringParameter} from "@guardian/cdk/lib/constructs/core";
+import {GuStack} from "@guardian/cdk/lib/constructs/core";
 import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
@@ -22,6 +22,8 @@ export interface SupportRemindersProps extends GuStackProps {
 	domainName: string;
 	hostedZoneId: string;
 	datalakeBucket: string;
+	deployBucket: string;
+	securityGroupToAccessPostgresId: string;
 }
 
 export class SupportReminders extends GuStack {
@@ -36,17 +38,6 @@ export class SupportReminders extends GuStack {
 		});
 
 
-		// ---- Parameters ---- //
-		const securityGroupToAccessPostgres = new GuStringParameter(
-			this,
-			"SecurityGroupToAccessPostgres-CDK",
-			{
-				description:
-					"Security group to access the RDS instance",
-			}
-		);
-
-
 		// ---- Miscellaneous constants ---- //
 		const app = "support-reminders";
 		const vpc = GuVpc.fromIdParameter(this, "vpc");
@@ -56,7 +47,7 @@ export class SupportReminders extends GuStack {
 			"Bucket": props.datalakeBucket,
 			"Stage": this.stage,
 		};
-		const securityGroups = [SecurityGroup.fromSecurityGroupId(this, "security-group", securityGroupToAccessPostgres.valueAsString)];
+		const securityGroups = [SecurityGroup.fromSecurityGroupId(this, "security-group", props.securityGroupToAccessPostgresId)];
 		const vpcSubnets = {
 			subnets: GuVpc.subnetsFromParameter(this),
 		};
@@ -186,7 +177,7 @@ export class SupportReminders extends GuStack {
 				statistic: "Sum",
 				period: Duration.seconds(300),
 				dimensionsMap: {
-					ApiName: `support-reminders-${this.stage}`,
+					ApiName: `support-reminders-new-${this.stage}`,
 				}
 			}),
 		});
@@ -247,7 +238,7 @@ export class SupportReminders extends GuStack {
 						"s3:GetObject"
 					],
 					resources: [
-						"arn:aws:s3::*:membership-dist/*"
+						`arn:aws:s3::*:${props.deployBucket}/*`
 					]
 				})
 			],
@@ -269,7 +260,7 @@ export class SupportReminders extends GuStack {
 			]
 		})
 
-		const apiGatewayInvokedLambdaFunctions: GuLambdaFunction[] = [
+		const apiGatewayTriggeredLambdaFunctions: GuLambdaFunction[] = [
 			createRemindersSignupLambda,
 			reactivateRecurringReminderLambda,
 			cancelRemindersLambda,
@@ -280,7 +271,7 @@ export class SupportReminders extends GuStack {
 			nextRemindersLambda
 		]
 
-		apiGatewayInvokedLambdaFunctions.forEach((l: GuLambdaFunction) => {
+		apiGatewayTriggeredLambdaFunctions.forEach((l: GuLambdaFunction) => {
 			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 			l.role?.attachInlinePolicy(ssmInlinePolicy)
 			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy)
