@@ -17,9 +17,9 @@ deployments:
       bucketSsmLookup: true
       fileName: support-reminders.zip
       functionNames:
-        - support-reminders-create-reminder-signup-new-
-        - support-reminders-cancel-reminders-new-
-        - support-reminders-reactivate-recurring-reminder-new-
-        - support-reminders-next-reminders-new-
-        - support-reminders-signup-exports-new-
+        - support-reminders-create-reminder-signup-
+        - support-reminders-cancel-reminders-
+        - support-reminders-reactivate-recurring-reminder-
+        - support-reminders-next-reminders-
+        - support-reminders-signup-exports-
     dependencies: [ support-reminders-cloudformation ]
