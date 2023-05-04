@@ -1,4 +1,3 @@
-import path from "path";
 import {GuApiGatewayWithLambdaByPath, GuScheduledLambda} from "@guardian/cdk";
 import {GuAlarm} from "@guardian/cdk/lib/constructs/cloudwatch";
 import type {GuStackProps} from "@guardian/cdk/lib/constructs/core";
@@ -14,7 +13,6 @@ import {Schedule} from "aws-cdk-lib/aws-events";
 import {Effect, ManagedPolicy, Policy, PolicyStatement} from "aws-cdk-lib/aws-iam";
 import {Runtime} from "aws-cdk-lib/aws-lambda";
 import {CfnRecordSet} from "aws-cdk-lib/aws-route53";
-import {CfnInclude} from "aws-cdk-lib/cloudformation-include";
 import {isProd} from "../../src/lib/stage";
 
 export interface SupportRemindersProps extends GuStackProps {
@@ -29,13 +27,6 @@ export interface SupportRemindersProps extends GuStackProps {
 export class SupportReminders extends GuStack {
 	constructor(scope: App, id: string, props: SupportRemindersProps) {
 		super(scope, id, props);
-
-
-		// ---- CFN template resources ---- //
-		const yamlTemplateFilePath = path.join(__dirname, "../..", "cfn.yaml");
-		new CfnInclude(this, "YamlTemplate", {
-			templateFile: yamlTemplateFilePath,
-		});
 
 
 		// ---- Miscellaneous constants ---- //
@@ -67,19 +58,19 @@ export class SupportReminders extends GuStack {
 		// ---- API-triggered lambda functions ---- //
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			handler: "create-reminder-signup/lambda/lambda.handler",
-			functionName: `support-reminders-create-reminder-signup-new-${this.stage}`,
+			functionName: `support-reminders-create-reminder-signup-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
 			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
-			functionName: `support-reminders-reactivate-recurring-reminder-new-${this.stage}`,
+			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
 		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
 			handler: "cancel-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-cancel-reminders-new-${this.stage}`,
+			functionName: `support-reminders-cancel-reminders-${this.stage}`,
 			...sharedLambdaProps,
 		});
 
@@ -126,7 +117,7 @@ export class SupportReminders extends GuStack {
 		// ---- Scheduled lambda functions ---- //
 		const signupExportsLambda = new GuScheduledLambda(this, "signup-exports", {
 			handler: "signup-exports/lambda/lambda.handler",
-			functionName: `support-reminders-signup-exports-new-${this.stage}`,
+			functionName: `support-reminders-signup-exports-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.cron({ hour: "00", minute: "05" }),
@@ -141,7 +132,7 @@ export class SupportReminders extends GuStack {
 
 		const nextRemindersLambda = new GuScheduledLambda(this, "next-reminders", {
 			handler: "next-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-next-reminders-new-${this.stage}`,
+			functionName: `support-reminders-next-reminders-${this.stage}`,
 			rules: [
 				{
 					schedule: Schedule.cron({ hour: "00", minute: "05" }),
@@ -177,7 +168,7 @@ export class SupportReminders extends GuStack {
 				statistic: "Sum",
 				period: Duration.seconds(300),
 				dimensionsMap: {
-					ApiName: `support-reminders-new-${this.stage}`,
+					ApiName: `support-reminders-${this.stage}`,
 				}
 			}),
 		});
