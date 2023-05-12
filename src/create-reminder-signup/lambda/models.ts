@@ -29,7 +29,8 @@ export type ReminderComponent =
 	| 'BANNER'
 	| 'THANKYOU'
 	| 'CANCELLATION'
-	| 'EMAIL';
+	| 'EMAIL'
+	| 'EDITORIAL_ADS';
 
 export type ReminderStage = 'PRE' | 'POST' | 'WINBACK';
 
