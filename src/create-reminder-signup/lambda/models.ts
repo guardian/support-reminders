@@ -30,7 +30,11 @@ export type ReminderComponent =
 	| 'THANKYOU'
 	| 'CANCELLATION'
 	| 'EMAIL'
-	| 'EDITORIAL_ADS';
+	| 'EDITORIAL_ADS'
+	| 'REMINDER'
+	| 'MOMENT'
+	| 'SINGLE_MONTHLY'
+	| 'IN_LIFE_JOURNEY';
 
 export type ReminderStage = 'PRE' | 'POST' | 'WINBACK';
 
