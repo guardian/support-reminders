@@ -46,7 +46,6 @@ jobs:
 
       - name: Install - support-reminders
         run: yarn
-        working-directory: /
 
       - name: Install - CDK
         run: yarn
@@ -55,7 +54,6 @@ jobs:
       # ---- Build ---- #
       - name: Build - support-reminders
         run: yarn run build
-        working-directory: /
 
 
       - name: Build - CDK
@@ -65,7 +63,6 @@ jobs:
       # ---- Test ---- #
       - name: Test - support-reminders
         run: yarn run test
-        working-directory: /
         env:
           TEST_DB_URL: postgresql://localhost/postgres
           TEST_DB_USER: postgres
