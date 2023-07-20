@@ -14,7 +14,7 @@ CREATE TABLE one_off_reminder_signups(
   reminder_code uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4 (),
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  UNIQUE KEY (identity_id, reminder_period)
+  UNIQUE (identity_id, reminder_period)
 );
 
 /* PostgreSQL automatically creates a unique index when a unique constraint or primary key is defined for a table
