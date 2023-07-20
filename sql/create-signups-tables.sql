@@ -11,17 +11,20 @@ CREATE TABLE one_off_reminder_signups(
   reminder_stage TEXT NOT NULL,
   reminder_period DATE NOT NULL,
   reminder_option TEXT,
-  reminder_code uuid NOT NULL UNIQUE DEFAULT uuid_generate_v4 (),
+  reminder_code uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4 (),
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  PRIMARY KEY (identity_id, reminder_period)
+  UNIQUE KEY (identity_id, reminder_period)
 );
 
-CREATE INDEX one_off_reminder_signups_reminder_code ON one_off_reminder_signups (reminder_code);
+/* PostgreSQL automatically creates a unique index when a unique constraint or primary key is defined for a table
+   - https://www.postgresql.org/docs/current/indexes-unique.html
+ */
+-- CREATE INDEX one_off_reminder_signups_reminder_code ON one_off_reminder_signups (identity_id);
 
 DROP TABLE IF EXISTS recurring_reminder_signups;
 CREATE TABLE recurring_reminder_signups(
-  identity_id TEXT NOT NULL PRIMARY KEY,
+  identity_id TEXT NOT NULL UNIQUE,
   country TEXT,
   reminder_created_at TIMESTAMP NOT NULL,
   reminder_cancelled_at TIMESTAMP,
@@ -30,12 +33,15 @@ CREATE TABLE recurring_reminder_signups(
   reminder_stage TEXT NOT NULL,
   reminder_frequency_months INT NOT NULL,
   reminder_option TEXT,
-  reminder_code uuid NOT NULL UNIQUE DEFAULT uuid_generate_v4 (),
+  reminder_code uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4 (),
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX recurring_reminder_signups_reminder_code ON recurring_reminder_signups (reminder_code);
+/* PostgreSQL automatically creates a unique index when a unique constraint or primary key is defined for a table
+   - https://www.postgresql.org/docs/current/indexes-unique.html
+ */
+-- CREATE INDEX recurring_reminder_signups_reminder_code ON recurring_reminder_signups (identity_id);
 
 CREATE OR REPLACE FUNCTION set_updated_at_column()
 RETURNS TRIGGER AS $$

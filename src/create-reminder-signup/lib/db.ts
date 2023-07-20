@@ -20,7 +20,7 @@ export function writeOneOffSignup(
 			) VALUES (
 				$1, $2, $3, $4, $5, $6, $7, $8
 			)
-			ON CONFLICT ON CONSTRAINT one_off_reminder_signups_pkey
+			ON CONFLICT ON CONSTRAINT one_off_reminder_signups_identity_id_reminder_period_key
 			DO
 				UPDATE SET
 					country = $2,
@@ -65,7 +65,7 @@ export function writeRecurringSignup(
 			) VALUES (
 				$1, $2, $3, $4, $5, $6, $7, $8
 			)
-			ON CONFLICT ON CONSTRAINT recurring_reminder_signups_pkey
+			ON CONFLICT ON CONSTRAINT recurring_reminder_signups_identity_id_key
 			DO
 				UPDATE SET
 					country = $2,
