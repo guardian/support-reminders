@@ -54,6 +54,9 @@ jobs:
       - name: Build project and generate Riff-Raff artefact
         run: ./script/ci.sh
 
+      - name: Dependency Tree
+        run : sbt dependencyTree
+
       - name: Run unit tests
         run: yarn test --silent
         env:
