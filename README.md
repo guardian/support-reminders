@@ -53,6 +53,8 @@ followed by (you can actually call the database whatever you'd like)
 CREATE DATABASE "support-reminders-test";
 ```
 
+If this doesn't work, you might want to try running `createdb` (outside of your psql session).
+
 Finally to set up your environment variables, make a copy of the `.env.example`
 
 ```sh
