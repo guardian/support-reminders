@@ -27,7 +27,7 @@
     "@guardian/eslint-config-typescript": "^0.4.2",
     "@guardian/prettier": "^0.4.2",
     "@types/aws-lambda": "^8.10.119",
-    "@types/jest": "^26.0.20",
+    "@types/jest": "^29.5.3",
     "@types/node": "18.15.11",
     "@types/node-fetch": "^1.6.9",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -40,7 +40,7 @@
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-prettier": "^3.3.1",
-    "jest": "^26.6.3",
+    "jest": "^29.6.2",
     "prettier": "^2.2.1",
     "ts-node": "^9.1.1",
     "typecheck.macro": "^0.7.1"
