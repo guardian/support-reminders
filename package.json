@@ -13,7 +13,7 @@
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1415.0",
     "csv-writer": "^1.6.0",
-    "node-fetch": "^2.1.2",
+    "node-fetch": "^3.3.2",
     "pg": "8.4.0",
     "pg-format": "^1.0.4",
     "typescript": "5.0.4"
