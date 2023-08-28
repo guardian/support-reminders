@@ -91,7 +91,7 @@ jobs:
         run: yarn synth
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         if: >-
           github.actor != 'dependabot[bot]'
           && github.event.pull_request.user.login != 'dependabot[bot]'
