@@ -100,7 +100,7 @@ jobs:
           role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
 
       - name: Upload to Riff-Raff
-        uses: guardian/actions-riff-raff@v2
+        uses: guardian/actions-riff-raff@v3
         if: >-
           github.actor != 'dependabot[bot]'
           && github.event.pull_request.user.login != 'dependabot[bot]'
