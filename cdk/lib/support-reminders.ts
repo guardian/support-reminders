@@ -32,6 +32,7 @@ export class SupportReminders extends GuStack {
 		// ---- Miscellaneous constants ---- //
 		const app = "support-reminders";
 		const vpc = GuVpc.fromIdParameter(this, "vpc");
+		const alarmsTopic = 'alarms-handler-topic-PROD';
 		const runtime = Runtime.NODEJS_18_X;
 		const fileName = "support-reminders.zip";
 		const environment = {
@@ -84,7 +85,7 @@ export class SupportReminders extends GuStack {
 				allowHeaders: ["Content-Type"],
 			},
 			monitoringConfiguration: {
-				snsTopicName: "conversion-dev",
+				snsTopicName: alarmsTopic,
 				http5xxAlarm: {
 					tolerated5xxPercentage: 1,
 				}
@@ -124,7 +125,7 @@ export class SupportReminders extends GuStack {
 				},
 			],
 			monitoringConfiguration: {
-				snsTopicName: "conversion-dev",
+				snsTopicName: alarmsTopic,
 				toleratedErrorPercentage: 1,
 			},
 			...sharedLambdaProps,
@@ -139,7 +140,7 @@ export class SupportReminders extends GuStack {
 				},
 			],
 			monitoringConfiguration: {
-				snsTopicName: "conversion-dev",
+				snsTopicName: alarmsTopic,
 				toleratedErrorPercentage: 1,
 			},
 			...sharedLambdaProps,
@@ -160,7 +161,7 @@ export class SupportReminders extends GuStack {
 			evaluationPeriods: 1,
 			threshold: 8,
 			actionsEnabled: isProd(),
-			snsTopicName: "contributions-dev",
+			snsTopicName: alarmsTopic,
 			comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
 			metric: new Metric({
 				metricName: "4XXError",
