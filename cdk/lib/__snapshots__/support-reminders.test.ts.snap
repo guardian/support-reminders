@@ -82,7 +82,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":contributions-dev",
+                ":alarms-handler-topic-PROD",
               ],
             ],
           },
@@ -121,7 +121,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":conversion-dev",
+                ":alarms-handler-topic-PROD",
               ],
             ],
           },
@@ -1883,7 +1883,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":conversion-dev",
+                ":alarms-handler-topic-PROD",
               ],
             ],
           },
@@ -2488,7 +2488,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":conversion-dev",
+                ":alarms-handler-topic-PROD",
               ],
             ],
           },
@@ -2868,7 +2868,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":contributions-dev",
+                ":alarms-handler-topic-PROD",
               ],
             ],
           },
@@ -2907,7 +2907,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":conversion-dev",
+                ":alarms-handler-topic-PROD",
               ],
             ],
           },
@@ -4669,7 +4669,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":conversion-dev",
+                ":alarms-handler-topic-PROD",
               ],
             ],
           },
@@ -5274,7 +5274,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":conversion-dev",
+                ":alarms-handler-topic-PROD",
               ],
             ],
           },
