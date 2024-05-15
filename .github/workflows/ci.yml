@@ -56,22 +56,13 @@ jobs:
           TEST_DB_PASSWORD: postgres
 
       - name: Copy files to Riff Raff package
-        if: >-
-          github.actor != 'dependabot[bot]'
-          && github.event.pull_request.user.login != 'dependabot[bot]'
         run: cp package.json riff-raff.yaml target
 
       - name: Yarn install in package
-        if: >-
-          github.actor != 'dependabot[bot]'
-          && github.event.pull_request.user.login != 'dependabot[bot]'
         working-directory: ./target
         run: yarn install --production
 
       - name: Zip target directory contents (quietly)
-        if: >-
-          github.actor != 'dependabot[bot]'
-          && github.event.pull_request.user.login != 'dependabot[bot]'
         run: zip -qr ../support-reminders.zip ./*
         working-directory: ./target
 
@@ -84,26 +75,17 @@ jobs:
           yarn test
 
       - name: Yarn synth (CDK)
-        if: >-
-          github.actor != 'dependabot[bot]'
-          && github.event.pull_request.user.login != 'dependabot[bot]'
         working-directory: cdk
         run: yarn synth
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
-        if: >-
-          github.actor != 'dependabot[bot]'
-          && github.event.pull_request.user.login != 'dependabot[bot]'
         with:
           aws-region: eu-west-1
           role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
 
       - name: Upload to Riff-Raff
         uses: guardian/actions-riff-raff@v2
-        if: >-
-          github.actor != 'dependabot[bot]'
-          && github.event.pull_request.user.login != 'dependabot[bot]'
         with:
           app: support-reminders
           configPath: ./riff-raff.yaml
@@ -113,6 +95,3 @@ jobs:
               - ./cdk/cdk.out/SupportReminders-PROD.template.json
             support-reminders:
               - ./support-reminders.zip
-
-
-
