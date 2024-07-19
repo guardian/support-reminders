@@ -1,4 +1,4 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyResult, SQSEvent } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool, QueryResult } from 'pg';
@@ -39,21 +39,21 @@ const identityAccessTokenPromise: Promise<string> = getParamFromSSM(
 	`/support-reminders/idapi/${ssmStage}/accessToken`,
 );
 
-export const run = async (
-	event: APIGatewayEvent,
-): Promise<APIGatewayProxyResult> => {
+export const run = async (event: SQSEvent): Promise<void> => {
 	console.log('received event: ', event);
 
 	const country = event.headers['X-GU-GeoIP-Country-Code'];
 	const signupRequest: unknown = { country, ...JSON.parse(event.body) };
 
+	let result;
 	if (event.path === '/create/one-off') {
-		return runOneOff(signupRequest);
+		result = await runOneOff(signupRequest);
 	} else if (event.path === '/create/recurring') {
-		return runRecurring(signupRequest);
+		result = await runRecurring(signupRequest);
 	}
 
-	return { headers, statusCode: 404, body: 'Not found' };
+	console.log('Result', result);
+	// return { headers, statusCode: 404, body: 'Not found' };
 };
 
 export const runOneOff = async (

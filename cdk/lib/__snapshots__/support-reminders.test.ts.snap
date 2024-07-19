@@ -47,32 +47,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         ],
       },
     },
-    "apiEndpoint9349E63C": {
-      "Value": {
-        "Fn::Join": [
-          "",
-          [
-            "https://",
-            {
-              "Ref": "apiC8550315",
-            },
-            ".execute-api.",
-            {
-              "Ref": "AWS::Region",
-            },
-            ".",
-            {
-              "Ref": "AWS::URLSuffix",
-            },
-            "/",
-            {
-              "Ref": "apiDeploymentStageprod896C8101",
-            },
-            "/",
-          ],
-        ],
-      },
-    },
   },
   "Parameters": {
     "DistributionBucketName": {
@@ -432,18 +406,13 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503c1c6a4dfeb8ac35ff8cef92727876ad9": {
+    "RestApiDeployment180EC503801c22eb56fec5ec4109339c7fd2ed27": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
         "RestApicancel928D6387",
-        "RestApicreateoneoffOPTIONS1F89A992",
-        "RestApicreateoneoffPOST41A64A32",
-        "RestApicreateoneoff2D1FCD3C",
         "RestApicreateOPTIONSC3837E5E",
-        "RestApicreaterecurringOPTIONSFBFDACD1",
-        "RestApicreaterecurringPOSTC2005445",
-        "RestApicreaterecurringA327119C",
+        "RestApicreatePOST89063740",
         "RestApicreate68AA2AF0",
         "RestApiOPTIONS6AA64D2D",
         "RestApireactivateOPTIONS263B776D",
@@ -464,7 +433,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503c1c6a4dfeb8ac35ff8cef92727876ad9",
+          "Ref": "RestApiDeployment180EC503801c22eb56fec5ec4109339c7fd2ed27",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -759,64 +728,33 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       },
       "Type": "AWS::ApiGateway::Method",
     },
-    "RestApicreateoneoff2D1FCD3C": {
-      "Properties": {
-        "ParentId": {
-          "Ref": "RestApicreate68AA2AF0",
-        },
-        "PathPart": "one-off",
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Resource",
-    },
-    "RestApicreateoneoffOPTIONS1F89A992": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "Integration": {
-          "IntegrationResponses": [
-            {
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-              },
-              "StatusCode": "204",
-            },
-          ],
-          "RequestTemplates": {
-            "application/json": "{ statusCode: 200 }",
-          },
-          "Type": "MOCK",
-        },
-        "MethodResponses": [
-          {
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true,
-              "method.response.header.Access-Control-Allow-Origin": true,
-            },
-            "StatusCode": "204",
-          },
-        ],
-        "ResourceId": {
-          "Ref": "RestApicreateoneoff2D1FCD3C",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApicreateoneoffPOST41A64A32": {
+    "RestApicreatePOST89063740": {
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "POST",
         "Integration": {
+          "Credentials": {
+            "Fn::GetAtt": [
+              "ApiGatewayToSqsRole590217A3",
+              "Arn",
+            ],
+          },
           "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
+          "IntegrationResponses": [
+            {
+              "ResponseTemplates": {
+                "application/json": "{"done": true}",
+              },
+              "StatusCode": "200",
+            },
+          ],
+          "RequestParameters": {
+            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
+          },
+          "RequestTemplates": {
+            "application/json": "Action=SendMessage&MessageBody=$input.body",
+          },
+          "Type": "AWS",
           "Uri": {
             "Fn::Join": [
               "",
@@ -829,267 +767,28 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                 {
                   "Ref": "AWS::Region",
                 },
-                ":lambda:path/2015-03-31/functions/",
+                ":sqs:path/",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                "/",
                 {
                   "Fn::GetAtt": [
-                    "createreminderssignupB956888C",
-                    "Arn",
+                    "supportremindersQueue01C5AB8D",
+                    "QueueName",
                   ],
                 },
-                "/invocations",
               ],
             ],
           },
-        },
-        "ResourceId": {
-          "Ref": "RestApicreateoneoff2D1FCD3C",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApicreateoneoffPOSTApiPermissionSupportRemindersCODERestApi2446198FPOSTcreateoneoff673C3AFA": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "createreminderssignupB956888C",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/",
-              {
-                "Ref": "RestApiDeploymentStageprod3855DE66",
-              },
-              "/POST/create/one-off",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "RestApicreateoneoffPOSTApiPermissionTestSupportRemindersCODERestApi2446198FPOSTcreateoneoff90DF1AAD": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "createreminderssignupB956888C",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/test-invoke-stage/POST/create/one-off",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "RestApicreaterecurringA327119C": {
-      "Properties": {
-        "ParentId": {
-          "Ref": "RestApicreate68AA2AF0",
-        },
-        "PathPart": "recurring",
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Resource",
-    },
-    "RestApicreaterecurringOPTIONSFBFDACD1": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "Integration": {
-          "IntegrationResponses": [
-            {
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-              },
-              "StatusCode": "204",
-            },
-          ],
-          "RequestTemplates": {
-            "application/json": "{ statusCode: 200 }",
-          },
-          "Type": "MOCK",
         },
         "MethodResponses": [
           {
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true,
-              "method.response.header.Access-Control-Allow-Origin": true,
-            },
-            "StatusCode": "204",
+            "StatusCode": "200",
           },
         ],
         "ResourceId": {
-          "Ref": "RestApicreaterecurringA327119C",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApicreaterecurringPOSTApiPermissionSupportRemindersCODERestApi2446198FPOSTcreaterecurringA978DFB3": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "createreminderssignupB956888C",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/",
-              {
-                "Ref": "RestApiDeploymentStageprod3855DE66",
-              },
-              "/POST/create/recurring",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "RestApicreaterecurringPOSTApiPermissionTestSupportRemindersCODERestApi2446198FPOSTcreaterecurringE21E016C": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "createreminderssignupB956888C",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/test-invoke-stage/POST/create/recurring",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "RestApicreaterecurringPOSTC2005445": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "POST",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "createreminderssignupB956888C",
-                    "Arn",
-                  ],
-                },
-                "/invocations",
-              ],
-            ],
-          },
-        },
-        "ResourceId": {
-          "Ref": "RestApicreaterecurringA327119C",
+          "Ref": "RestApicreate68AA2AF0",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -1464,213 +1163,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
-    },
-    "apiAccount57E28B43": {
-      "DeletionPolicy": "Retain",
-      "DependsOn": [
-        "apiC8550315",
-      ],
-      "Properties": {
-        "CloudWatchRoleArn": {
-          "Fn::GetAtt": [
-            "apiCloudWatchRoleAC81D93E",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::ApiGateway::Account",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "apiC8550315": {
-      "Properties": {
-        "Name": "api",
-        "Tags": [
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "CODE",
-          },
-        ],
-      },
-      "Type": "AWS::ApiGateway::RestApi",
-    },
-    "apiCloudWatchRoleAC81D93E": {
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "apigateway.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
-              ],
-            ],
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "CODE",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "apiDeployment149F129446765f02adb599bbbfd06ebca9169f38": {
-      "DependsOn": [
-        "apiPOST36368FF5",
-      ],
-      "Properties": {
-        "Description": "Automatically created by the RestApi construct",
-        "RestApiId": {
-          "Ref": "apiC8550315",
-        },
-      },
-      "Type": "AWS::ApiGateway::Deployment",
-    },
-    "apiDeploymentStageprod896C8101": {
-      "DependsOn": [
-        "apiAccount57E28B43",
-      ],
-      "Properties": {
-        "DeploymentId": {
-          "Ref": "apiDeployment149F129446765f02adb599bbbfd06ebca9169f38",
-        },
-        "RestApiId": {
-          "Ref": "apiC8550315",
-        },
-        "StageName": "prod",
-        "Tags": [
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "CODE",
-          },
-        ],
-      },
-      "Type": "AWS::ApiGateway::Stage",
-    },
-    "apiPOST36368FF5": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "POST",
-        "Integration": {
-          "Credentials": {
-            "Fn::GetAtt": [
-              "ApiGatewayToSqsRole590217A3",
-              "Arn",
-            ],
-          },
-          "IntegrationHttpMethod": "POST",
-          "IntegrationResponses": [
-            {
-              "ResponseTemplates": {
-                "application/json": "{"done": true}",
-              },
-              "StatusCode": "200",
-            },
-          ],
-          "RequestParameters": {
-            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
-          },
-          "RequestTemplates": {
-            "application/json": "Action=SendMessage&MessageBody=$input.body",
-          },
-          "Type": "AWS",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ":sqs:path/",
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                "/",
-                {
-                  "Fn::GetAtt": [
-                    "supportremindersQueue01C5AB8D",
-                    "QueueName",
-                  ],
-                },
-              ],
-            ],
-          },
-        },
-        "MethodResponses": [
-          {
-            "StatusCode": "200",
-          },
-        ],
-        "ResourceId": {
-          "Fn::GetAtt": [
-            "apiC8550315",
-            "RootResourceId",
-          ],
-        },
-        "RestApiId": {
-          "Ref": "apiC8550315",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
     },
     "cancelremindersF4DAF18B": {
       "DependsOn": [
@@ -3391,32 +2883,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         ],
       },
     },
-    "apiEndpoint9349E63C": {
-      "Value": {
-        "Fn::Join": [
-          "",
-          [
-            "https://",
-            {
-              "Ref": "apiC8550315",
-            },
-            ".execute-api.",
-            {
-              "Ref": "AWS::Region",
-            },
-            ".",
-            {
-              "Ref": "AWS::URLSuffix",
-            },
-            "/",
-            {
-              "Ref": "apiDeploymentStageprod896C8101",
-            },
-            "/",
-          ],
-        ],
-      },
-    },
   },
   "Parameters": {
     "DistributionBucketName": {
@@ -3776,18 +3242,13 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC5036c6d30ab953d426d0de7e72d49f91562": {
+    "RestApiDeployment180EC503b73f118319c8bf666fcc1a86b9725266": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
         "RestApicancel928D6387",
-        "RestApicreateoneoffOPTIONS1F89A992",
-        "RestApicreateoneoffPOST41A64A32",
-        "RestApicreateoneoff2D1FCD3C",
         "RestApicreateOPTIONSC3837E5E",
-        "RestApicreaterecurringOPTIONSFBFDACD1",
-        "RestApicreaterecurringPOSTC2005445",
-        "RestApicreaterecurringA327119C",
+        "RestApicreatePOST89063740",
         "RestApicreate68AA2AF0",
         "RestApiOPTIONS6AA64D2D",
         "RestApireactivateOPTIONS263B776D",
@@ -3808,7 +3269,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC5036c6d30ab953d426d0de7e72d49f91562",
+          "Ref": "RestApiDeployment180EC503b73f118319c8bf666fcc1a86b9725266",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -4103,64 +3564,33 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       },
       "Type": "AWS::ApiGateway::Method",
     },
-    "RestApicreateoneoff2D1FCD3C": {
-      "Properties": {
-        "ParentId": {
-          "Ref": "RestApicreate68AA2AF0",
-        },
-        "PathPart": "one-off",
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Resource",
-    },
-    "RestApicreateoneoffOPTIONS1F89A992": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "Integration": {
-          "IntegrationResponses": [
-            {
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-              },
-              "StatusCode": "204",
-            },
-          ],
-          "RequestTemplates": {
-            "application/json": "{ statusCode: 200 }",
-          },
-          "Type": "MOCK",
-        },
-        "MethodResponses": [
-          {
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true,
-              "method.response.header.Access-Control-Allow-Origin": true,
-            },
-            "StatusCode": "204",
-          },
-        ],
-        "ResourceId": {
-          "Ref": "RestApicreateoneoff2D1FCD3C",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApicreateoneoffPOST41A64A32": {
+    "RestApicreatePOST89063740": {
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "POST",
         "Integration": {
+          "Credentials": {
+            "Fn::GetAtt": [
+              "ApiGatewayToSqsRole590217A3",
+              "Arn",
+            ],
+          },
           "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
+          "IntegrationResponses": [
+            {
+              "ResponseTemplates": {
+                "application/json": "{"done": true}",
+              },
+              "StatusCode": "200",
+            },
+          ],
+          "RequestParameters": {
+            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
+          },
+          "RequestTemplates": {
+            "application/json": "Action=SendMessage&MessageBody=$input.body",
+          },
+          "Type": "AWS",
           "Uri": {
             "Fn::Join": [
               "",
@@ -4173,267 +3603,28 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                 {
                   "Ref": "AWS::Region",
                 },
-                ":lambda:path/2015-03-31/functions/",
+                ":sqs:path/",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                "/",
                 {
                   "Fn::GetAtt": [
-                    "createreminderssignupB956888C",
-                    "Arn",
+                    "supportremindersQueue01C5AB8D",
+                    "QueueName",
                   ],
                 },
-                "/invocations",
               ],
             ],
           },
-        },
-        "ResourceId": {
-          "Ref": "RestApicreateoneoff2D1FCD3C",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApicreateoneoffPOSTApiPermissionSupportRemindersPRODRestApi318F04F5POSTcreateoneoffCB9C5A56": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "createreminderssignupB956888C",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/",
-              {
-                "Ref": "RestApiDeploymentStageprod3855DE66",
-              },
-              "/POST/create/one-off",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "RestApicreateoneoffPOSTApiPermissionTestSupportRemindersPRODRestApi318F04F5POSTcreateoneoff02BE2CEA": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "createreminderssignupB956888C",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/test-invoke-stage/POST/create/one-off",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "RestApicreaterecurringA327119C": {
-      "Properties": {
-        "ParentId": {
-          "Ref": "RestApicreate68AA2AF0",
-        },
-        "PathPart": "recurring",
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Resource",
-    },
-    "RestApicreaterecurringOPTIONSFBFDACD1": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "Integration": {
-          "IntegrationResponses": [
-            {
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-              },
-              "StatusCode": "204",
-            },
-          ],
-          "RequestTemplates": {
-            "application/json": "{ statusCode: 200 }",
-          },
-          "Type": "MOCK",
         },
         "MethodResponses": [
           {
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true,
-              "method.response.header.Access-Control-Allow-Origin": true,
-            },
-            "StatusCode": "204",
+            "StatusCode": "200",
           },
         ],
         "ResourceId": {
-          "Ref": "RestApicreaterecurringA327119C",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApicreaterecurringPOSTApiPermissionSupportRemindersPRODRestApi318F04F5POSTcreaterecurringF86752F5": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "createreminderssignupB956888C",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/",
-              {
-                "Ref": "RestApiDeploymentStageprod3855DE66",
-              },
-              "/POST/create/recurring",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "RestApicreaterecurringPOSTApiPermissionTestSupportRemindersPRODRestApi318F04F5POSTcreaterecurring6220A329": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "createreminderssignupB956888C",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              {
-                "Ref": "RestApi0C43BF4B",
-              },
-              "/test-invoke-stage/POST/create/recurring",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "RestApicreaterecurringPOSTC2005445": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "POST",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "createreminderssignupB956888C",
-                    "Arn",
-                  ],
-                },
-                "/invocations",
-              ],
-            ],
-          },
-        },
-        "ResourceId": {
-          "Ref": "RestApicreaterecurringA327119C",
+          "Ref": "RestApicreate68AA2AF0",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -4808,213 +3999,6 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
-    },
-    "apiAccount57E28B43": {
-      "DeletionPolicy": "Retain",
-      "DependsOn": [
-        "apiC8550315",
-      ],
-      "Properties": {
-        "CloudWatchRoleArn": {
-          "Fn::GetAtt": [
-            "apiCloudWatchRoleAC81D93E",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::ApiGateway::Account",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "apiC8550315": {
-      "Properties": {
-        "Name": "api",
-        "Tags": [
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-      },
-      "Type": "AWS::ApiGateway::RestApi",
-    },
-    "apiCloudWatchRoleAC81D93E": {
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "apigateway.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
-              ],
-            ],
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "apiDeployment149F1294461bea2efd612aad2761d2d18c877942": {
-      "DependsOn": [
-        "apiPOST36368FF5",
-      ],
-      "Properties": {
-        "Description": "Automatically created by the RestApi construct",
-        "RestApiId": {
-          "Ref": "apiC8550315",
-        },
-      },
-      "Type": "AWS::ApiGateway::Deployment",
-    },
-    "apiDeploymentStageprod896C8101": {
-      "DependsOn": [
-        "apiAccount57E28B43",
-      ],
-      "Properties": {
-        "DeploymentId": {
-          "Ref": "apiDeployment149F1294461bea2efd612aad2761d2d18c877942",
-        },
-        "RestApiId": {
-          "Ref": "apiC8550315",
-        },
-        "StageName": "prod",
-        "Tags": [
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-      },
-      "Type": "AWS::ApiGateway::Stage",
-    },
-    "apiPOST36368FF5": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "POST",
-        "Integration": {
-          "Credentials": {
-            "Fn::GetAtt": [
-              "ApiGatewayToSqsRole590217A3",
-              "Arn",
-            ],
-          },
-          "IntegrationHttpMethod": "POST",
-          "IntegrationResponses": [
-            {
-              "ResponseTemplates": {
-                "application/json": "{"done": true}",
-              },
-              "StatusCode": "200",
-            },
-          ],
-          "RequestParameters": {
-            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
-          },
-          "RequestTemplates": {
-            "application/json": "Action=SendMessage&MessageBody=$input.body",
-          },
-          "Type": "AWS",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ":sqs:path/",
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                "/",
-                {
-                  "Fn::GetAtt": [
-                    "supportremindersQueue01C5AB8D",
-                    "QueueName",
-                  ],
-                },
-              ],
-            ],
-          },
-        },
-        "MethodResponses": [
-          {
-            "StatusCode": "200",
-          },
-        ],
-        "ResourceId": {
-          "Fn::GetAtt": [
-            "apiC8550315",
-            "RootResourceId",
-          ],
-        },
-        "RestApiId": {
-          "Ref": "apiC8550315",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
     },
     "cancelremindersF4DAF18B": {
       "DependsOn": [

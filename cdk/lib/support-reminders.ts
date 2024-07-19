@@ -6,7 +6,7 @@ import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
 import {Duration} from "aws-cdk-lib";
-import { AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors, RestApi } from "aws-cdk-lib/aws-apigateway";
+import { AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors  } from "aws-cdk-lib/aws-apigateway";
 import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
@@ -116,18 +116,6 @@ export class SupportReminders extends GuStack {
 			},
 		});
 
-		// Rest Api
-		const api = new RestApi(this, 'api', {});
-
-		// post method
-		api.root.addMethod('POST', sendMessageIntegration, {
-			methodResponses: [
-				{
-					statusCode: '200',
-				},
-			]
-		});
-
 		// ---- API-triggered lambda functions ---- //
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			handler: "create-reminder-signup/lambda/lambda.handler",
@@ -168,16 +156,16 @@ export class SupportReminders extends GuStack {
 					httpMethod: "POST",
 					lambda: reactivateRecurringReminderLambda,
 				},
-				{
-					path: "/create/recurring",
-					httpMethod: "POST",
-					lambda: createRemindersSignupLambda,
-				},
-				{
-					path: "/create/one-off",
-					httpMethod: "POST",
-					lambda: createRemindersSignupLambda,
-				},
+				// {
+				// 	path: "/create/recurring",
+				// 	httpMethod: "POST",
+				// 	lambda: createRemindersSignupLambda,
+				// },
+				// {
+				// 	path: "/create/one-off",
+				// 	httpMethod: "POST",
+				// 	lambda: createRemindersSignupLambda,
+				// },
 				{
 					path: "/cancel",
 					httpMethod: "POST",
@@ -185,6 +173,17 @@ export class SupportReminders extends GuStack {
 				},
 			],
 		})
+
+
+		// post method
+		supportRemindersApi.api.root.resourceForPath('/create/').addMethod('POST', sendMessageIntegration, {
+			methodResponses: [
+				{
+					statusCode: '200',
+				},
+			]
+		});
+
 
 
 		// ---- Scheduled lambda functions ---- //
