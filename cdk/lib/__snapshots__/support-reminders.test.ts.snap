@@ -47,6 +47,32 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         ],
       },
     },
+    "apiEndpoint9349E63C": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "apiC8550315",
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "apiDeploymentStageprod896C8101",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
   },
   "Parameters": {
     "DistributionBucketName": {
@@ -177,6 +203,71 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "TreatMissingData": "notBreaching",
       },
       "Type": "AWS::CloudWatch::Alarm",
+    },
+    "ApiGatewayToSqsRole590217A3": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "CODE",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "ApiGatewayToSqsRoleDefaultPolicy4DC2F8A9": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "sqs:SendMessage",
+                "sqs:GetQueueAttributes",
+                "sqs:GetQueueUrl",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ApiGatewayToSqsRoleDefaultPolicy4DC2F8A9",
+        "Roles": [
+          {
+            "Ref": "ApiGatewayToSqsRole590217A3",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
     },
     "BasePathMapping": {
       "Properties": {
@@ -1342,6 +1433,245 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "SendMessagePolicyDCAA5B79": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sqs:SendMessage",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "SendMessagePolicyDCAA5B79",
+        "Roles": [
+          {
+            "Ref": "createreminderssignupServiceRole14AD0F8F",
+          },
+          {
+            "Ref": "reactivaterecurringreminderServiceRoleA9652C4C",
+          },
+          {
+            "Ref": "cancelremindersServiceRole2D334903",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "apiAccount57E28B43": {
+      "DeletionPolicy": "Retain",
+      "DependsOn": [
+        "apiC8550315",
+      ],
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "apiCloudWatchRoleAC81D93E",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "apiC8550315": {
+      "Properties": {
+        "Name": "api",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "CODE",
+          },
+        ],
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "apiCloudWatchRoleAC81D93E": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "CODE",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "apiDeployment149F129446765f02adb599bbbfd06ebca9169f38": {
+      "DependsOn": [
+        "apiPOST36368FF5",
+      ],
+      "Properties": {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": {
+          "Ref": "apiC8550315",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "apiDeploymentStageprod896C8101": {
+      "DependsOn": [
+        "apiAccount57E28B43",
+      ],
+      "Properties": {
+        "DeploymentId": {
+          "Ref": "apiDeployment149F129446765f02adb599bbbfd06ebca9169f38",
+        },
+        "RestApiId": {
+          "Ref": "apiC8550315",
+        },
+        "StageName": "prod",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "CODE",
+          },
+        ],
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "apiPOST36368FF5": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": {
+          "Credentials": {
+            "Fn::GetAtt": [
+              "ApiGatewayToSqsRole590217A3",
+              "Arn",
+            ],
+          },
+          "IntegrationHttpMethod": "POST",
+          "IntegrationResponses": [
+            {
+              "ResponseTemplates": {
+                "application/json": "{"done": true}",
+              },
+              "StatusCode": "200",
+            },
+          ],
+          "RequestParameters": {
+            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
+          },
+          "RequestTemplates": {
+            "application/json": "Action=SendMessage&MessageBody=$input.body",
+          },
+          "Type": "AWS",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":sqs:path/",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                "/",
+                {
+                  "Fn::GetAtt": [
+                    "supportremindersQueue01C5AB8D",
+                    "QueueName",
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+          },
+        ],
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "apiC8550315",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": {
+          "Ref": "apiC8550315",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
     "cancelremindersF4DAF18B": {
       "DependsOn": [
         "cancelremindersServiceRoleDefaultPolicyC48CB67C",
@@ -1478,6 +1808,22 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           "Statement": [
             {
               "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
@@ -1571,6 +1917,23 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "cancelremindersSqsEventSourceSupportRemindersCODEsupportremindersQueueD5BCDE9B46367325": {
+      "Properties": {
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "supportremindersQueue01C5AB8D",
+            "Arn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "cancelremindersF4DAF18B",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
     },
     "createreminderssignupB956888C": {
       "DependsOn": [
@@ -1708,6 +2071,22 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           "Statement": [
             {
               "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
@@ -1801,6 +2180,50 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "createreminderssignupSqsEventSourceSupportRemindersCODEsupportremindersQueueD5BCDE9BE219E9BA": {
+      "Properties": {
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "supportremindersQueue01C5AB8D",
+            "Arn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "createreminderssignupB956888C",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
+    },
+    "deadletterssupportremindersQueue83E67347": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "MessageRetentionPeriod": 1209600,
+        "QueueName": "dead-letters-support-reminders-CODE",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "CODE",
+          },
+        ],
+      },
+      "Type": "AWS::SQS::Queue",
+      "UpdateReplacePolicy": "Delete",
     },
     "nextreminders1BF0BB76": {
       "DependsOn": [
@@ -2046,6 +2469,22 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           "Statement": [
             {
               "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
@@ -2139,6 +2578,23 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "nextremindersSqsEventSourceSupportRemindersCODEsupportremindersQueueD5BCDE9B6DC73DA8": {
+      "Properties": {
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "supportremindersQueue01C5AB8D",
+            "Arn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "nextreminders1BF0BB76",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
     },
     "nextremindersnextreminderscron05000AllowEventRuleSupportRemindersCODEnextremindersCEEC74A609E30C1C": {
       "Properties": {
@@ -2313,6 +2769,22 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           "Statement": [
             {
               "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
@@ -2406,6 +2878,23 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "reactivaterecurringreminderSqsEventSourceSupportRemindersCODEsupportremindersQueueD5BCDE9B8D3D30D2": {
+      "Properties": {
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "supportremindersQueue01C5AB8D",
+            "Arn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "reactivaterecurringreminder0045F57B",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
     },
     "signupexportsDBFAB572": {
       "DependsOn": [
@@ -2651,6 +3140,22 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           "Statement": [
             {
               "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
@@ -2745,6 +3250,23 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "signupexportsSqsEventSourceSupportRemindersCODEsupportremindersQueueD5BCDE9B89F70850": {
+      "Properties": {
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "supportremindersQueue01C5AB8D",
+            "Arn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "signupexportsDBFAB572",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
+    },
     "signupexportssignupexportscron05000AADDEB89": {
       "Properties": {
         "ScheduleExpression": "cron(05 00 * * ? *)",
@@ -2781,6 +3303,42 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         },
       },
       "Type": "AWS::Lambda::Permission",
+    },
+    "supportremindersQueue01C5AB8D": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "QueueName": "support-reminders-queue-CODE",
+        "RedrivePolicy": {
+          "deadLetterTargetArn": {
+            "Fn::GetAtt": [
+              "deadletterssupportremindersQueue83E67347",
+              "Arn",
+            ],
+          },
+          "maxReceiveCount": 1,
+        },
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "CODE",
+          },
+        ],
+        "VisibilityTimeout": 120,
+      },
+      "Type": "AWS::SQS::Queue",
+      "UpdateReplacePolicy": "Delete",
     },
   },
 }
@@ -2827,6 +3385,32 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "/",
             {
               "Ref": "RestApiDeploymentStageprod3855DE66",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+    "apiEndpoint9349E63C": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "apiC8550315",
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            {
+              "Ref": "apiDeploymentStageprod896C8101",
             },
             "/",
           ],
@@ -2963,6 +3547,71 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "TreatMissingData": "notBreaching",
       },
       "Type": "AWS::CloudWatch::Alarm",
+    },
+    "ApiGatewayToSqsRole590217A3": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "PROD",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "ApiGatewayToSqsRoleDefaultPolicy4DC2F8A9": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "sqs:SendMessage",
+                "sqs:GetQueueAttributes",
+                "sqs:GetQueueUrl",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ApiGatewayToSqsRoleDefaultPolicy4DC2F8A9",
+        "Roles": [
+          {
+            "Ref": "ApiGatewayToSqsRole590217A3",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
     },
     "BasePathMapping": {
       "Properties": {
@@ -4128,6 +4777,245 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "SendMessagePolicyDCAA5B79": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sqs:SendMessage",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "SendMessagePolicyDCAA5B79",
+        "Roles": [
+          {
+            "Ref": "createreminderssignupServiceRole14AD0F8F",
+          },
+          {
+            "Ref": "reactivaterecurringreminderServiceRoleA9652C4C",
+          },
+          {
+            "Ref": "cancelremindersServiceRole2D334903",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "apiAccount57E28B43": {
+      "DeletionPolicy": "Retain",
+      "DependsOn": [
+        "apiC8550315",
+      ],
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "apiCloudWatchRoleAC81D93E",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "apiC8550315": {
+      "Properties": {
+        "Name": "api",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "PROD",
+          },
+        ],
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "apiCloudWatchRoleAC81D93E": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "PROD",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "apiDeployment149F1294461bea2efd612aad2761d2d18c877942": {
+      "DependsOn": [
+        "apiPOST36368FF5",
+      ],
+      "Properties": {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": {
+          "Ref": "apiC8550315",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "apiDeploymentStageprod896C8101": {
+      "DependsOn": [
+        "apiAccount57E28B43",
+      ],
+      "Properties": {
+        "DeploymentId": {
+          "Ref": "apiDeployment149F1294461bea2efd612aad2761d2d18c877942",
+        },
+        "RestApiId": {
+          "Ref": "apiC8550315",
+        },
+        "StageName": "prod",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "PROD",
+          },
+        ],
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "apiPOST36368FF5": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": {
+          "Credentials": {
+            "Fn::GetAtt": [
+              "ApiGatewayToSqsRole590217A3",
+              "Arn",
+            ],
+          },
+          "IntegrationHttpMethod": "POST",
+          "IntegrationResponses": [
+            {
+              "ResponseTemplates": {
+                "application/json": "{"done": true}",
+              },
+              "StatusCode": "200",
+            },
+          ],
+          "RequestParameters": {
+            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
+          },
+          "RequestTemplates": {
+            "application/json": "Action=SendMessage&MessageBody=$input.body",
+          },
+          "Type": "AWS",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":sqs:path/",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                "/",
+                {
+                  "Fn::GetAtt": [
+                    "supportremindersQueue01C5AB8D",
+                    "QueueName",
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+          },
+        ],
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "apiC8550315",
+            "RootResourceId",
+          ],
+        },
+        "RestApiId": {
+          "Ref": "apiC8550315",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
     "cancelremindersF4DAF18B": {
       "DependsOn": [
         "cancelremindersServiceRoleDefaultPolicyC48CB67C",
@@ -4264,6 +5152,22 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           "Statement": [
             {
               "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
@@ -4357,6 +5261,23 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "cancelremindersSqsEventSourceSupportRemindersPRODsupportremindersQueue30985D82CF609D22": {
+      "Properties": {
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "supportremindersQueue01C5AB8D",
+            "Arn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "cancelremindersF4DAF18B",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
     },
     "createreminderssignupB956888C": {
       "DependsOn": [
@@ -4494,6 +5415,22 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           "Statement": [
             {
               "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
@@ -4587,6 +5524,50 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "createreminderssignupSqsEventSourceSupportRemindersPRODsupportremindersQueue30985D82167501E9": {
+      "Properties": {
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "supportremindersQueue01C5AB8D",
+            "Arn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "createreminderssignupB956888C",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
+    },
+    "deadletterssupportremindersQueue83E67347": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "MessageRetentionPeriod": 1209600,
+        "QueueName": "dead-letters-support-reminders-PROD",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "PROD",
+          },
+        ],
+      },
+      "Type": "AWS::SQS::Queue",
+      "UpdateReplacePolicy": "Delete",
     },
     "nextreminders1BF0BB76": {
       "DependsOn": [
@@ -4832,6 +5813,22 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           "Statement": [
             {
               "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
@@ -4925,6 +5922,23 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "nextremindersSqsEventSourceSupportRemindersPRODsupportremindersQueue30985D829B3BB3C8": {
+      "Properties": {
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "supportremindersQueue01C5AB8D",
+            "Arn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "nextreminders1BF0BB76",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
     },
     "nextremindersnextreminderscron05000AllowEventRuleSupportRemindersPRODnextreminders3B36D5FC8C6A0FB9": {
       "Properties": {
@@ -5099,6 +6113,22 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           "Statement": [
             {
               "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
@@ -5192,6 +6222,23 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "reactivaterecurringreminderSqsEventSourceSupportRemindersPRODsupportremindersQueue30985D82899AD062": {
+      "Properties": {
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "supportremindersQueue01C5AB8D",
+            "Arn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "reactivaterecurringreminder0045F57B",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
     },
     "signupexportsDBFAB572": {
       "DependsOn": [
@@ -5437,6 +6484,22 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           "Statement": [
             {
               "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "supportremindersQueue01C5AB8D",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
@@ -5531,6 +6594,23 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "signupexportsSqsEventSourceSupportRemindersPRODsupportremindersQueue30985D82BEF93D9D": {
+      "Properties": {
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "supportremindersQueue01C5AB8D",
+            "Arn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "signupexportsDBFAB572",
+        },
+        "FunctionResponseTypes": [
+          "ReportBatchItemFailures",
+        ],
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
+    },
     "signupexportssignupexportscron05000AADDEB89": {
       "Properties": {
         "ScheduleExpression": "cron(05 00 * * ? *)",
@@ -5567,6 +6647,42 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         },
       },
       "Type": "AWS::Lambda::Permission",
+    },
+    "supportremindersQueue01C5AB8D": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "QueueName": "support-reminders-queue-PROD",
+        "RedrivePolicy": {
+          "deadLetterTargetArn": {
+            "Fn::GetAtt": [
+              "deadletterssupportremindersQueue83E67347",
+              "Arn",
+            ],
+          },
+          "maxReceiveCount": 1,
+        },
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "PROD",
+          },
+        ],
+        "VisibilityTimeout": 120,
+      },
+      "Type": "AWS::SQS::Queue",
+      "UpdateReplacePolicy": "Delete",
     },
   },
 }

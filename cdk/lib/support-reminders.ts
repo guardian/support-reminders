@@ -6,7 +6,7 @@ import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
 import {Duration} from "aws-cdk-lib";
-import {AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors } from "aws-cdk-lib/aws-apigateway";
+import { AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors, RestApi } from "aws-cdk-lib/aws-apigateway";
 import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
@@ -95,7 +95,7 @@ export class SupportReminders extends GuStack {
 		// Api Gateway Direct Integration
 		const sendMessageIntegration = new AwsIntegration({
 			service: 'sqs',
-			path: `${}/${queue.queueName}`,
+			path: `${this.account}/${queue.queueName}`,
 			integrationHttpMethod: 'POST',
 			options: {
 				credentialsRole: apiRole,
@@ -116,7 +116,17 @@ export class SupportReminders extends GuStack {
 			},
 		});
 
+		// Rest Api
+		const api = new RestApi(this, 'api', {});
 
+		// post method
+		api.root.addMethod('POST', sendMessageIntegration, {
+			methodResponses: [
+				{
+					statusCode: '200',
+				},
+			]
+		});
 
 		// ---- API-triggered lambda functions ---- //
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
@@ -348,6 +358,5 @@ export class SupportReminders extends GuStack {
 			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy)
 			l.role?.attachInlinePolicy(s3PutObjectInlinePolicy)
 		})
-
 	}
 }
