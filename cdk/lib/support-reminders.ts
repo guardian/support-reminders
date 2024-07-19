@@ -144,7 +144,7 @@ export class SupportReminders extends GuStack {
 				allowMethods: Cors.ALL_METHODS,
 				allowHeaders: ["Content-Type"],
 			},
-			monitoringConfiguration: {
+			monitoringConfiguration: this.stage === 'CODE' ? { noMonitoring: true } : {
 				snsTopicName: alarmsTopic,
 				http5xxAlarm: {
 					tolerated5xxPercentage: 1,
