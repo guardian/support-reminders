@@ -176,7 +176,7 @@ export class SupportReminders extends GuStack {
 
 
 		// post method
-		supportRemindersApi.api.root.resourceForPath('/create/one-').addMethod('POST', sendMessageIntegration, {
+		supportRemindersApi.api.root.resourceForPath('/create').addMethod('POST', sendMessageIntegration, {
 			methodResponses: [
 				{
 					statusCode: '200',

@@ -332,15 +332,13 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503028aa5ded9001e8322ed3e4ea52560d6": {
+    "RestApiDeployment180EC503801c22eb56fec5ec4109339c7fd2ed27": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
         "RestApicancel928D6387",
-        "RestApicreateoneOPTIONS6F9500E1",
-        "RestApicreateonePOST9B86A777",
-        "RestApicreateoneC363A09F",
         "RestApicreateOPTIONSC3837E5E",
+        "RestApicreatePOST89063740",
         "RestApicreate68AA2AF0",
         "RestApiOPTIONS6AA64D2D",
         "RestApireactivateOPTIONS263B776D",
@@ -361,7 +359,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503028aa5ded9001e8322ed3e4ea52560d6",
+          "Ref": "RestApiDeployment180EC503801c22eb56fec5ec4109339c7fd2ed27",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -656,58 +654,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       },
       "Type": "AWS::ApiGateway::Method",
     },
-    "RestApicreateoneC363A09F": {
-      "Properties": {
-        "ParentId": {
-          "Ref": "RestApicreate68AA2AF0",
-        },
-        "PathPart": "one-",
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Resource",
-    },
-    "RestApicreateoneOPTIONS6F9500E1": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "Integration": {
-          "IntegrationResponses": [
-            {
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-              },
-              "StatusCode": "204",
-            },
-          ],
-          "RequestTemplates": {
-            "application/json": "{ statusCode: 200 }",
-          },
-          "Type": "MOCK",
-        },
-        "MethodResponses": [
-          {
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true,
-              "method.response.header.Access-Control-Allow-Origin": true,
-            },
-            "StatusCode": "204",
-          },
-        ],
-        "ResourceId": {
-          "Ref": "RestApicreateoneC363A09F",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApicreateonePOST9B86A777": {
+    "RestApicreatePOST89063740": {
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "POST",
@@ -767,7 +714,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           },
         ],
         "ResourceId": {
-          "Ref": "RestApicreateoneC363A09F",
+          "Ref": "RestApicreate68AA2AF0",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -3089,15 +3036,13 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC5035a364e18e9e867b453b010c0b4c9414e": {
+    "RestApiDeployment180EC503b73f118319c8bf666fcc1a86b9725266": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
         "RestApicancel928D6387",
-        "RestApicreateoneOPTIONS6F9500E1",
-        "RestApicreateonePOST9B86A777",
-        "RestApicreateoneC363A09F",
         "RestApicreateOPTIONSC3837E5E",
+        "RestApicreatePOST89063740",
         "RestApicreate68AA2AF0",
         "RestApiOPTIONS6AA64D2D",
         "RestApireactivateOPTIONS263B776D",
@@ -3118,7 +3063,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC5035a364e18e9e867b453b010c0b4c9414e",
+          "Ref": "RestApiDeployment180EC503b73f118319c8bf666fcc1a86b9725266",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -3413,58 +3358,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       },
       "Type": "AWS::ApiGateway::Method",
     },
-    "RestApicreateoneC363A09F": {
-      "Properties": {
-        "ParentId": {
-          "Ref": "RestApicreate68AA2AF0",
-        },
-        "PathPart": "one-",
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Resource",
-    },
-    "RestApicreateoneOPTIONS6F9500E1": {
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "Integration": {
-          "IntegrationResponses": [
-            {
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-              },
-              "StatusCode": "204",
-            },
-          ],
-          "RequestTemplates": {
-            "application/json": "{ statusCode: 200 }",
-          },
-          "Type": "MOCK",
-        },
-        "MethodResponses": [
-          {
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true,
-              "method.response.header.Access-Control-Allow-Origin": true,
-            },
-            "StatusCode": "204",
-          },
-        ],
-        "ResourceId": {
-          "Ref": "RestApicreateoneC363A09F",
-        },
-        "RestApiId": {
-          "Ref": "RestApi0C43BF4B",
-        },
-      },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "RestApicreateonePOST9B86A777": {
+    "RestApicreatePOST89063740": {
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "POST",
@@ -3524,7 +3418,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           },
         ],
         "ResourceId": {
-          "Ref": "RestApicreateoneC363A09F",
+          "Ref": "RestApicreate68AA2AF0",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
