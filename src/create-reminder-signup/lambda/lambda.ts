@@ -43,7 +43,11 @@ export const run = async (event: SQSEvent): Promise<void> => {
 	console.log('received event: ', event);
 
 	const country = event.headers['X-GU-GeoIP-Country-Code'];
-	const signupRequest: unknown = { country, ...JSON.parse(event.body) };
+
+	const signupRequest: unknown = {
+		country,
+		...JSON.parse(event.Records[0].body),
+	};
 
 	let result;
 	if (event.path === '/create/one-off') {
