@@ -102,7 +102,7 @@ export class SupportReminders extends GuStack {
 					'integration.request.header.Content-Type': `'application/x-www-form-urlencoded'`,
 				},
 				requestTemplates: {
-					'application/json': 'Action=SendMessage&MessageBody=$input.body&MessageAttributes.entry.1.Name=Headers&MessageAttributes.entry.1.Value.DataType=String&MessageAttributes.entry.1.Value.StringValue=$util.urlEncode($input.params().header)'
+					'application/json': 'Action=SendMessage&MessageBody=$input.body&MessageAttributes.entry.1.Name=X-GU-GeoIP-Country-Code&MessageAttributes.entry.1.Value.DataType=String&MessageAttributes.entry.1.Value.StringValue=$util.urlEncode($input.params().header.get(\'X-GU-GeoIP-Country-Code\'))'
 				},
 				integrationResponses: [
 					{
