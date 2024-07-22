@@ -332,7 +332,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC5031f73e9e0881546891a8a5fa8a2a9fff2": {
+    "RestApiDeployment180EC5034ee94a05b01318d21ec1502ec4a7ca7f": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -359,7 +359,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC5031f73e9e0881546891a8a5fa8a2a9fff2",
+          "Ref": "RestApiDeployment180EC5034ee94a05b01318d21ec1502ec4a7ca7f",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -678,7 +678,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
           },
           "RequestTemplates": {
-            "application/json": "Action=SendMessage&MessageBody=$input.body&MessageAttributes.entry.1.Name=X-GU-GeoIP-Country-Code&MessageAttributes.entry.1.Value.DataType=String&MessageAttributes.entry.1.Value.StringValue=$util.urlEncode($input.params().header.get('X-GU-GeoIP-Country-Code'))",
+            "application/json": "Action=SendMessage&MessageBody=$input.body&MessageAttributes="{\\"X-GU-GeoIP-Country-Code\\":{\\"DataType\\":\\"String\\",\\"StringValue\\":\\"{$request.header.X-GU-GeoIP-Country-Code}\\"}}"",
           },
           "Type": "AWS",
           "Uri": {
@@ -3036,7 +3036,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503bd5136ffa144d5464a103ca98d81d905": {
+    "RestApiDeployment180EC50356cf38bcadde9d3b261e0b6486023421": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -3063,7 +3063,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503bd5136ffa144d5464a103ca98d81d905",
+          "Ref": "RestApiDeployment180EC50356cf38bcadde9d3b261e0b6486023421",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -3382,7 +3382,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
           },
           "RequestTemplates": {
-            "application/json": "Action=SendMessage&MessageBody=$input.body&MessageAttributes.entry.1.Name=X-GU-GeoIP-Country-Code&MessageAttributes.entry.1.Value.DataType=String&MessageAttributes.entry.1.Value.StringValue=$util.urlEncode($input.params().header.get('X-GU-GeoIP-Country-Code'))",
+            "application/json": "Action=SendMessage&MessageBody=$input.body&MessageAttributes="{\\"X-GU-GeoIP-Country-Code\\":{\\"DataType\\":\\"String\\",\\"StringValue\\":\\"{$request.header.X-GU-GeoIP-Country-Code}\\"}}"",
           },
           "Type": "AWS",
           "Uri": {
