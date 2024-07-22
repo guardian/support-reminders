@@ -102,7 +102,7 @@ export class SupportReminders extends GuStack {
 					'integration.request.header.Content-Type': `'application/x-www-form-urlencoded'`,
 				},
 				requestTemplates: {
-					'application/json': 'Action=SendMessage&MessageBody=$input.body&MessageAttributes="{\\"Signature\\":{\\"DataType\\":\\"String\\",\\"StringValue\\":\\"${request.header.signature}\\"}}"',
+					'application/json': 'Action=SendMessage&MessageBody=$input.body&MessageAttributes=$input.header',
 				},
 				integrationResponses: [
 					{
