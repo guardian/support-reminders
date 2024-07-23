@@ -42,6 +42,17 @@ const identityAccessTokenPromise: Promise<string> = getParamFromSSM(
 export const run = async (event: SQSEvent): Promise<void> => {
 	console.log('received event: ', event);
 
+	console.log('received header: ', event.Records[0].messageAttributes);
+	console.log(
+		'received header1: ',
+		event.Records[0].messageAttributes['X-GU-GeoIP-Country-Code'],
+	);
+	console.log(
+		'received header2: ',
+		event.Records[0].messageAttributes['X-GU-GeoIP-Country-Code']
+			.stringValue,
+	);
+
 	const country =
 		event.Records[0].messageAttributes['X-GU-GeoIP-Country-Code']
 			.stringValue;
