@@ -42,16 +42,6 @@ const identityAccessTokenPromise: Promise<string> = getParamFromSSM(
 export const run = async (event: SQSEvent): Promise<void> => {
 	console.log('received event: ', event);
 
-	console.log('received header: ', event.Records[0].messageAttributes);
-	console.log(
-		'received header1: ',
-		event.Records[0].messageAttributes['EventPath'],
-	);
-	console.log(
-		'received header2: ',
-		event.Records[0].messageAttributes['EventPath'].stringValue,
-	);
-
 	const country =
 		event.Records[0].messageAttributes['X-GU-GeoIP-Country-Code']
 			.stringValue;
@@ -64,17 +54,12 @@ export const run = async (event: SQSEvent): Promise<void> => {
 		...JSON.parse(event.Records[0].body),
 	};
 
-	console.log('signupRequest: ', signupRequest);
-
 	let result;
 	if (eventPath === '/create/one-off') {
 		result = await runOneOff(signupRequest);
 	} else if (eventPath === '/create/recurring') {
 		result = await runRecurring(signupRequest);
 	}
-
-	console.log('Result', result);
-	// return { headers, statusCode: 404, body: 'Not found' };
 };
 
 export const runOneOff = async (
