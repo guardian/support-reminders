@@ -332,13 +332,18 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503822a9b98d6d6bc279f6d05209afc37f8": {
+    "RestApiDeployment180EC503ddd14ce8239bbacaf6192796abf8eb29": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
         "RestApicancel928D6387",
+        "RestApicreateoneoffOPTIONS1F89A992",
+        "RestApicreateoneoffPOST41A64A32",
+        "RestApicreateoneoff2D1FCD3C",
         "RestApicreateOPTIONSC3837E5E",
-        "RestApicreatePOST89063740",
+        "RestApicreaterecurringOPTIONSFBFDACD1",
+        "RestApicreaterecurringPOSTC2005445",
+        "RestApicreaterecurringA327119C",
         "RestApicreate68AA2AF0",
         "RestApiOPTIONS6AA64D2D",
         "RestApireactivateOPTIONS263B776D",
@@ -359,7 +364,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503822a9b98d6d6bc279f6d05209afc37f8",
+          "Ref": "RestApiDeployment180EC503ddd14ce8239bbacaf6192796abf8eb29",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -654,7 +659,58 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       },
       "Type": "AWS::ApiGateway::Method",
     },
-    "RestApicreatePOST89063740": {
+    "RestApicreateoneoff2D1FCD3C": {
+      "Properties": {
+        "ParentId": {
+          "Ref": "RestApicreate68AA2AF0",
+        },
+        "PathPart": "one-off",
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "RestApicreateoneoffOPTIONS1F89A992": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Ref": "RestApicreateoneoff2D1FCD3C",
+        },
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "RestApicreateoneoffPOST41A64A32": {
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "POST",
@@ -678,7 +734,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
           },
           "RequestTemplates": {
-            "application/json": "Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params('X-GU-GeoIP-Country-Code')",
+            "application/json": "Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params('X-GU-GeoIP-Country-Code')&MessageAttribute.2.Name=EventPath&MessageAttribute.2.Value.DataType=String&MessageAttribute.2.Value.StringValue=‘$context.path)",
           },
           "Type": "AWS",
           "Uri": {
@@ -714,7 +770,126 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           },
         ],
         "ResourceId": {
+          "Ref": "RestApicreateoneoff2D1FCD3C",
+        },
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "RestApicreaterecurringA327119C": {
+      "Properties": {
+        "ParentId": {
           "Ref": "RestApicreate68AA2AF0",
+        },
+        "PathPart": "recurring",
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "RestApicreaterecurringOPTIONSFBFDACD1": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Ref": "RestApicreaterecurringA327119C",
+        },
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "RestApicreaterecurringPOSTC2005445": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": {
+          "Credentials": {
+            "Fn::GetAtt": [
+              "ApiGatewayToSqsRole590217A3",
+              "Arn",
+            ],
+          },
+          "IntegrationHttpMethod": "POST",
+          "IntegrationResponses": [
+            {
+              "ResponseTemplates": {
+                "application/json": "{"done": true}",
+              },
+              "StatusCode": "200",
+            },
+          ],
+          "RequestParameters": {
+            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
+          },
+          "RequestTemplates": {
+            "application/json": "Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params('X-GU-GeoIP-Country-Code')&MessageAttribute.2.Name=EventPath&MessageAttribute.2.Value.DataType=String&MessageAttribute.2.Value.StringValue=‘$context.path)",
+          },
+          "Type": "AWS",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":sqs:path/",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                "/",
+                {
+                  "Fn::GetAtt": [
+                    "supportremindersQueue01C5AB8D",
+                    "QueueName",
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+          },
+        ],
+        "ResourceId": {
+          "Ref": "RestApicreaterecurringA327119C",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -3036,13 +3211,18 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC50320cdebac9b37e39b389b3eb4d6ef1260": {
+    "RestApiDeployment180EC503425c8ffd6fd88e79f3cc34e8f8338674": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
         "RestApicancel928D6387",
+        "RestApicreateoneoffOPTIONS1F89A992",
+        "RestApicreateoneoffPOST41A64A32",
+        "RestApicreateoneoff2D1FCD3C",
         "RestApicreateOPTIONSC3837E5E",
-        "RestApicreatePOST89063740",
+        "RestApicreaterecurringOPTIONSFBFDACD1",
+        "RestApicreaterecurringPOSTC2005445",
+        "RestApicreaterecurringA327119C",
         "RestApicreate68AA2AF0",
         "RestApiOPTIONS6AA64D2D",
         "RestApireactivateOPTIONS263B776D",
@@ -3063,7 +3243,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC50320cdebac9b37e39b389b3eb4d6ef1260",
+          "Ref": "RestApiDeployment180EC503425c8ffd6fd88e79f3cc34e8f8338674",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -3358,7 +3538,58 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       },
       "Type": "AWS::ApiGateway::Method",
     },
-    "RestApicreatePOST89063740": {
+    "RestApicreateoneoff2D1FCD3C": {
+      "Properties": {
+        "ParentId": {
+          "Ref": "RestApicreate68AA2AF0",
+        },
+        "PathPart": "one-off",
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "RestApicreateoneoffOPTIONS1F89A992": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Ref": "RestApicreateoneoff2D1FCD3C",
+        },
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "RestApicreateoneoffPOST41A64A32": {
       "Properties": {
         "AuthorizationType": "NONE",
         "HttpMethod": "POST",
@@ -3382,7 +3613,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
           },
           "RequestTemplates": {
-            "application/json": "Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params('X-GU-GeoIP-Country-Code')",
+            "application/json": "Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params('X-GU-GeoIP-Country-Code')&MessageAttribute.2.Name=EventPath&MessageAttribute.2.Value.DataType=String&MessageAttribute.2.Value.StringValue=‘$context.path)",
           },
           "Type": "AWS",
           "Uri": {
@@ -3418,7 +3649,126 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           },
         ],
         "ResourceId": {
+          "Ref": "RestApicreateoneoff2D1FCD3C",
+        },
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "RestApicreaterecurringA327119C": {
+      "Properties": {
+        "ParentId": {
           "Ref": "RestApicreate68AA2AF0",
+        },
+        "PathPart": "recurring",
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "RestApicreaterecurringOPTIONSFBFDACD1": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+              },
+              "StatusCode": "204",
+            },
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }",
+          },
+          "Type": "MOCK",
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+            },
+            "StatusCode": "204",
+          },
+        ],
+        "ResourceId": {
+          "Ref": "RestApicreaterecurringA327119C",
+        },
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "RestApicreaterecurringPOSTC2005445": {
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": {
+          "Credentials": {
+            "Fn::GetAtt": [
+              "ApiGatewayToSqsRole590217A3",
+              "Arn",
+            ],
+          },
+          "IntegrationHttpMethod": "POST",
+          "IntegrationResponses": [
+            {
+              "ResponseTemplates": {
+                "application/json": "{"done": true}",
+              },
+              "StatusCode": "200",
+            },
+          ],
+          "RequestParameters": {
+            "integration.request.header.Content-Type": "'application/x-www-form-urlencoded'",
+          },
+          "RequestTemplates": {
+            "application/json": "Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params('X-GU-GeoIP-Country-Code')&MessageAttribute.2.Name=EventPath&MessageAttribute.2.Value.DataType=String&MessageAttribute.2.Value.StringValue=‘$context.path)",
+          },
+          "Type": "AWS",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ":sqs:path/",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                "/",
+                {
+                  "Fn::GetAtt": [
+                    "supportremindersQueue01C5AB8D",
+                    "QueueName",
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+          },
+        ],
+        "ResourceId": {
+          "Ref": "RestApicreaterecurringA327119C",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",

@@ -102,7 +102,7 @@ export class SupportReminders extends GuStack {
 					'integration.request.header.Content-Type': `'application/x-www-form-urlencoded'`,
 				},
 				requestTemplates: {
-					'application/json': 'Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params(\'X-GU-GeoIP-Country-Code\')',
+					'application/json': 'Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params(\'X-GU-GeoIP-Country-Code\')&MessageAttribute.2.Name=EventPath&MessageAttribute.2.Value.DataType=String&MessageAttribute.2.Value.StringValue=‘$context.path)',
 				},
 				integrationResponses: [
 					{
@@ -176,7 +176,15 @@ export class SupportReminders extends GuStack {
 
 
 		// post method
-		supportRemindersApi.api.root.resourceForPath('/create').addMethod('POST', sendMessageIntegration, {
+		supportRemindersApi.api.root.resourceForPath('/create/one-off').addMethod('POST', sendMessageIntegration, {
+			methodResponses: [
+				{
+					statusCode: '200',
+				},
+			]
+		});
+		// post method
+		supportRemindersApi.api.root.resourceForPath('/create/recurring').addMethod('POST', sendMessageIntegration, {
 			methodResponses: [
 				{
 					statusCode: '200',
