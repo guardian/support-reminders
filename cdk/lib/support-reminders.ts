@@ -156,16 +156,6 @@ export class SupportReminders extends GuStack {
 					httpMethod: "POST",
 					lambda: reactivateRecurringReminderLambda,
 				},
-				// {
-				// 	path: "/create/recurring",
-				// 	httpMethod: "POST",
-				// 	lambda: createRemindersSignupLambda,
-				// },
-				// {
-				// 	path: "/create/one-off",
-				// 	httpMethod: "POST",
-				// 	lambda: createRemindersSignupLambda,
-				// },
 				{
 					path: "/cancel",
 					httpMethod: "POST",
@@ -175,7 +165,7 @@ export class SupportReminders extends GuStack {
 		})
 
 
-		// post method
+		// post method to /create
 		supportRemindersApi.api.root.resourceForPath('/create/one-off').addMethod('POST', sendMessageIntegration, {
 			methodResponses: [
 				{
@@ -183,7 +173,6 @@ export class SupportReminders extends GuStack {
 				},
 			]
 		});
-		// post method
 		supportRemindersApi.api.root.resourceForPath('/create/recurring').addMethod('POST', sendMessageIntegration, {
 			methodResponses: [
 				{
