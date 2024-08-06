@@ -1,4 +1,4 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyResult, SQSEvent } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool, QueryResult } from 'pg';
@@ -39,21 +39,27 @@ const identityAccessTokenPromise: Promise<string> = getParamFromSSM(
 	`/support-reminders/idapi/${ssmStage}/accessToken`,
 );
 
-export const run = async (
-	event: APIGatewayEvent,
-): Promise<APIGatewayProxyResult> => {
+export const run = async (event: SQSEvent): Promise<void> => {
 	console.log('received event: ', event);
 
-	const country = event.headers['X-GU-GeoIP-Country-Code'];
-	const signupRequest: unknown = { country, ...JSON.parse(event.body) };
+	const country =
+		event.Records[0].messageAttributes['X-GU-GeoIP-Country-Code']
+			.stringValue;
 
-	if (event.path === '/create/one-off') {
-		return runOneOff(signupRequest);
-	} else if (event.path === '/create/recurring') {
-		return runRecurring(signupRequest);
+	const eventPath =
+		event.Records[0].messageAttributes['EventPath'].stringValue;
+
+	const signupRequest: unknown = {
+		country,
+		...JSON.parse(event.Records[0].body),
+	};
+
+	let result;
+	if (eventPath === '/create/one-off') {
+		result = await runOneOff(signupRequest);
+	} else if (eventPath === '/create/recurring') {
+		result = await runRecurring(signupRequest);
 	}
-
-	return { headers, statusCode: 404, body: 'Not found' };
 };
 
 export const runOneOff = async (

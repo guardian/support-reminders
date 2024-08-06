@@ -6,13 +6,15 @@ import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
 import {Duration} from "aws-cdk-lib";
-import {CfnBasePathMapping, CfnDomainName, Cors} from "aws-cdk-lib/aws-apigateway";
+import { AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors  } from "aws-cdk-lib/aws-apigateway";
 import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
-import {Effect, ManagedPolicy, Policy, PolicyStatement} from "aws-cdk-lib/aws-iam";
+import { Effect, ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import {Runtime} from "aws-cdk-lib/aws-lambda";
+import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import {CfnRecordSet} from "aws-cdk-lib/aws-route53";
+import { Queue } from "aws-cdk-lib/aws-sqs";
 import {isProd} from "../../src/lib/stage";
 
 export interface SupportRemindersProps extends GuStackProps {
@@ -45,6 +47,33 @@ export class SupportReminders extends GuStack {
 		};
 		const awsLambdaVpcAccessExecutionRole =
 			ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")
+
+		// SQS Queues
+		const queueName = `${app}-queue-${props.stage}`;
+		const deadLetterQueueName = `dead-letters-${app}-${props.stage}`;
+
+		const deadLetterQueue = new Queue(this, `dead-letters-${app}Queue`, {
+			queueName: deadLetterQueueName,
+			retentionPeriod: Duration.days(14),
+		});
+
+		const queue = new Queue(this, `${app}Queue`, {
+			queueName,
+			visibilityTimeout: Duration.minutes(2),
+			deadLetterQueue: {
+				// The number of times a message can be unsuccessfully dequeued before being moved to the dead-letter queue.
+				// This has been set to 1 to avoid duplicate  events
+				maxReceiveCount: 1,
+				queue: deadLetterQueue,
+			},
+		});
+
+		// SQS to Lambda event source mapping
+		const eventSource = new SqsEventSource(queue, {
+			reportBatchItemFailures: true,
+		});
+		const events=[eventSource];
+
 		const sharedLambdaProps = {
 			app,
 			runtime,
@@ -55,12 +84,43 @@ export class SupportReminders extends GuStack {
 			environment,
 		};
 
+		const apiRole = new Role(this, 'ApiGatewayToSqsRole', {
+			assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),
+		});
+
+		// grant sqs:SendMessage* to Api Gateway Role
+		queue.grantSendMessages(apiRole);
+
+		// Api Gateway Direct Integration
+		const sendMessageIntegration = new AwsIntegration({
+			service: 'sqs',
+			path: `${this.account}/${queue.queueName}`,
+			integrationHttpMethod: 'POST',
+			options: {
+				credentialsRole: apiRole,
+				requestParameters: {
+					'integration.request.header.Content-Type': `'application/x-www-form-urlencoded'`,
+				},
+				requestTemplates: {
+					'application/json': 'Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params(\'X-GU-GeoIP-Country-Code\')&MessageAttribute.2.Name=EventPath&MessageAttribute.2.Value.DataType=String&MessageAttribute.2.Value.StringValue=$context.path',
+				},
+				integrationResponses: [
+					{
+						statusCode: '200',
+						responseTemplates: {
+							"application/json": `{"done": true}`,
+						},
+					},
+				]
+			},
+		});
 
 		// ---- API-triggered lambda functions ---- //
 		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
 			handler: "create-reminder-signup/lambda/lambda.handler",
 			functionName: `support-reminders-create-reminder-signup-${this.stage}`,
 			...sharedLambdaProps,
+			events,
 		});
 
 		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
@@ -84,7 +144,7 @@ export class SupportReminders extends GuStack {
 				allowMethods: Cors.ALL_METHODS,
 				allowHeaders: ["Content-Type"],
 			},
-			monitoringConfiguration: {
+			monitoringConfiguration: this.stage === 'CODE' ? { noMonitoring: true } : {
 				snsTopicName: alarmsTopic,
 				http5xxAlarm: {
 					tolerated5xxPercentage: 1,
@@ -97,22 +157,30 @@ export class SupportReminders extends GuStack {
 					lambda: reactivateRecurringReminderLambda,
 				},
 				{
-					path: "/create/recurring",
-					httpMethod: "POST",
-					lambda: createRemindersSignupLambda,
-				},
-				{
-					path: "/create/one-off",
-					httpMethod: "POST",
-					lambda: createRemindersSignupLambda,
-				},
-				{
 					path: "/cancel",
 					httpMethod: "POST",
 					lambda: cancelRemindersLambda,
 				},
 			],
 		})
+
+
+		// post method to /create
+		supportRemindersApi.api.root.resourceForPath('/create/one-off').addMethod('POST', sendMessageIntegration, {
+			methodResponses: [
+				{
+					statusCode: '200',
+				},
+			]
+		});
+		supportRemindersApi.api.root.resourceForPath('/create/recurring').addMethod('POST', sendMessageIntegration, {
+			methodResponses: [
+				{
+					statusCode: '200',
+				},
+			]
+		});
+
 
 
 		// ---- Scheduled lambda functions ---- //
@@ -252,6 +320,16 @@ export class SupportReminders extends GuStack {
 			]
 		})
 
+		const apiRolePolicy: Policy = 	new Policy(this, "SendMessagePolicy", {
+			statements: [
+				new PolicyStatement({
+					actions: ["sqs:SendMessage"],
+					effect:  Effect.ALLOW,
+					resources: [queue.queueArn],
+				}),
+			],
+		})
+
 		const apiGatewayTriggeredLambdaFunctions: GuLambdaFunction[] = [
 			createRemindersSignupLambda,
 			reactivateRecurringReminderLambda,
@@ -267,6 +345,7 @@ export class SupportReminders extends GuStack {
 			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
 			l.role?.attachInlinePolicy(ssmInlinePolicy)
 			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy)
+			l.role?.attachInlinePolicy(apiRolePolicy)
 		})
 
 		scheduledLambdaFunctions.forEach((l: GuLambdaFunction) => {
