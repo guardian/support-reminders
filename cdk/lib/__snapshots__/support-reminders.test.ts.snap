@@ -154,76 +154,6 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Value": "CODE",
           },
         ],
-<<<<<<< Updated upstream
-=======
-        "AlarmDescription": "support-reminders exceeded 1% error rate",
-        "AlarmName": "High 5XX error percentage from support-reminders (ApiGateway) in CODE",
-        "ComparisonOperator": "GreaterThanThreshold",
-        "EvaluationPeriods": 1,
-        "Metrics": [
-          {
-            "Expression": "100*m1/m2",
-            "Id": "expr_1",
-            "Label": "% of 5XX responses served for support-reminders",
-          },
-          {
-            "Id": "m1",
-            "MetricStat": {
-              "Metric": {
-                "Dimensions": [
-                  {
-                    "Name": "ApiName",
-                    "Value": "support-CODE-support-reminders",
-                  },
-                ],
-                "MetricName": "5XXError",
-                "Namespace": "AWS/ApiGateway",
-              },
-              "Period": 60,
-              "Stat": "Sum",
-            },
-            "ReturnData": false,
-          },
-          {
-            "Id": "m2",
-            "MetricStat": {
-              "Metric": {
-                "Dimensions": [
-                  {
-                    "Name": "ApiName",
-                    "Value": "support-CODE-support-reminders",
-                  },
-                ],
-                "MetricName": "Count",
-                "Namespace": "AWS/ApiGateway",
-              },
-              "Period": 60,
-              "Stat": "SampleCount",
-            },
-            "ReturnData": false,
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/support-reminders",
-          },
-          {
-            "Key": "Stack",
-            "Value": "support",
-          },
-          {
-            "Key": "Stage",
-            "Value": "CODE",
-          },
-        ],
-        "Threshold": 1,
-        "TreatMissingData": "notBreaching",
->>>>>>> Stashed changes
       },
       "Type": "AWS::IAM::Role",
     },
@@ -420,11 +350,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-<<<<<<< Updated upstream
-    "RestApiDeployment180EC5039c0207ecfdffb9711e2545cf3e18486f": {
-=======
-    "RestApiDeployment180EC50345f81a09a59107b9d6a37c71a0e4fcc7": {
->>>>>>> Stashed changes
+    "RestApiDeployment180EC503fcf0333a4041292d1f2defc7f14d62da": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -456,11 +382,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-<<<<<<< Updated upstream
-          "Ref": "RestApiDeployment180EC5039c0207ecfdffb9711e2545cf3e18486f",
-=======
-          "Ref": "RestApiDeployment180EC50345f81a09a59107b9d6a37c71a0e4fcc7",
->>>>>>> Stashed changes
+          "Ref": "RestApiDeployment180EC503fcf0333a4041292d1f2defc7f14d62da",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -3400,11 +3322,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-<<<<<<< Updated upstream
-    "RestApiDeployment180EC50385c482c5a885cdec79014443bb465ffd": {
-=======
-    "RestApiDeployment180EC503013cf41b70d7c9bccf57b6b5efb00261": {
->>>>>>> Stashed changes
+    "RestApiDeployment180EC503aeb5683c0cd969c7e8fc564945b91afc": {
       "DependsOn": [
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
@@ -3436,11 +3354,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-<<<<<<< Updated upstream
-          "Ref": "RestApiDeployment180EC50385c482c5a885cdec79014443bb465ffd",
-=======
-          "Ref": "RestApiDeployment180EC503013cf41b70d7c9bccf57b6b5efb00261",
->>>>>>> Stashed changes
+          "Ref": "RestApiDeployment180EC503aeb5683c0cd969c7e8fc564945b91afc",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
