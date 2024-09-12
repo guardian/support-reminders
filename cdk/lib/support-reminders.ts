@@ -11,7 +11,7 @@ import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
 import { Effect, ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
-import {Runtime} from "aws-cdk-lib/aws-lambda";
+import {LoggingFormat, Runtime} from "aws-cdk-lib/aws-lambda";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import {CfnRecordSet} from "aws-cdk-lib/aws-route53";
 import { Queue } from "aws-cdk-lib/aws-sqs";
@@ -74,6 +74,8 @@ export class SupportReminders extends GuStack {
 		});
 		const events=[eventSource];
 
+		const loggingFormat = LoggingFormat.TEXT;
+
 		const sharedLambdaProps = {
 			app,
 			runtime,
@@ -82,6 +84,7 @@ export class SupportReminders extends GuStack {
 			vpcSubnets,
 			securityGroups,
 			environment,
+			loggingFormat,
 		};
 
 		const apiRole = new Role(this, 'ApiGatewayToSqsRole', {
