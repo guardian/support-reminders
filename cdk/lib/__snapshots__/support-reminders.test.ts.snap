@@ -1313,7 +1313,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "FunctionName": "support-reminders-cancel-reminders-CODE",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
@@ -1546,7 +1546,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "FunctionName": "support-reminders-create-reminder-signup-CODE",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
@@ -1839,7 +1839,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "FunctionName": "support-reminders-next-reminders-CODE",
         "Handler": "next-reminders/lambda/lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
@@ -2235,7 +2235,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "FunctionName": "support-reminders-reactivate-recurring-reminder-CODE",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
@@ -2468,7 +2468,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "FunctionName": "support-reminders-signup-exports-CODE",
         "Handler": "signup-exports/lambda/lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
@@ -4285,7 +4285,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "FunctionName": "support-reminders-cancel-reminders-PROD",
         "Handler": "cancel-reminders/lambda/lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
@@ -4518,7 +4518,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "FunctionName": "support-reminders-create-reminder-signup-PROD",
         "Handler": "create-reminder-signup/lambda/lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
@@ -4811,7 +4811,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "FunctionName": "support-reminders-next-reminders-PROD",
         "Handler": "next-reminders/lambda/lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
@@ -5207,7 +5207,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "FunctionName": "support-reminders-reactivate-recurring-reminder-PROD",
         "Handler": "reactivate-recurring-reminder/lambda/lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
@@ -5440,7 +5440,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "FunctionName": "support-reminders-signup-exports-PROD",
         "Handler": "signup-exports/lambda/lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
