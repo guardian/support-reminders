@@ -27,7 +27,7 @@
     "@guardian/eslint-config-typescript": "^0.4.2",
     "@guardian/prettier": "^0.4.2",
     "@types/aws-lambda": "^8.10.119",
-    "@types/jest": "^29.5.12",
+    "@types/jest": "^29.5.13",
     "@types/node": "20.14.2",
     "@types/node-fetch": "^1.6.9",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
