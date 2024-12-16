@@ -6,7 +6,7 @@ import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
 import {Duration} from "aws-cdk-lib";
-import { AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors  } from "aws-cdk-lib/aws-apigateway";
+import {AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors, RequestValidator} from "aws-cdk-lib/aws-apigateway";
 import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
@@ -174,7 +174,14 @@ export class SupportReminders extends GuStack {
 				{
 					statusCode: '200',
 				},
-			]
+			],
+			requestParameters: {
+				'integration.request.header.X-GU-GeoIP-Country-Code': true,
+			},
+			requestValidator: new RequestValidator(this, 'one-off-validator', {
+				restApi: supportRemindersApi.api,
+				validateRequestParameters: true
+			})
 		});
 		supportRemindersApi.api.root.resourceForPath('/create/recurring').addMethod('POST', sendMessageIntegration, {
 			methodResponses: [
