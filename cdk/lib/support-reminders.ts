@@ -176,7 +176,7 @@ export class SupportReminders extends GuStack {
 				},
 			],
 			requestParameters: {
-				'integration.request.header.X-GU-GeoIP-Country-Code': true,
+				'method.request.header.X-GU-GeoIP-Country-Code': true,
 			},
 			requestValidator: new RequestValidator(this, 'one-off-validator', {
 				restApi: supportRemindersApi.api,

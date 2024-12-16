@@ -350,7 +350,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC50375bf4a3a3927649c4d17a8062e486ec2": {
+    "RestApiDeployment180EC50394e319ffe9f5f50f772c279a73b63764": {
       "DependsOn": [
         "oneoffvalidator0C4177E4",
         "RestApicancelOPTIONS8CB256F3",
@@ -383,7 +383,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC50375bf4a3a3927649c4d17a8062e486ec2",
+          "Ref": "RestApiDeployment180EC50394e319ffe9f5f50f772c279a73b63764",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -793,7 +793,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           },
         ],
         "RequestParameters": {
-          "integration.request.header.X-GU-GeoIP-Country-Code": true,
+          "method.request.header.X-GU-GeoIP-Country-Code": true,
         },
         "RequestValidatorId": {
           "Ref": "oneoffvalidator0C4177E4",
@@ -3338,7 +3338,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503c799b5d183678aecee5a08190a2256b9": {
+    "RestApiDeployment180EC503a23ae4dcaca1e433b36c59c80393fd9a": {
       "DependsOn": [
         "oneoffvalidator0C4177E4",
         "RestApicancelOPTIONS8CB256F3",
@@ -3371,7 +3371,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503c799b5d183678aecee5a08190a2256b9",
+          "Ref": "RestApiDeployment180EC503a23ae4dcaca1e433b36c59c80393fd9a",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -3781,7 +3781,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           },
         ],
         "RequestParameters": {
-          "integration.request.header.X-GU-GeoIP-Country-Code": true,
+          "method.request.header.X-GU-GeoIP-Country-Code": true,
         },
         "RequestValidatorId": {
           "Ref": "oneoffvalidator0C4177E4",
