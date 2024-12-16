@@ -350,9 +350,10 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC50394e319ffe9f5f50f772c279a73b63764": {
+    "RestApiDeployment180EC503a345def70b385514941e7a699c9d376f": {
       "DependsOn": [
         "oneoffvalidator0C4177E4",
+        "recurringvalidatorA3C040BF",
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
         "RestApicancel928D6387",
@@ -383,7 +384,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC50394e319ffe9f5f50f772c279a73b63764",
+          "Ref": "RestApiDeployment180EC503a345def70b385514941e7a699c9d376f",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -918,6 +919,12 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "StatusCode": "200",
           },
         ],
+        "RequestParameters": {
+          "method.request.header.X-GU-GeoIP-Country-Code": true,
+        },
+        "RequestValidatorId": {
+          "Ref": "recurringvalidatorA3C040BF",
+        },
         "ResourceId": {
           "Ref": "RestApicreaterecurringA327119C",
         },
@@ -2460,6 +2467,15 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "recurringvalidatorA3C040BF": {
+      "Properties": {
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+        "ValidateRequestParameters": true,
+      },
+      "Type": "AWS::ApiGateway::RequestValidator",
+    },
     "signupexportsDBFAB572": {
       "DependsOn": [
         "signupexportsServiceRoleDefaultPolicy7B14F7DA",
@@ -3338,9 +3354,10 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503a23ae4dcaca1e433b36c59c80393fd9a": {
+    "RestApiDeployment180EC503527c2dadd44b8927ecf4437252adb507": {
       "DependsOn": [
         "oneoffvalidator0C4177E4",
+        "recurringvalidatorA3C040BF",
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
         "RestApicancel928D6387",
@@ -3371,7 +3388,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       ],
       "Properties": {
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503a23ae4dcaca1e433b36c59c80393fd9a",
+          "Ref": "RestApiDeployment180EC503527c2dadd44b8927ecf4437252adb507",
         },
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
@@ -3906,6 +3923,12 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "StatusCode": "200",
           },
         ],
+        "RequestParameters": {
+          "method.request.header.X-GU-GeoIP-Country-Code": true,
+        },
+        "RequestValidatorId": {
+          "Ref": "recurringvalidatorA3C040BF",
+        },
         "ResourceId": {
           "Ref": "RestApicreaterecurringA327119C",
         },
@@ -5447,6 +5470,15 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "recurringvalidatorA3C040BF": {
+      "Properties": {
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+        "ValidateRequestParameters": true,
+      },
+      "Type": "AWS::ApiGateway::RequestValidator",
     },
     "signupexportsDBFAB572": {
       "DependsOn": [

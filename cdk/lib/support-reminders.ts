@@ -181,14 +181,21 @@ export class SupportReminders extends GuStack {
 			requestValidator: new RequestValidator(this, 'one-off-validator', {
 				restApi: supportRemindersApi.api,
 				validateRequestParameters: true
-			})
+			}),
 		});
 		supportRemindersApi.api.root.resourceForPath('/create/recurring').addMethod('POST', sendMessageIntegration, {
 			methodResponses: [
 				{
 					statusCode: '200',
 				},
-			]
+			],
+			requestParameters: {
+				'method.request.header.X-GU-GeoIP-Country-Code': true,
+			},
+			requestValidator: new RequestValidator(this, 'recurring-validator', {
+				restApi: supportRemindersApi.api,
+				validateRequestParameters: true
+			}),
 		});
 
 
