@@ -1,16 +1,18 @@
 import {
-	APIGatewayProxyCallback,
+	APIGatewayProxyEvent,
+	APIGatewayProxyHandler,
 	APIGatewayProxyResult,
+	Callback,
 	Context,
+	SQSBatchResponse,
+	SQSEvent,
+	SQSHandler,
 } from 'aws-lambda';
-import { APIGatewayEvent } from './models';
 
-export const getHandler = (
-	run: (event: APIGatewayEvent) => Promise<APIGatewayProxyResult>,
-) => (
-	event: APIGatewayEvent,
+const getHandler = <INPUT, OUTPUT>(run: (event: INPUT) => Promise<OUTPUT>) => (
+	event: INPUT,
 	context: Context,
-	callback: APIGatewayProxyCallback,
+	callback: Callback<OUTPUT>,
 ): void => {
 	// setTimeout is necessary because of a bug in the node lambda runtime which can break requests to ssm
 	setTimeout(() => {
@@ -31,3 +33,11 @@ export const getHandler = (
 			});
 	});
 };
+
+export const getApiGatewayHandler = (
+	run: (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult>,
+): APIGatewayProxyHandler => getHandler(run);
+
+export const getSQSHandler = (
+	run: (event: SQSEvent) => Promise<SQSBatchResponse>,
+): SQSHandler => getHandler(run);

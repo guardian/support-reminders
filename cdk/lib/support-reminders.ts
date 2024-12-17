@@ -57,6 +57,20 @@ export class SupportReminders extends GuStack {
 			retentionPeriod: Duration.days(14),
 		});
 
+		new GuAlarm(this, `${app}-alarm`, {
+			app: app,
+			snsTopicName: alarmsTopic,
+			alarmName: `${app}-${this.stage}: failed event on the dead letter queue`,
+			alarmDescription: `A reminder signup event failed and is now on the dead letter queue.`,
+			metric: deadLetterQueue
+				.metric('ApproximateNumberOfMessagesVisible')
+				.with({ statistic: 'Sum', period: Duration.minutes(1) }),
+			comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
+			threshold: 0,
+			evaluationPeriods: 24,
+			actionsEnabled: this.stage === 'PROD',
+		});
+
 		const queue = new Queue(this, `${app}Queue`, {
 			queueName,
 			visibilityTimeout: Duration.minutes(2),
@@ -71,6 +85,7 @@ export class SupportReminders extends GuStack {
 		// SQS to Lambda event source mapping
 		const eventSource = new SqsEventSource(queue, {
 			reportBatchItemFailures: true,
+			batchSize: 1,
 		});
 		const events=[eventSource];
 

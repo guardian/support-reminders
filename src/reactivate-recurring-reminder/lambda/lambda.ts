@@ -1,10 +1,10 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool } from 'pg';
 import { createDatabaseConnectionPool } from '../../lib/db';
-import { getHandler } from '../../lib/handler';
-import { APIGatewayEvent, ValidationErrors } from '../../lib/models';
+import { getApiGatewayHandler } from '../../lib/handler';
+import { ValidationErrors } from '../../lib/models';
 import { getDatabaseParamsFromSSM } from '../../lib/ssm';
 import { reactivateRecurringReminder } from '../lib/db';
 import { reactivationValidator } from './models';
@@ -23,11 +23,11 @@ const dbConnectionPoolPromise: Promise<Pool> = getDatabaseParamsFromSSM(
 ).then(createDatabaseConnectionPool);
 
 export const run = async (
-	event: APIGatewayEvent,
+	event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
 	console.log('received event: ', event);
 
-	const reactivationRequest: unknown = JSON.parse(event.body);
+	const reactivationRequest: unknown = JSON.parse(event.body ?? '');
 
 	const validationErrors: ValidationErrors = [];
 	if (!reactivationValidator(reactivationRequest, validationErrors)) {
@@ -46,4 +46,4 @@ export const run = async (
 	return Promise.resolve({ headers, statusCode: 200, body: 'OK' });
 };
 
-export const handler = getHandler(run);
+export const handler = getApiGatewayHandler(run);
