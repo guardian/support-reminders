@@ -1,10 +1,10 @@
-import { APIGatewayProxyResult, SQSEvent } from 'aws-lambda';
+import { SQSBatchResponse, SQSEvent, SQSRecord } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool, QueryResult } from 'pg';
 import { createDatabaseConnectionPool } from '../../lib/db';
-import { getHandler } from '../../lib/handler';
-import { APIGatewayEvent, ValidationErrors } from '../../lib/models';
+import { getSQSHandler } from '../../lib/handler';
+import { ValidationErrors } from '../../lib/models';
 import {
 	getDatabaseParamsFromSSM,
 	getParamFromSSM,
@@ -22,13 +22,6 @@ import {
 	recurringSignupValidator,
 } from './models';
 
-const headers = {
-	'Content-Type': 'application/json',
-	'Access-Control-Allow-Origin': '*',
-	'Access-Control-Allow-Headers': '*',
-	'Access-Control-Allow-Methods': '*',
-};
-
 const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
 
 const dbConnectionPoolPromise: Promise<Pool> = getDatabaseParamsFromSSM(
@@ -39,32 +32,46 @@ const identityAccessTokenPromise: Promise<string> = getParamFromSSM(
 	`/support-reminders/idapi/${ssmStage}/accessToken`,
 );
 
-export const run = async (event: SQSEvent): Promise<void> => {
+export const run = async (event: SQSEvent): Promise<SQSBatchResponse> => {
 	console.log('received event: ', event);
 
-	const country =
-		event.Records[0].messageAttributes['X-GU-GeoIP-Country-Code']
-			.stringValue;
+	// SQS event source is configured with batchSize = 1
+	const record = event.Records[0];
 
-	const eventPath =
-		event.Records[0].messageAttributes['EventPath'].stringValue;
+	// If there is an error, return the messageId to SQS
+	return processRecord(record)
+		.then(() => ({
+			batchItemFailures: [{ itemIdentifier: record.messageId }],
+		}))
+		.catch((error) => {
+			console.log(error);
+			return {
+				batchItemFailures: [{ itemIdentifier: record.messageId }],
+			};
+		});
+};
+
+const processRecord = (record: SQSRecord): Promise<void> => {
+	const country =
+		record.messageAttributes['X-GU-GeoIP-Country-Code'].stringValue;
+
+	const eventPath = record.messageAttributes['EventPath'].stringValue;
 
 	const signupRequest: unknown = {
 		country,
-		...JSON.parse(event.Records[0].body),
+		...JSON.parse(record.body),
 	};
 
-	let result;
 	if (eventPath === '/create/one-off') {
-		result = await runOneOff(signupRequest);
+		return runOneOff(signupRequest);
 	} else if (eventPath === '/create/recurring') {
-		result = await runRecurring(signupRequest);
+		return runRecurring(signupRequest);
+	} else {
+		return Promise.reject(`Invalid path: ${String(eventPath)}`);
 	}
 };
 
-export const runOneOff = async (
-	signupRequest: unknown,
-): Promise<APIGatewayProxyResult> => {
+const runOneOff = async (signupRequest: unknown): Promise<void> => {
 	const persist = (
 		signupRequest: OneOffSignupRequest,
 		identityId: string,
@@ -77,9 +84,7 @@ export const runOneOff = async (
 	return createSignup(signupRequest, oneOffSignupValidator, persist);
 };
 
-export const runRecurring = async (
-	signupRequest: unknown,
-): Promise<APIGatewayProxyResult> => {
+const runRecurring = async (signupRequest: unknown): Promise<void> => {
 	const persist = (
 		signupRequest: RecurringSignupRequest,
 		identityId: string,
@@ -107,15 +112,11 @@ const createSignup = async <T extends BaseSignupRequest>(
 	signupRequest: unknown,
 	validator: Validator<T>,
 	persist: Persist<T>,
-): Promise<APIGatewayProxyResult> => {
+): Promise<void> => {
 	const validationErrors: ValidationErrors = [];
 	if (!validator(signupRequest, validationErrors)) {
 		console.log('Validation of signup failed', validationErrors);
-		return {
-			headers,
-			statusCode: 400,
-			body: 'Invalid body',
-		};
+		return Promise.reject('Validation of signup failed');
 	}
 
 	const token = await identityAccessTokenPromise;
@@ -136,24 +137,13 @@ const createSignup = async <T extends BaseSignupRequest>(
 		console.log('dbResult: ', dbResult);
 
 		if (dbResult.rowCount !== 1) {
-			return {
-				headers,
-				statusCode: 500,
-				body: 'Internal Server Error',
-			};
+			return Promise.reject(
+				`Unexpected row count in database response: ${dbResult.rowCount}`,
+			);
 		}
-		return {
-			headers,
-			statusCode: 200,
-			body: 'OK',
-		};
 	} else {
-		return {
-			headers,
-			statusCode: identityResult.status,
-			body: identityResult.status.toString(),
-		};
+		return Promise.reject(identityResult.status.toString());
 	}
 };
 
-export const handler = getHandler(run);
+export const handler = getSQSHandler(run);
