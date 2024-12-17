@@ -41,7 +41,7 @@ export const run = async (event: SQSEvent): Promise<SQSBatchResponse> => {
 	// If there is an error, return the messageId to SQS
 	return processRecord(record)
 		.then(() => ({
-			batchItemFailures: [{ itemIdentifier: record.messageId }],
+			batchItemFailures: [],
 		}))
 		.catch((error) => {
 			console.log(error);
