@@ -25,7 +25,6 @@ const reminderPlatformSchema = z.union([
 	z.literal('SUPPORT'),
 	z.literal('EMAIL'),
 ]);
-export type ReminderPlatform = 'WEB' | 'AMP' | 'MMA' | 'SUPPORT' | 'EMAIL';
 
 const reminderComponentSchema = z.union([
 	z.literal('EPIC'),
@@ -39,17 +38,6 @@ const reminderComponentSchema = z.union([
 	z.literal('SINGLE_MONTHLY'),
 	z.literal('IN_LIFE_JOURNEY'),
 ]);
-export type ReminderComponent =
-	| 'EPIC'
-	| 'BANNER'
-	| 'THANKYOU'
-	| 'CANCELLATION'
-	| 'EMAIL'
-	| 'EDITORIAL_ADS'
-	| 'REMINDER'
-	| 'MOMENT'
-	| 'SINGLE_MONTHLY'
-	| 'IN_LIFE_JOURNEY';
 
 const reminderStageSchema = z.union([
 	z.literal('PRE'),
