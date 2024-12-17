@@ -71,6 +71,7 @@ export class SupportReminders extends GuStack {
 		// SQS to Lambda event source mapping
 		const eventSource = new SqsEventSource(queue, {
 			reportBatchItemFailures: true,
+			batchSize: 1,
 		});
 		const events=[eventSource];
 

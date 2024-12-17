@@ -1787,6 +1787,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
     },
     "createreminderssignupSqsEventSourceSupportRemindersCODEsupportremindersQueueD5BCDE9BE219E9BA": {
       "Properties": {
+        "BatchSize": 1,
         "EventSourceArn": {
           "Fn::GetAtt": [
             "supportremindersQueue01C5AB8D",
@@ -4791,6 +4792,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
     },
     "createreminderssignupSqsEventSourceSupportRemindersPRODsupportremindersQueue30985D82167501E9": {
       "Properties": {
+        "BatchSize": 1,
         "EventSourceArn": {
           "Fn::GetAtt": [
             "supportremindersQueue01C5AB8D",
