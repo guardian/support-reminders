@@ -15,9 +15,11 @@ import { getOrCreateIdentityIdByEmail } from '../lib/identity';
 import {
 	BaseSignupRequest,
 	oneOffSignupFromRequest,
-	OneOffSignupRequest, oneOffSignupRequestSchema,
+	OneOffSignupRequest,
+	oneOffSignupRequestSchema,
 	recurringSignupFromRequest,
-	RecurringSignupRequest, recurringSignupRequestSchema,
+	RecurringSignupRequest,
+	recurringSignupRequestSchema,
 } from './models';
 
 const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });

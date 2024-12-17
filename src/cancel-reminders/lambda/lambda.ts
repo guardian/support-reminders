@@ -28,9 +28,8 @@ export const run = async (
 
 	const cancellationRequest: unknown = JSON.parse(event.body ?? '');
 
-	const parseResult = cancellationRequestSchema.safeParse(
-		cancellationRequest,
-	);
+	const parseResult =
+		cancellationRequestSchema.safeParse(cancellationRequest);
 
 	if (parseResult.success) {
 		const { reminderCode } = parseResult.data;

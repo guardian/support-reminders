@@ -28,9 +28,8 @@ export const run = async (
 
 	const reactivationRequest: unknown = JSON.parse(event.body ?? '');
 
-	const parseResult = reactivationRequestSchema.safeParse(
-		reactivationRequest,
-	);
+	const parseResult =
+		reactivationRequestSchema.safeParse(reactivationRequest);
 	if (parseResult.success) {
 		const { reminderCode } = parseResult.data;
 
