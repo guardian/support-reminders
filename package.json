@@ -21,7 +21,7 @@
   "devDependencies": {
     "@babel/cli": "^7.24.7",
     "@babel/core": "^7.24.7",
-    "@babel/plugin-transform-modules-commonjs": "^7.24.7",
+    "@babel/plugin-transform-modules-commonjs": "^7.26.3",
     "@babel/preset-typescript": "^7.24.7",
     "@guardian/eslint-config": "^0.4.2",
     "@guardian/eslint-config-typescript": "^0.4.2",
