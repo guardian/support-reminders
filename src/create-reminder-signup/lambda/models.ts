@@ -1,8 +1,4 @@
-import {
-	createDetailedValidator,
-	registerType,
-} from 'typecheck.macro/dist/typecheck.macro';
-import { emailIsShortEnoughForIdentity, isValidEmail } from '../../lib/models';
+import { z } from 'zod';
 
 // Database model
 export interface BaseSignup {
@@ -22,8 +18,27 @@ export interface RecurringSignup extends BaseSignup {
 }
 
 // API request models
+const reminderPlatformSchema = z.union([
+	z.literal('WEB'),
+	z.literal('AMP'),
+	z.literal('MMA'),
+	z.literal('SUPPORT'),
+	z.literal('EMAIL'),
+]);
 export type ReminderPlatform = 'WEB' | 'AMP' | 'MMA' | 'SUPPORT' | 'EMAIL';
 
+const reminderComponentSchema = z.union([
+	z.literal('EPIC'),
+	z.literal('BANNER'),
+	z.literal('THANKYOU'),
+	z.literal('CANCELLATION'),
+	z.literal('EMAIL'),
+	z.literal('EDITORIAL_ADS'),
+	z.literal('REMINDER'),
+	z.literal('MOMENT'),
+	z.literal('SINGLE_MONTHLY'),
+	z.literal('IN_LIFE_JOURNEY'),
+]);
 export type ReminderComponent =
 	| 'EPIC'
 	| 'BANNER'
@@ -36,71 +51,36 @@ export type ReminderComponent =
 	| 'SINGLE_MONTHLY'
 	| 'IN_LIFE_JOURNEY';
 
+const reminderStageSchema = z.union([
+	z.literal('PRE'),
+	z.literal('POST'),
+	z.literal('WINBACK'),
+]);
 export type ReminderStage = 'PRE' | 'POST' | 'WINBACK';
 
-type Email = string;
+export const baseSignupRequestSchema = z.object({
+	// Identity’s guest creation endpoint errors if the provided email address is more than 100 characters long
+	email: z.string().max(100).email(),
+	country: z.string().optional(),
+	reminderCreatedAt: z.string().datetime().optional(),
+	reminderPlatform: reminderPlatformSchema,
+	reminderComponent: reminderComponentSchema,
+	reminderStage: reminderStageSchema,
+	reminderOption: z.string().optional(),
+});
+export type BaseSignupRequest = z.infer<typeof baseSignupRequestSchema>;
 
-type DateString = string;
+export const oneOffSignupRequestSchema = baseSignupRequestSchema.extend({
+	reminderPeriod: z.string().datetime(),
+});
+export type OneOffSignupRequest = z.infer<typeof oneOffSignupRequestSchema>;
 
-function isValidDateString(dateString: string): boolean {
-	const date = Date.parse(dateString);
-	return !isNaN(date);
-}
-
-export interface BaseSignupRequest {
-	email: Email;
-	country?: string;
-	reminderCreatedAt?: DateString;
-	reminderPlatform: ReminderPlatform;
-	reminderComponent: ReminderComponent;
-	reminderStage: ReminderStage;
-	reminderOption?: string;
-}
-
-// typecheck.macro doesn't support extends
-export type OneOffSignupRequest = BaseSignupRequest & {
-	reminderPeriod: DateString;
-};
-
-// typecheck.macro doesn't support extends
-export type RecurringSignupRequest = BaseSignupRequest & {
-	reminderFrequencyMonths: number;
-};
-
-// Use macro to generate validator
-registerType('OneOffSignupRequest');
-export const oneOffSignupValidator = createDetailedValidator<OneOffSignupRequest>(
-	undefined,
-	{
-		constraints: {
-			Email: (email: string) =>
-				!isValidEmail(email)
-					? 'Invalid email address'
-					: !emailIsShortEnoughForIdentity(email)
-					? 'Email address is too long'
-					: null,
-			DateString: (dateString: string) =>
-				isValidDateString(dateString) ? null : 'Invalid date',
-		},
-	},
-);
-
-registerType('RecurringSignupRequest');
-export const recurringSignupValidator = createDetailedValidator<RecurringSignupRequest>(
-	undefined,
-	{
-		constraints: {
-			Email: (email: string) =>
-				!isValidEmail(email)
-					? 'Invalid email address'
-					: !emailIsShortEnoughForIdentity(email)
-					? 'Email address is too long'
-					: null,
-			DateString: (dateString: string) =>
-				isValidDateString(dateString) ? null : 'Invalid date',
-		},
-	},
-);
+export const recurringSignupRequestSchema = baseSignupRequestSchema.extend({
+	reminderFrequencyMonths: z.number(),
+});
+export type RecurringSignupRequest = z.infer<
+	typeof recurringSignupRequestSchema
+>;
 
 const toDate = (s: string): string => {
 	const d = new Date(s);
