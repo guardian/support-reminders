@@ -48,7 +48,7 @@
   "scripts": {
     "clean": "rm -rf target",
     "lint": "eslint ./src --ext .js,.ts",
-    "build": "babel src --out-dir target --extensions \".ts\"",
+    "build": "tsc",
     "create-reminder-signup": "yarn build && node target/create-reminder-signup/lambda/local.js",
     "cancel-reminders": "yarn build && node target/cancel-reminders/lambda/local.js",
     "reactivate-recurring-reminder": "yarn build && node target/reactivate-recurring-reminder/lambda/local.js",
