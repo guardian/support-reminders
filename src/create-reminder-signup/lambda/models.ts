@@ -59,7 +59,7 @@ export const baseSignupRequestSchema = z.object({
 export type BaseSignupRequest = z.infer<typeof baseSignupRequestSchema>;
 
 export const oneOffSignupRequestSchema = baseSignupRequestSchema.extend({
-	reminderPeriod: z.string().datetime(),
+	reminderPeriod: z.string().date(),
 });
 export type OneOffSignupRequest = z.infer<typeof oneOffSignupRequestSchema>;
 
