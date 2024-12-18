@@ -1,11 +1,5 @@
-import {
-	createDetailedValidator,
-	registerType,
-} from 'typecheck.macro/dist/typecheck.macro';
+import { z } from 'zod';
 
-export interface CancellationRequest {
-	reminderCode: string;
-}
-
-registerType('CancellationRequest');
-export const cancellationValidator = createDetailedValidator<CancellationRequest>();
+export const cancellationRequestSchema = z.object({
+	reminderCode: z.string(),
+});

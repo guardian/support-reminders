@@ -1,11 +1,7 @@
-import {
-	createDetailedValidator,
-	registerType,
-} from 'typecheck.macro/dist/typecheck.macro';
+import { z } from 'zod';
 
-export interface ReactivationRequest {
-	reminderCode: string;
-}
+export const reactivationRequestSchema = z.object({
+	reminderCode: z.string(),
+});
 
-registerType('ReactivationRequest');
-export const reactivationValidator = createDetailedValidator<ReactivationRequest>();
+export type ReactivationRequest = z.infer<typeof reactivationRequestSchema>;

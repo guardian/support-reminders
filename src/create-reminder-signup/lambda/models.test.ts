@@ -1,5 +1,7 @@
-import { ValidationErrors } from '../../lib/models';
-import { oneOffSignupValidator, recurringSignupValidator } from './models';
+import {
+	oneOffSignupRequestSchema,
+	recurringSignupRequestSchema,
+} from './models';
 
 const oneOffSignupRequest = {
 	email: 'test-reminders10@theguardian.com',
@@ -21,78 +23,68 @@ const recurringSignupRequest = {
 
 describe('request validation', () => {
 	it('accepts a good OneOffSignupRequest', () => {
-		const validationErrors: ValidationErrors = [];
-		const result = oneOffSignupValidator(
-			oneOffSignupRequest,
-			validationErrors,
-		);
-		expect(result).toBe(true);
-		expect(validationErrors.length).toEqual(0);
+		const result = oneOffSignupRequestSchema.safeParse(oneOffSignupRequest);
+		expect(result.success).toBe(true);
 	});
 
 	it('accepts a good OneOffSignupRequest with no reminderOption', () => {
-		const validationErrors: ValidationErrors = [];
-		const result = oneOffSignupValidator(
-			{ ...oneOffSignupRequest, reminderOption: undefined },
-			validationErrors,
-		);
-		expect(result).toBe(true);
-		expect(validationErrors.length).toEqual(0);
+		const result = oneOffSignupRequestSchema.safeParse({
+			...oneOffSignupRequest,
+			reminderOption: undefined,
+		});
+		expect(result.success).toBe(true);
 	});
 
 	it('rejects a OneOffSignupRequest with invalid email', () => {
-		const validationErrors: ValidationErrors = [];
-		const result = oneOffSignupValidator(
-			{ ...oneOffSignupRequest, email: 'notavalidemail' },
-			validationErrors,
-		);
-		expect(result).toBe(false);
-		expect(validationErrors.length).toEqual(1);
+		const result = oneOffSignupRequestSchema.safeParse({
+			...oneOffSignupRequest,
+			email: 'notavalidemail',
+		});
+		expect(result.success).toBe(false);
+		expect(result.error?.errors[0].message).toEqual('Invalid email');
 	});
 
 	it('rejects a OneOffSignupRequest with a really long email', () => {
-		const validationErrors: ValidationErrors = [];
 		let email = '';
 		for (let i = 0; i < 100; i++) {
 			email += 'e';
 		}
 		email += '@gmail.com';
 
-		const result = oneOffSignupValidator(
-			{ ...oneOffSignupRequest, email },
-			validationErrors,
+		const result = oneOffSignupRequestSchema.safeParse({
+			...oneOffSignupRequest,
+			email,
+		});
+		expect(result.success).toBe(false);
+		expect(result.error?.errors[0].message).toEqual(
+			'String must contain at most 100 character(s)',
 		);
-		expect(result).toBe(false);
-		expect(validationErrors.length).toEqual(1);
 	});
 
 	it('rejects a OneOffSignupRequest with invalid reminderPeriod', () => {
-		const validationErrors: ValidationErrors = [];
-		const result = oneOffSignupValidator(
-			{ ...oneOffSignupRequest, reminderPeriod: 'a' },
-			validationErrors,
-		);
-		expect(result).toBe(false);
-		expect(validationErrors.length).toEqual(1);
+		const result = oneOffSignupRequestSchema.safeParse({
+			...oneOffSignupRequest,
+			reminderPeriod: 'a',
+		});
+		expect(result.success).toBe(false);
+		expect(result.error?.errors[0].message).toEqual('Invalid date');
 	});
 
 	it('accepts a good RecurringSignupRequest', () => {
-		const validationErrors: ValidationErrors = [];
-		const result = recurringSignupValidator(
+		const result = recurringSignupRequestSchema.safeParse(
 			recurringSignupRequest,
-			validationErrors,
 		);
-		expect(result).toBe(true);
-		expect(validationErrors.length).toEqual(0);
+		expect(result.success).toBe(true);
 	});
 
 	it('rejects a RecurringSignupRequest with invalid reminderFrequencyMonths', () => {
-		const validationErrors: ValidationErrors = [];
-		const result = recurringSignupValidator(
-			{ ...recurringSignupRequest, reminderFrequencyMonths: 'a' },
-			validationErrors,
+		const result = recurringSignupRequestSchema.safeParse({
+			...recurringSignupRequest,
+			reminderFrequencyMonths: 'a',
+		});
+		expect(result.success).toBe(false);
+		expect(result.error?.errors[0].message).toEqual(
+			'Expected number, received string',
 		);
-		expect(result).toBe(false);
-		expect(validationErrors.length).toEqual(1);
 	});
 });
