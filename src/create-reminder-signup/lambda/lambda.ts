@@ -114,8 +114,11 @@ const createSignup = async <T extends BaseSignupRequest>(
 		const token = await identityAccessTokenPromise;
 		const pool = await dbConnectionPoolPromise;
 
+		// The API gateway -> SQS integration encodes + as a space in the email string
+		const email = signup.email.replace(' ', '+');
+
 		const identityResult = await getOrCreateIdentityIdByEmail(
-			signup.email,
+			email,
 			signup.reminderStage,
 			token,
 		);
