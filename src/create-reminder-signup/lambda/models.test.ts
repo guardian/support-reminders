@@ -4,7 +4,7 @@ import {
 } from './models';
 
 const oneOffSignupRequest = {
-	email: 'test-reminders+10@theguardian.com',
+	email: 'test-reminders10@theguardian.com',
 	reminderPeriod: '2021-01-01',
 	reminderPlatform: 'WEB',
 	reminderComponent: 'EPIC',
@@ -13,7 +13,7 @@ const oneOffSignupRequest = {
 };
 
 const recurringSignupRequest = {
-	email: 'test-reminders+10@theguardian.com',
+	email: 'test-reminders10@theguardian.com',
 	reminderFrequencyMonths: 6,
 	reminderPlatform: 'WEB',
 	reminderComponent: 'THANKYOU',
@@ -86,5 +86,17 @@ describe('request validation', () => {
 		expect(result.error?.errors[0].message).toEqual(
 			'Expected number, received string',
 		);
+	});
+
+	it('transforms an email address containing a space', () => {
+		// Identity’s guest creation endpoint errors if the provided email address is more than 100 characters long
+		// See baseSignupRequestSchema definition for details
+		const email = 'test afterplus@theguardian.com';
+		const result = oneOffSignupRequestSchema.safeParse({
+			...oneOffSignupRequest,
+			email,
+		});
+		expect(result.success).toBe(true);
+		expect(result.data?.email).toBe('test+afterplus@theguardian.com');
 	});
 });
