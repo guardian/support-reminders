@@ -4,7 +4,7 @@ import {
 } from './models';
 
 const oneOffSignupRequest = {
-	email: 'test-reminders10@theguardian.com',
+	email: 'test-reminders+10@theguardian.com',
 	reminderPeriod: '2021-01-01',
 	reminderPlatform: 'WEB',
 	reminderComponent: 'EPIC',
@@ -13,7 +13,7 @@ const oneOffSignupRequest = {
 };
 
 const recurringSignupRequest = {
-	email: 'test-reminders10@theguardian.com',
+	email: 'test-reminders+10@theguardian.com',
 	reminderFrequencyMonths: 6,
 	reminderPlatform: 'WEB',
 	reminderComponent: 'THANKYOU',
