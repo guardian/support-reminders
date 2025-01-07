@@ -48,7 +48,11 @@ export type ReminderStage = 'PRE' | 'POST' | 'WINBACK';
 
 export const baseSignupRequestSchema = z.object({
 	// Identity’s guest creation endpoint errors if the provided email address is more than 100 characters long
-	email: z.string().max(100).email(),
+	email: z
+		.string()
+		// The API gateway -> SQS integration encodes + as a space in the email string
+		.transform((email) => email.replace(' ', '+'))
+		.pipe(z.string().max(100).email()),
 	country: z.string().optional(),
 	reminderCreatedAt: z.string().datetime().optional(),
 	reminderPlatform: reminderPlatformSchema,
