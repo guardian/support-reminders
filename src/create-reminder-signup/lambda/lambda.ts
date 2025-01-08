@@ -121,7 +121,7 @@ const createSignup = async <T extends BaseSignupRequest>(
 		);
 
 		if (identityResult.name === 'success') {
-			const dbResult = await persist<T>(
+			const dbResult = await persist(
 				signup,
 				identityResult.identityId,
 				pool,
