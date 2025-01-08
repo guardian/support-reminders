@@ -24,8 +24,12 @@ function runLocal() {
 				}),
 				messageId: 'test-id',
 				messageAttributes: {
-					'X-GU-GeoIP-Country-Code': 'GB',
-					EventPath: '/create/one-off',
+					'X-GU-GeoIP-Country-Code': {
+						stringValue: 'GB',
+					},
+					EventPath: {
+						stringValue: '/create/one-off',
+					},
 				},
 			},
 		],
