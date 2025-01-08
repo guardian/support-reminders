@@ -1,3 +1,4 @@
+import { SQSEvent } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import { run } from './lambda';
 
@@ -9,20 +10,30 @@ function runLocal() {
 	console.log(__dirname);
 	process.env.Stage = 'DEV';
 
+	// @ts-expect-error -- only these fields are required
 	const event = {
-		path: '/create/one-off',
-		headers: {
-			'X-GU-GeoIP-Country-Code': 'GB',
-		},
-		body: JSON.stringify({
-			email: 'test-reminders10@theguardian.com',
-			reminderPeriod: '2021-01-01',
-			reminderFrequencyMonths: 3,
-			reminderPlatform: 'WEB',
-			reminderComponent: 'EPIC',
-			reminderStage: 'PRE',
-		}),
-	};
+		Records: [
+			{
+				body: JSON.stringify({
+					email: 'test-reminders10@theguardian.com',
+					reminderPeriod: '2021-01-01',
+					reminderFrequencyMonths: 3,
+					reminderPlatform: 'WEB',
+					reminderComponent: 'EPIC',
+					reminderStage: 'PRE',
+				}),
+				messageId: 'test-id',
+				messageAttributes: {
+					'X-GU-GeoIP-Country-Code': {
+						stringValue: 'GB',
+					},
+					EventPath: {
+						stringValue: '/create/one-off',
+					},
+				},
+			},
+		],
+	} as SQSEvent;
 
 	run(event)
 		.then((result) => {

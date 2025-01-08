@@ -1,3 +1,4 @@
+import { APIGatewayProxyEvent } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 import { run } from './lambda';
 
@@ -13,9 +14,9 @@ function runLocal() {
 		path: '/cancel',
 		headers: {},
 		body: JSON.stringify({
-			email: 'test-reminders10@theguardian.com',
+			reminderCode: 'reminderCode',
 		}),
-	};
+	} as APIGatewayProxyEvent;
 
 	run(event)
 		.then((result) => {
