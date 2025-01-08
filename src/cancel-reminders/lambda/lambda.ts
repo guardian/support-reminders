@@ -4,10 +4,9 @@ import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool } from 'pg';
 import { createDatabaseConnectionPool } from '../../lib/db';
 import { getApiGatewayHandler } from '../../lib/handler';
-import { ValidationErrors } from '../../lib/models';
 import { getDatabaseParamsFromSSM } from '../../lib/ssm';
 import { cancelPendingSignups } from '../lib/db';
-import { cancellationValidator } from './models';
+import { cancellationRequestSchema } from './models';
 
 const headers = {
 	'Content-Type': 'application/json',
@@ -29,21 +28,28 @@ export const run = async (
 
 	const cancellationRequest: unknown = JSON.parse(event.body ?? '');
 
-	const validationErrors: ValidationErrors = [];
-	if (!cancellationValidator(cancellationRequest, validationErrors)) {
-		console.log('Validation of cancellation failed', validationErrors);
+	const parseResult =
+		cancellationRequestSchema.safeParse(cancellationRequest);
+
+	if (parseResult.success) {
+		const { reminderCode } = parseResult.data;
+
+		const pool = await dbConnectionPoolPromise;
+
+		await cancelPendingSignups(reminderCode, pool);
+
+		return { headers, statusCode: 200, body: 'OK' };
+	} else {
+		console.log(
+			'Validation of cancellation failed',
+			parseResult.error.message,
+		);
 		return {
 			headers,
 			statusCode: 400,
 			body: 'Invalid body',
 		};
 	}
-
-	const pool = await dbConnectionPoolPromise;
-
-	await cancelPendingSignups(cancellationRequest.reminderCode, pool);
-
-	return { headers, statusCode: 200, body: 'OK' };
 };
 
 export const handler = getApiGatewayHandler(run);
