@@ -1,5 +1,3 @@
-import { Response } from 'node-fetch';
-
 export async function fetchWithRetry(
 	fetcher: () => Promise<Response>,
 	maxRetries: number,

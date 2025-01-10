@@ -1,4 +1,3 @@
-import { Response } from 'node-fetch';
 import { fetchWithRetry } from './fetch-with-retry';
 
 describe('fetchWithRetry', () => {
