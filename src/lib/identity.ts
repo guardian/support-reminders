@@ -12,7 +12,7 @@ export const idapiBaseUrl = isProd()
 	: 'https://idapi.code.dev-theguardian.com';
 
 const encodeEmail = (email: string): string =>
-	encodeURI(email).replace('+', '%2B');
+	encodeURI(email).replace(/\+/g, '%2B');
 
 export interface IdentitySuccess {
 	name: 'success';
