@@ -1,5 +1,12 @@
 import fetch from 'node-fetch';
+import { z } from 'zod';
 import { isProd } from './stage';
+
+const identityResponseSchema = z.object({
+	user: z.object({
+		id: z.string(),
+	}),
+});
 
 export const idapiBaseUrl = isProd()
 	? 'https://idapi.theguardian.com'
@@ -52,15 +59,17 @@ export const getIdentityIdByEmail = async (
 	}
 
 	return response.json().then((identityResponse) => {
-		if (identityResponse?.user?.id) {
+		const parseResult = identityResponseSchema.safeParse(identityResponse);
+		if (parseResult.success) {
+			const { id } = parseResult.data.user;
 			return {
 				name: 'success',
-				identityId: identityResponse.user.id as string,
-			};
+				identityId: id,
+			} as IdentitySuccess;
 		} else {
 			console.log(
 				`Missing identity ID in response from identity for email ${email}`,
-				identityResponse,
+				parseResult.error.message,
 			);
 			return fail(500);
 		}
