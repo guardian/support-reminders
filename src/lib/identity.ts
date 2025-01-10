@@ -49,7 +49,7 @@ export const getIdentityIdByEmail = async (
 	if (!response.ok) {
 		return response.text().then((body) => {
 			console.log(
-				`Failed to get identity ID for email ${email}`,
+				`Unable to get identity ID for email ${email}`,
 				response.status,
 				body,
 			);
