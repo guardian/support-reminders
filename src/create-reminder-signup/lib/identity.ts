@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import { z } from 'zod';
 import {
 	fail,
 	getIdentityIdByEmail,
@@ -8,6 +9,12 @@ import {
 } from '../../lib/identity';
 import { ReminderStage } from '../lambda/models';
 import { fetchWithRetry } from './fetch-with-retry';
+
+const identityResponseSchema = z.object({
+	guestRegistrationRequest: z.object({
+		userId: z.string(),
+	}),
+});
 
 const IDENTITY_ACCOUNT_CREATION_MAX_RETRIES = 1;
 
@@ -41,14 +48,14 @@ const createIdentityAccount = async (
 	}
 
 	return response.json().then((identityResponse) => {
-		if (identityResponse?.guestRegistrationRequest?.userId) {
-			return success(
-				identityResponse.guestRegistrationRequest.userId as string,
-			);
+		const parseResult = identityResponseSchema.safeParse(identityResponse);
+		if (parseResult.success) {
+			const { userId } = parseResult.data.guestRegistrationRequest;
+			return success(userId);
 		} else {
 			console.log(
 				'Missing userId in identity response',
-				JSON.stringify(identityResponse),
+				parseResult.error.message,
 			);
 			return fail(500);
 		}
