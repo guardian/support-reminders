@@ -30,5 +30,5 @@ export function uploadAsCsvToS3(
 			ACL: 'bucket-owner-full-control',
 		})
 		.promise()
-		.then(() => result.rowCount);
+		.then(() => result.rowCount ?? 0);
 }

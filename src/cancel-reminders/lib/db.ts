@@ -78,7 +78,7 @@ export async function cancelPendingSignups(
 			runWithLogging(recurringQuery, pool),
 		]).then(
 			([oneOffResult, recurringResult]) =>
-				oneOffResult.rowCount + recurringResult.rowCount,
+				(oneOffResult.rowCount ?? 0) + (recurringResult.rowCount ?? 0),
 		);
 	}
 	return Promise.resolve(0);
