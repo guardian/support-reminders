@@ -130,7 +130,9 @@ const createSignup = async <T extends BaseSignupRequest>(
 
 			if (dbResult.rowCount !== 1) {
 				return Promise.reject(
-					`Unexpected row count in database response: ${dbResult.rowCount}`,
+					`Unexpected row count in database response: ${
+						dbResult.rowCount ?? 0
+					}`,
 				);
 			}
 		} else {

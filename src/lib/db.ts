@@ -31,7 +31,7 @@ export function runWithLogging(
 	return pool.query(queryConfig).then((result: QueryResult) => {
 		logInfo(
 			`Query: ${JSON.stringify(queryConfig)}. Affected ${
-				result.rowCount
+				result.rowCount ?? 0
 			} row(s): `,
 			result.rows,
 		);
