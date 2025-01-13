@@ -15,6 +15,8 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      pull-requests: write
+
     name: support-reminders build
     runs-on: ubuntu-latest
     services:
@@ -78,16 +80,12 @@ jobs:
         working-directory: cdk
         run: yarn synth
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: eu-west-1
-          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
-
       - name: Upload to Riff-Raff
-        uses: guardian/actions-riff-raff@v2
+        uses: guardian/actions-riff-raff@v4
         with:
           app: support-reminders
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
           configPath: ./riff-raff.yaml
           contentDirectories: |
             support-reminders-cloudformation:
