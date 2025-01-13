@@ -447,10 +447,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/eslint-config/-/eslint-config-0.4.2.tgz#0f07c3b951e0b5730ad3a3423d8cc508ff2c431e"
   integrity sha512-zDXdnGhY+5IomMc0zVLOquaxylWEFjWJz4Beg2UP+U2qPjr4yVVe2ekEjZM+hayADHIs9bH7OlQ8s2EHSgfK2g==
 
-"@guardian/prettier@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@guardian/prettier/-/prettier-0.4.2.tgz#2d08a8a50aad3911a88c9b53f92a37748694d551"
-  integrity sha512-f8MCY/s3rLNonqxITsqnqrPRt0r6hEyW6rGKqDexTt88fEQnA3BMtAlN2hqjuNfrOa9EQexEknZugRVdIpbijQ==
+"@guardian/prettier@^2.1.5":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@guardian/prettier/-/prettier-2.1.5.tgz#715fff5b110006408f92a3fe2a803ad0e4c79e06"
+  integrity sha512-4fehERf5HHS9Nkaw+4u5EZ1OrFEHL4lYhLUWkpwEx4VmHI+RgcMezfDfosb3TD8cPFCKakrpdQEJUwNP283SJw==
 
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
