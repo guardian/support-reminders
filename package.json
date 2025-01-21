@@ -19,7 +19,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@guardian/eslint-config": "^0.4.2",
+    "@guardian/eslint-config": "^0.7.0",
     "@guardian/eslint-config-typescript": "^0.4.2",
     "@guardian/prettier": "^2.1.5",
     "@types/aws-lambda": "^8.10.147",
