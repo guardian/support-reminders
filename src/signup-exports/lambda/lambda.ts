@@ -25,9 +25,10 @@ export const handler = async (): Promise<number> => {
 		pool,
 	).then((result) => uploadAsCsvToS3(result, S3_BUCKET, ONE_OFF_S3_KEY));
 
-	const numRecurrings = await getCreatedOrCancelledRecurringSignupsFromYesterday(
-		pool,
-	).then((result) => uploadAsCsvToS3(result, S3_BUCKET, RECURRING_S3_KEY));
+	const numRecurrings =
+		await getCreatedOrCancelledRecurringSignupsFromYesterday(pool).then(
+			(result) => uploadAsCsvToS3(result, S3_BUCKET, RECURRING_S3_KEY),
+		);
 
 	return numOneOffs + numRecurrings;
 };
