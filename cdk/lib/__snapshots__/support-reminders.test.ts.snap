@@ -1337,7 +1337,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "App",
@@ -1570,7 +1570,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "App",
@@ -1801,6 +1801,28 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "FunctionResponseTypes": [
           "ReportBatchItemFailures",
         ],
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "support-reminders",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "CODE",
+          },
+        ],
       },
       "Type": "AWS::Lambda::EventSourceMapping",
     },
@@ -1864,7 +1886,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "App",
@@ -2269,7 +2291,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "App",
@@ -2511,7 +2533,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "App",
@@ -4405,7 +4427,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "App",
@@ -4638,7 +4660,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "App",
@@ -4869,6 +4891,28 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "FunctionResponseTypes": [
           "ReportBatchItemFailures",
         ],
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "support-reminders",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "PROD",
+          },
+        ],
       },
       "Type": "AWS::Lambda::EventSourceMapping",
     },
@@ -4932,7 +4976,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "App",
@@ -5337,7 +5381,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "App",
@@ -5579,7 +5623,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Tags": [
           {
             "Key": "App",
