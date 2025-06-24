@@ -5,6 +5,7 @@ import { Pool, QueryResult } from 'pg';
 import { ZodSchema } from 'zod';
 import { createDatabaseConnectionPool } from '../../lib/db';
 import { getSQSHandler } from '../../lib/handler';
+import { IdentityFailure } from '../../lib/identity';
 import {
 	getDatabaseParamsFromSSM,
 	getParamFromSSM,
@@ -97,6 +98,33 @@ const runRecurring = async (signupRequest: unknown): Promise<void> => {
 	return createSignup(signupRequest, recurringSignupRequestSchema, persist);
 };
 
+/**
+ * There are some validation errors that currently end up on the DLQ which we can't actually fix.  This ignores those.
+ * @param identityResult
+ * @returns Promise<void>
+ */
+const ignoreSomeValidationErrors = async (
+	identityResult: IdentityFailure,
+): Promise<void> => {
+	// blocked email providers should not be passed to DLQ
+	const ignoreBlockedProvider = identityResult.errorMessage?.errors.filter(
+		(e) => {
+			e.message === 'Registration Error';
+		},
+	);
+	// email addresses that fail validation should not be passed to the DQL
+	const ignoreInvalidEmailAddress =
+		identityResult.errorMessage?.errors.filter((e) => {
+			e.message === 'Invalid emailAddress';
+		});
+
+	if (!(ignoreBlockedProvider || ignoreInvalidEmailAddress)) {
+		return Promise.reject(identityResult.status.toString());
+	} else {
+		return Promise.resolve();
+	}
+};
+
 type Persist<T> = (
 	signupRequest: T,
 	identityId: string,
@@ -136,7 +164,7 @@ const createSignup = async <T extends BaseSignupRequest>(
 				);
 			}
 		} else {
-			return Promise.reject(identityResult.status.toString());
+			return ignoreSomeValidationErrors(identityResult);
 		}
 	} else {
 		console.log('Validation of signup failed', parseResult.error.message);
