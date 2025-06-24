@@ -115,7 +115,8 @@ const ignoreSomeValidationErrors = async (
 	// email addresses that fail validation should not be passed to the DQL
 	const ignoreInvalidEmailAddress =
 		identityResult.errorMessage?.errors.filter((e) => {
-			e.message === 'Invalid emailAddress';
+			e.description === 'Invalid email format' ||
+				e.message == 'Invalid emailAddress:';
 		});
 
 	if (!(ignoreBlockedProvider || ignoreInvalidEmailAddress)) {
