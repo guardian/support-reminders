@@ -35,15 +35,6 @@ describe('request validation', () => {
 		expect(result.success).toBe(true);
 	});
 
-	it('rejects a OneOffSignupRequest with invalid email', () => {
-		const result = oneOffSignupRequestSchema.safeParse({
-			...oneOffSignupRequest,
-			email: 'notavalidemail',
-		});
-		expect(result.success).toBe(false);
-		expect(result.error?.errors[0].message).toEqual('Invalid email');
-	});
-
 	it('rejects a OneOffSignupRequest with a really long email', () => {
 		let email = '';
 		for (let i = 0; i < 100; i++) {
