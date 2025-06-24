@@ -19,9 +19,23 @@ export interface IdentitySuccess {
 	identityId: string;
 }
 
+//TODO: move to models?
+export interface IdentityErrorMessage {
+	message: string;
+	description: string;
+	context?: string;
+}
+
+//TODO: move to models?
+export interface IdentityError {
+	status: 'error';
+	errors: IdentityErrorMessage[];
+}
+
 export interface IdentityFailure {
 	name: 'failure';
 	status: number;
+	errorMessage?: IdentityError;
 }
 export type IdentityResult = IdentitySuccess | IdentityFailure;
 
@@ -30,9 +44,13 @@ export const success = (identityId: string): IdentitySuccess => ({
 	identityId,
 });
 
-export const fail = (status: number): IdentityFailure => ({
+export const fail = (
+	status: number,
+	message?: IdentityError,
+): IdentityFailure => ({
 	name: 'failure',
 	status,
+	errorMessage: message,
 });
 
 export const getIdentityIdByEmail = async (
@@ -47,13 +65,13 @@ export const getIdentityIdByEmail = async (
 	);
 
 	if (!response.ok) {
-		return response.text().then((body) => {
+		return response.json().then((body: IdentityError) => {
 			console.log(
 				`Unable to lookup identity ID for email ${email}`,
 				response.status,
 				body,
 			);
-			return fail(response.status);
+			return fail(response.status, body);
 		});
 	}
 
