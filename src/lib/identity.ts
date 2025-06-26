@@ -19,14 +19,12 @@ export interface IdentitySuccess {
 	identityId: string;
 }
 
-//TODO: move to models?
 export interface IdentityErrorMessage {
 	message: string;
 	description: string;
 	context?: string;
 }
 
-//TODO: move to models?
 export interface IdentityError {
 	status: 'error';
 	errors: IdentityErrorMessage[];

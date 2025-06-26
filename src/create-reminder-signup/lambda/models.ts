@@ -53,7 +53,6 @@ export const baseSignupRequestSchema = z.object({
 		.max(100)
 		// The API gateway -> SQS integration encodes + as a space in the email string
 		.transform((email) => email.replace(/ /g, '+')),
-	// .pipe(z.string().email()), // TODO: remove this validation in favour of IDAPI's validation
 	country: z.string().optional(),
 	reminderCreatedAt: z.string().datetime().optional(),
 	reminderPlatform: reminderPlatformSchema,
