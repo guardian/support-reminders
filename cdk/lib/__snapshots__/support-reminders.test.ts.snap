@@ -423,6 +423,15 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "DeploymentId": {
           "Ref": "RestApiDeployment180EC503a345def70b385514941e7a699c9d376f",
         },
+        "MethodSettings": [
+          {
+            "DataTraceEnabled": false,
+            "HttpMethod": "*",
+            "LoggingLevel": "ERROR",
+            "MetricsEnabled": true,
+            "ResourcePath": "/*",
+          },
+        ],
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
         },
@@ -3549,6 +3558,15 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "DeploymentId": {
           "Ref": "RestApiDeployment180EC503527c2dadd44b8927ecf4437252adb507",
         },
+        "MethodSettings": [
+          {
+            "DataTraceEnabled": false,
+            "HttpMethod": "*",
+            "LoggingLevel": "ERROR",
+            "MetricsEnabled": true,
+            "ResourcePath": "/*",
+          },
+        ],
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
         },
