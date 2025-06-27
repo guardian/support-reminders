@@ -6,7 +6,7 @@ import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
 import {Duration} from "aws-cdk-lib";
-import {AccessLogFormat, AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors, LogGroupLogDestination, RequestValidator} from "aws-cdk-lib/aws-apigateway";
+import {AccessLogFormat, AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors, LogGroupLogDestination, MethodLoggingLevel, RequestValidator} from "aws-cdk-lib/aws-apigateway";
 import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
@@ -189,6 +189,9 @@ export class SupportReminders extends GuStack {
 					apiGatewayLogGroup,
 				),
 				accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
+				loggingLevel: MethodLoggingLevel.ERROR,
+				metricsEnabled: true,
+				dataTraceEnabled: false,
 			},
 		})
 
