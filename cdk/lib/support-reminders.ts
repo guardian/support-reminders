@@ -6,13 +6,14 @@ import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
 import {Duration} from "aws-cdk-lib";
-import {AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors, RequestValidator} from "aws-cdk-lib/aws-apigateway";
+import {AccessLogFormat, AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors, LogGroupLogDestination, MethodLoggingLevel, RequestValidator} from "aws-cdk-lib/aws-apigateway";
 import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
 import { Effect, ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import {LoggingFormat, Runtime} from "aws-cdk-lib/aws-lambda";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import {CfnRecordSet} from "aws-cdk-lib/aws-route53";
 import { Queue } from "aws-cdk-lib/aws-sqs";
 import {isProd} from "../../src/lib/stage";
@@ -153,8 +154,11 @@ export class SupportReminders extends GuStack {
 			...sharedLambdaProps,
 		});
 
-
 		// ---- API gateway ---- //
+		const apiGatewayLogGroup = new LogGroup(this, 'ApiGatewayAccessLogs', {
+			logGroupName: `/aws/apigateway/${app}-${this.stage}`,
+		});
+
 		const supportRemindersApi = new GuApiGatewayWithLambdaByPath(this, {
 			app,
 			defaultCorsPreflightOptions: {
@@ -180,6 +184,15 @@ export class SupportReminders extends GuStack {
 					lambda: cancelRemindersLambda,
 				},
 			],
+			deployOptions: {
+				accessLogDestination: new LogGroupLogDestination(
+					apiGatewayLogGroup,
+				),
+				accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
+				loggingLevel: MethodLoggingLevel.ERROR,
+				metricsEnabled: true,
+				dataTraceEnabled: false,
+			},
 		})
 
 
