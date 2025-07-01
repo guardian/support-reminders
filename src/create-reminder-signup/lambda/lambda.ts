@@ -99,28 +99,23 @@ const runRecurring = async (signupRequest: unknown): Promise<void> => {
 };
 
 /**
- * There are some validation errors that currently end up on the DLQ which we can't actually fix.  This ignores those.
+ * There are some validation errors that currently end up on the DLQ which we can't actually fix.  This checks for those.
  * https://github.com/guardian/identity/blob/0580155e9eac0fe52ef4772fa1ae72d91155f258/identity-model/src/main/scala/com/gu/identity/model/Errors.scala
+ * Here, blocked email providers and email addresses that fail validation should not be passed to the DQL for retry
  * @param identityResult
  * @returns Promise<void>
  */
 const ignoreSomeValidationErrors = async (
 	identityResult: IdentityFailure,
 ): Promise<void> => {
-	// blocked email providers should not be passed to DLQ
-	const ignoreBlockedProvider = identityResult.errorMessage?.errors.filter(
-		(e) => {
-			e.message === 'Registration Error';
-		},
+	const shouldIgnoreError = identityResult.errorMessage?.errors.some(
+		(error) =>
+			error.message === 'Registration Error' ||
+			error.description === 'Invalid email format' ||
+			error.message === 'Invalid emailAddress:',
 	);
-	// email addresses that fail validation should not be passed to the DQL
-	const ignoreInvalidEmailAddress =
-		identityResult.errorMessage?.errors.filter((e) => {
-			e.description === 'Invalid email format' ||
-				e.message == 'Invalid emailAddress:';
-		});
 
-	if (!(ignoreBlockedProvider || ignoreInvalidEmailAddress)) {
+	if (!shouldIgnoreError) {
 		return Promise.reject(identityResult.status.toString());
 	} else {
 		return Promise.resolve();
