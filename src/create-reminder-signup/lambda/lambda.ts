@@ -100,6 +100,7 @@ const runRecurring = async (signupRequest: unknown): Promise<void> => {
 
 /**
  * There are some validation errors that currently end up on the DLQ which we can't actually fix.  This ignores those.
+ * https://github.com/guardian/identity/blob/0580155e9eac0fe52ef4772fa1ae72d91155f258/identity-model/src/main/scala/com/gu/identity/model/Errors.scala
  * @param identityResult
  * @returns Promise<void>
  */
