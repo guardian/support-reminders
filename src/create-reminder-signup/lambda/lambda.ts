@@ -5,6 +5,7 @@ import { Pool, QueryResult } from 'pg';
 import { ZodSchema } from 'zod';
 import { createDatabaseConnectionPool } from '../../lib/db';
 import { getSQSHandler } from '../../lib/handler';
+import { IdentityFailure } from '../../lib/identity';
 import {
 	getDatabaseParamsFromSSM,
 	getParamFromSSM,
@@ -97,6 +98,30 @@ const runRecurring = async (signupRequest: unknown): Promise<void> => {
 	return createSignup(signupRequest, recurringSignupRequestSchema, persist);
 };
 
+/**
+ * There are some validation errors that currently end up on the DLQ which we can't actually fix.  This checks for those.
+ * https://github.com/guardian/identity/blob/0580155e9eac0fe52ef4772fa1ae72d91155f258/identity-model/src/main/scala/com/gu/identity/model/Errors.scala
+ * Here, blocked email providers and email addresses that fail validation should not be passed to the DQL for retry
+ * @param identityResult
+ * @returns Promise<void>
+ */
+const ignoreSomeValidationErrors = async (
+	identityResult: IdentityFailure,
+): Promise<void> => {
+	const shouldIgnoreError = identityResult.errorMessage?.errors.some(
+		(error) =>
+			error.message === 'Registration Error' ||
+			error.description === 'Invalid email format' ||
+			error.message === 'Invalid emailAddress:',
+	);
+
+	if (!shouldIgnoreError) {
+		return Promise.reject(identityResult.status.toString());
+	} else {
+		return Promise.resolve();
+	}
+};
+
 type Persist<T> = (
 	signupRequest: T,
 	identityId: string,
@@ -136,7 +161,7 @@ const createSignup = async <T extends BaseSignupRequest>(
 				);
 			}
 		} else {
-			return Promise.reject(identityResult.status.toString());
+			return ignoreSomeValidationErrors(identityResult);
 		}
 	} else {
 		console.log('Validation of signup failed', parseResult.error.message);

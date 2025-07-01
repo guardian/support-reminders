@@ -36,13 +36,13 @@ const createIdentityAccount = async (
 		IDENTITY_ACCOUNT_CREATION_MAX_RETRIES,
 	);
 	if (!response.ok) {
-		return response.text().then((body) => {
+		return response.json().then((body) => {
 			console.log(
 				'Identity guest account creation failed',
 				response.status,
 				body,
 			);
-			return fail(response.status);
+			return fail(response.status, body);
 		});
 	}
 
