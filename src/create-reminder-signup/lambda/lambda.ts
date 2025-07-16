@@ -101,7 +101,10 @@ const runRecurring = async (signupRequest: unknown): Promise<void> => {
 /**
  * There are some validation errors that currently end up on the DLQ which we can't actually fix.  This checks for those.
  * https://github.com/guardian/identity/blob/0580155e9eac0fe52ef4772fa1ae72d91155f258/identity-model/src/main/scala/com/gu/identity/model/Errors.scala
- * Here, blocked email providers and email addresses that fail validation should not be passed to the DQL for retry
+ * The following validation failures should not be passed to the DQL for retry:
+ * 	* blocked email providers
+ * 	* invalid email addresses (based on Okta validation)
+ * 	* incomplete accounts - user did not complete the email verification step on account creation
  * @param identityResult
  * @returns Promise<void>
  */
@@ -112,7 +115,8 @@ const ignoreSomeValidationErrors = async (
 		(error) =>
 			error.message === 'Registration Error' ||
 			error.description === 'Invalid email format' ||
-			error.message === 'Invalid emailAddress:',
+			error.message === 'Invalid emailAddress:' ||
+			error.message === 'Incomplete user',
 	);
 
 	if (!shouldIgnoreError) {
