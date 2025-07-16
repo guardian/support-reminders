@@ -71,7 +71,11 @@ export const getOrCreateIdentityIdByEmail = async (
 	if (
 		result.name === 'failure' &&
 		result.status === 404 &&
-		reminderStage === 'PRE'
+		reminderStage === 'PRE' &&
+		// don't try to create an account if they're already in an incomplete state
+		!result.errorMessage?.errors.some(
+			(m) => m.message === 'Incomplete user',
+		)
 	) {
 		return createIdentityAccount(email, accessToken);
 	}
