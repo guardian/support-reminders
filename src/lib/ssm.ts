@@ -1,4 +1,4 @@
-import type * as SSM from 'aws-sdk/clients/ssm';
+import { SSM } from '@aws-sdk/client-ssm';
 import type { DBConfig } from './db';
 import { isProd, isRunningLocally } from './stage';
 
@@ -8,12 +8,10 @@ export const ssmStage = isProd() ? 'PROD' : 'CODE';
 export async function getDatabaseParamsFromSSM(ssm: SSM): Promise<DBConfig> {
 	const dbConfigPath = `/support-reminders/db-config/${ssmStage}`;
 
-	const ssmResponse = await ssm
-		.getParametersByPath({
-			Path: dbConfigPath,
-			WithDecryption: true,
-		})
-		.promise();
+	const ssmResponse = await ssm.getParametersByPath({
+		Path: dbConfigPath,
+		WithDecryption: true,
+	});
 
 	if (ssmResponse.Parameters) {
 		const p = ssmResponse.Parameters;
@@ -47,12 +45,10 @@ export async function getDatabaseParamsFromSSM(ssm: SSM): Promise<DBConfig> {
 }
 
 export async function getParamFromSSM(ssm: SSM, path: string): Promise<string> {
-	const ssmResponse = await ssm
-		.getParameter({
-			Name: path,
-			WithDecryption: true,
-		})
-		.promise();
+	const ssmResponse = await ssm.getParameter({
+		Name: path,
+		WithDecryption: true,
+	});
 
 	if (ssmResponse.Parameter && ssmResponse.Parameter.Value) {
 		return ssmResponse.Parameter.Value;

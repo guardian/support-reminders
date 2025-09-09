@@ -1,6 +1,5 @@
+import { SSM } from '@aws-sdk/client-ssm';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import * as AWS from 'aws-sdk';
-import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool } from 'pg';
 import { createDatabaseConnectionPool } from '../../lib/db';
 import { getApiGatewayHandler } from '../../lib/handler';
@@ -15,7 +14,9 @@ const headers = {
 	'Access-Control-Allow-Methods': '*',
 };
 
-const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
+const ssm: SSM = new SSM({
+	region: 'eu-west-1',
+});
 
 const dbConnectionPoolPromise: Promise<Pool> = getDatabaseParamsFromSSM(
 	ssm,

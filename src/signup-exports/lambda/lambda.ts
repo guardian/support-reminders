@@ -1,5 +1,4 @@
-import * as AWS from 'aws-sdk';
-import * as SSM from 'aws-sdk/clients/ssm';
+import { SSM } from '@aws-sdk/client-ssm';
 import { createDatabaseConnectionPool } from '../../lib/db';
 import { getDatabaseParamsFromSSM } from '../../lib/ssm';
 import { uploadAsCsvToS3 } from '../../lib/upload';
@@ -9,7 +8,9 @@ import {
 } from '../lib/db';
 import { getYesterday } from '../lib/utils';
 
-const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
+const ssm: SSM = new SSM({
+	region: 'eu-west-1',
+});
 
 const yesterday = getYesterday();
 const ONE_OFF_S3_KEY = `one-off-signups/date=${yesterday}/one-off-signups.csv`;

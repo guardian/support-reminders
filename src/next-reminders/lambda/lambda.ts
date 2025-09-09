@@ -1,11 +1,13 @@
-import * as AWS from 'aws-sdk';
-import * as SSM from 'aws-sdk/clients/ssm';
+import { SSM } from '@aws-sdk/client-ssm';
 import { createDatabaseConnectionPool } from '../../lib/db';
 import { getDatabaseParamsFromSSM } from '../../lib/ssm';
 import { uploadAsCsvToS3 } from '../../lib/upload';
 import { getNextReminders } from '../lib/db';
 
-const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
+const ssm: SSM = new SSM({
+	region: 'eu-west-1',
+	profile: 'membership',
+});
 
 const S3_KEY = `next-reminders/next-reminders.csv`;
 const S3_BUCKET = process.env.Bucket ?? '';
