@@ -1,9 +1,8 @@
-import * as AWS from 'aws-sdk';
 import { handler } from './lambda';
 
-const config = new AWS.Config();
-const credentials = new AWS.SharedIniFileCredentials({ profile: 'membership' });
-config.update({ region: 'eu-west-1', credentials });
+// Configure AWS SDK v3 with profile-based credentials
+process.env.AWS_PROFILE = 'membership';
+process.env.AWS_REGION = 'eu-west-1';
 
 function runLocal() {
 	console.log(__dirname);

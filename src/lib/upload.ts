@@ -1,8 +1,8 @@
-import * as AWS from 'aws-sdk';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { QueryResult } from 'pg';
 
-const s3 = new AWS.S3();
+const s3 = new S3Client({ region: 'eu-west-1' });
 
 export function uploadAsCsvToS3(
 	result: QueryResult,
@@ -22,13 +22,12 @@ export function uploadAsCsvToS3(
 	const csvRows = csvWriter.stringifyRecords(result.rows);
 	const csv = `${csvHeader}${csvRows}`;
 
-	return s3
-		.upload({
-			Bucket: bucket,
-			Key: key,
-			Body: csv,
-			ACL: 'bucket-owner-full-control',
-		})
-		.promise()
-		.then(() => result.rowCount ?? 0);
+	const command = new PutObjectCommand({
+		Bucket: bucket,
+		Key: key,
+		Body: csv,
+		ACL: 'bucket-owner-full-control',
+	});
+
+	return s3.send(command).then(() => result.rowCount ?? 0);
 }
