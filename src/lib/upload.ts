@@ -27,6 +27,7 @@ export function uploadAsCsvToS3(
 			Bucket: bucket,
 			Key: key,
 			Body: csv,
+			ACL: 'bucket-owner-full-control',
 		})
 		.promise()
 		.then(() => result.rowCount ?? 0);

@@ -354,7 +354,8 @@ export class SupportReminders extends GuStack {
 				new PolicyStatement({
 					effect: Effect.ALLOW,
 					actions: [
-						"s3:PutObject"
+						"s3:PutObject",
+						"s3:PutObjectAcl"
 					],
 					resources: [
 						`arn:aws:s3:::${props.datalakeBucket}`,
