@@ -1191,10 +1191,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "PolicyDocument": {
           "Statement": [
             {
-              "Action": [
-                "s3:PutObject",
-                "s3:PutObjectAcl",
-              ],
+              "Action": "s3:PutObject",
               "Effect": "Allow",
               "Resource": [
                 "arn:aws:s3:::contributions-private",
@@ -4326,10 +4323,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "PolicyDocument": {
           "Statement": [
             {
-              "Action": [
-                "s3:PutObject",
-                "s3:PutObjectAcl",
-              ],
+              "Action": "s3:PutObject",
               "Effect": "Allow",
               "Resource": [
                 "arn:aws:s3:::ophan-raw-support-reminders",

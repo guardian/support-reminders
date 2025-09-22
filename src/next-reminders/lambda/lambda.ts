@@ -8,7 +8,8 @@ import { getNextReminders } from '../lib/db';
 const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
 
 const S3_KEY = `next-reminders/next-reminders.csv`;
-const S3_BUCKET = process.env.Bucket ?? '';
+//const S3_BUCKET = process.env.Bucket ?? '';
+const S3_BUCKET = 'ophan-raw-mm-copy-support-reminders';
 
 export const handler = async (): Promise<number> =>
 	getDatabaseParamsFromSSM(ssm)
