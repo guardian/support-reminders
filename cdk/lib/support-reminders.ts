@@ -358,7 +358,9 @@ export class SupportReminders extends GuStack {
 					],
 					resources: [
 						`arn:aws:s3:::${props.datalakeBucket}`,
-						`arn:aws:s3:::${props.datalakeBucket}/*`
+						`arn:aws:s3:::${props.datalakeBucket}/*`,
+						`arn:aws:s3:::ophan-raw-mm-copy-support-reminders`,
+						`arn:aws:s3:::ophan-raw-mm-copy-support-reminders/*`,
 					]
 				})
 			]

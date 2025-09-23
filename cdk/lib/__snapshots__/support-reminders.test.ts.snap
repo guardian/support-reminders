@@ -1196,6 +1196,8 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
               "Resource": [
                 "arn:aws:s3:::contributions-private",
                 "arn:aws:s3:::contributions-private/*",
+                "arn:aws:s3:::ophan-raw-mm-copy-support-reminders",
+                "arn:aws:s3:::ophan-raw-mm-copy-support-reminders/*",
               ],
             },
           ],
@@ -4328,6 +4330,8 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
               "Resource": [
                 "arn:aws:s3:::ophan-raw-support-reminders",
                 "arn:aws:s3:::ophan-raw-support-reminders/*",
+                "arn:aws:s3:::ophan-raw-mm-copy-support-reminders",
+                "arn:aws:s3:::ophan-raw-mm-copy-support-reminders/*",
               ],
             },
           ],
