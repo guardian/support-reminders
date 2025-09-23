@@ -418,7 +418,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
               "Arn",
             ],
           },
-          "Format": "{"requestId":"$context.requestId","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength","requestBody":"$input.body","userAgent":"$context.identity.userAgent"}",
+          "Format": "{"requestId":"$context.requestId","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength","requestBody":"$input.json('$')","userAgent":"$context.identity.userAgent"}",
         },
         "DeploymentId": {
           "Ref": "RestApiDeployment180EC503a345def70b385514941e7a699c9d376f",
@@ -3553,7 +3553,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
               "Arn",
             ],
           },
-          "Format": "{"requestId":"$context.requestId","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength","requestBody":"$input.body","userAgent":"$context.identity.userAgent"}",
+          "Format": "{"requestId":"$context.requestId","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength","requestBody":"$input.json('$')","userAgent":"$context.identity.userAgent"}",
         },
         "DeploymentId": {
           "Ref": "RestApiDeployment180EC503527c2dadd44b8927ecf4437252adb507",
