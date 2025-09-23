@@ -188,7 +188,19 @@ export class SupportReminders extends GuStack {
 				accessLogDestination: new LogGroupLogDestination(
 					apiGatewayLogGroup,
 				),
-				accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
+				accessLogFormat: AccessLogFormat.custom(
+					JSON.stringify({
+						requestId: '$context.requestId',
+						requestTime: '$context.requestTime',
+						httpMethod: '$context.httpMethod',
+						resourcePath: '$context.resourcePath',
+						status: '$context.status',
+						protocol: '$context.protocol',
+						responseLength: '$context.responseLength',
+						requestBody: '$input.body',
+						userAgent: '$context.identity.userAgent'
+					})
+				),
 				loggingLevel: MethodLoggingLevel.ERROR,
 				metricsEnabled: true,
 				dataTraceEnabled: false,
