@@ -378,10 +378,34 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503a345def70b385514941e7a699c9d376f": {
+    "RestApiCreateReminderRequestModel6D1E52C5": {
+      "Properties": {
+        "ContentType": "application/json",
+        "Name": "CreateReminderRequestModel",
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+        "Schema": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "properties": {
+            "email": {
+              "type": "string",
+            },
+          },
+          "required": [
+            "email",
+          ],
+          "title": "CreatReminderRequest",
+          "type": "object",
+        },
+      },
+      "Type": "AWS::ApiGateway::Model",
+    },
+    "RestApiDeployment180EC503f1d4f9a3e24a36fa9e7ae1f20466d662": {
       "DependsOn": [
         "oneoffvalidator0C4177E4",
         "recurringvalidatorA3C040BF",
+        "RestApiCreateReminderRequestModel6D1E52C5",
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
         "RestApicancel928D6387",
@@ -421,7 +445,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
           "Format": "{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","user":"$context.identity.user","caller":"$context.identity.caller","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}",
         },
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503a345def70b385514941e7a699c9d376f",
+          "Ref": "RestApiDeployment180EC503f1d4f9a3e24a36fa9e7ae1f20466d662",
         },
         "MethodSettings": [
           {
@@ -839,6 +863,11 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "StatusCode": "200",
           },
         ],
+        "RequestModels": {
+          "application/json": {
+            "Ref": "RestApiCreateReminderRequestModel6D1E52C5",
+          },
+        },
         "RequestParameters": {
           "method.request.header.X-GU-GeoIP-Country-Code": true,
         },
@@ -965,6 +994,11 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
             "StatusCode": "200",
           },
         ],
+        "RequestModels": {
+          "application/json": {
+            "Ref": "RestApiCreateReminderRequestModel6D1E52C5",
+          },
+        },
         "RequestParameters": {
           "method.request.header.X-GU-GeoIP-Country-Code": true,
         },
@@ -2299,6 +2333,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
         },
+        "ValidateRequestBody": true,
         "ValidateRequestParameters": true,
       },
       "Type": "AWS::ApiGateway::RequestValidator",
@@ -2541,6 +2576,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
         },
+        "ValidateRequestBody": true,
         "ValidateRequestParameters": true,
       },
       "Type": "AWS::ApiGateway::RequestValidator",
@@ -3513,10 +3549,34 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Type": "AWS::IAM::Role",
       "UpdateReplacePolicy": "Retain",
     },
-    "RestApiDeployment180EC503527c2dadd44b8927ecf4437252adb507": {
+    "RestApiCreateReminderRequestModel6D1E52C5": {
+      "Properties": {
+        "ContentType": "application/json",
+        "Name": "CreateReminderRequestModel",
+        "RestApiId": {
+          "Ref": "RestApi0C43BF4B",
+        },
+        "Schema": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "properties": {
+            "email": {
+              "type": "string",
+            },
+          },
+          "required": [
+            "email",
+          ],
+          "title": "CreatReminderRequest",
+          "type": "object",
+        },
+      },
+      "Type": "AWS::ApiGateway::Model",
+    },
+    "RestApiDeployment180EC5031d0d53a43b6458aab2fa25d46f7d1475": {
       "DependsOn": [
         "oneoffvalidator0C4177E4",
         "recurringvalidatorA3C040BF",
+        "RestApiCreateReminderRequestModel6D1E52C5",
         "RestApicancelOPTIONS8CB256F3",
         "RestApicancelPOST51F94A62",
         "RestApicancel928D6387",
@@ -3556,7 +3616,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
           "Format": "{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","user":"$context.identity.user","caller":"$context.identity.caller","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}",
         },
         "DeploymentId": {
-          "Ref": "RestApiDeployment180EC503527c2dadd44b8927ecf4437252adb507",
+          "Ref": "RestApiDeployment180EC5031d0d53a43b6458aab2fa25d46f7d1475",
         },
         "MethodSettings": [
           {
@@ -3974,6 +4034,11 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "StatusCode": "200",
           },
         ],
+        "RequestModels": {
+          "application/json": {
+            "Ref": "RestApiCreateReminderRequestModel6D1E52C5",
+          },
+        },
         "RequestParameters": {
           "method.request.header.X-GU-GeoIP-Country-Code": true,
         },
@@ -4100,6 +4165,11 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "StatusCode": "200",
           },
         ],
+        "RequestModels": {
+          "application/json": {
+            "Ref": "RestApiCreateReminderRequestModel6D1E52C5",
+          },
+        },
         "RequestParameters": {
           "method.request.header.X-GU-GeoIP-Country-Code": true,
         },
@@ -5434,6 +5504,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
         },
+        "ValidateRequestBody": true,
         "ValidateRequestParameters": true,
       },
       "Type": "AWS::ApiGateway::RequestValidator",
@@ -5676,6 +5747,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "RestApiId": {
           "Ref": "RestApi0C43BF4B",
         },
+        "ValidateRequestBody": true,
         "ValidateRequestParameters": true,
       },
       "Type": "AWS::ApiGateway::RequestValidator",

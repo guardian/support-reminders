@@ -6,7 +6,17 @@ import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
 import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
 import type {App} from "aws-cdk-lib";
 import {Duration} from "aws-cdk-lib";
-import {AccessLogFormat, AwsIntegration, CfnBasePathMapping, CfnDomainName, Cors, LogGroupLogDestination, MethodLoggingLevel, RequestValidator} from "aws-cdk-lib/aws-apigateway";
+import {
+	AccessLogFormat,
+	AwsIntegration,
+	CfnBasePathMapping,
+	CfnDomainName,
+	Cors, JsonSchemaType,
+	JsonSchemaVersion,
+	LogGroupLogDestination,
+	MethodLoggingLevel,
+	RequestValidator
+} from "aws-cdk-lib/aws-apigateway";
 import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
 import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
 import {Schedule} from "aws-cdk-lib/aws-events";
@@ -195,6 +205,23 @@ export class SupportReminders extends GuStack {
 			},
 		})
 
+		/**
+		 * A basic request model to validate the JSON request body.
+		 * The Lambdas will perform more detailed validation, but we want to avoid queueing up requests with e.g. empty JSON objects
+		 */
+		const createReminderRequestModel = supportRemindersApi.api.addModel('CreateReminderRequestModel', {
+			contentType: 'application/json',
+			modelName: 'CreateReminderRequestModel',
+			schema: {
+				schema: JsonSchemaVersion.DRAFT4,
+				title: 'CreatReminderRequest',
+				type: JsonSchemaType.OBJECT,
+				required: ['email'],
+				properties: {
+					email: { type: JsonSchemaType.STRING },
+				}
+			}
+		});
 
 		// post method to /create
 		supportRemindersApi.api.root.resourceForPath('/create/one-off').addMethod('POST', sendMessageIntegration, {
@@ -206,9 +233,13 @@ export class SupportReminders extends GuStack {
 			requestParameters: {
 				'method.request.header.X-GU-GeoIP-Country-Code': true,
 			},
+			requestModels: {
+				'application/json': createReminderRequestModel
+			},
 			requestValidator: new RequestValidator(this, 'one-off-validator', {
 				restApi: supportRemindersApi.api,
-				validateRequestParameters: true
+				validateRequestParameters: true,
+				validateRequestBody: true,
 			}),
 		});
 		supportRemindersApi.api.root.resourceForPath('/create/recurring').addMethod('POST', sendMessageIntegration, {
@@ -220,9 +251,13 @@ export class SupportReminders extends GuStack {
 			requestParameters: {
 				'method.request.header.X-GU-GeoIP-Country-Code': true,
 			},
+			requestModels: {
+				'application/json': createReminderRequestModel
+			},
 			requestValidator: new RequestValidator(this, 'recurring-validator', {
 				restApi: supportRemindersApi.api,
-				validateRequestParameters: true
+				validateRequestParameters: true,
+				validateRequestBody: true,
 			}),
 		});
 
