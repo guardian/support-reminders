@@ -197,7 +197,7 @@ export class SupportReminders extends GuStack {
 						status: '$context.status',
 						protocol: '$context.protocol',
 						responseLength: '$context.responseLength',
-						requestBody: '$util.escapeJavaScript($input.body)',
+						rawBody: '$input.path(\'$\')',
 						userAgent: '$context.identity.userAgent'
 					})
 				),
