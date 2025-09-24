@@ -12,9 +12,16 @@ const S3_KEY = `next-reminders/next-reminders.csv`;
 const S3_BUCKET1 = 'ophan-raw-mm-copy-support-reminders';
 const S3_BUCKET2 = 'ophan-raw-mm-copy2-support-reminders';
 
-export const handler = async (): Promise<number> =>
-	getDatabaseParamsFromSSM(ssm)
+export const handler = async (): Promise<number[]> => {
+	const write1: Promise<number> = getDatabaseParamsFromSSM(ssm)
 		.then(createDatabaseConnectionPool)
 		.then(getNextReminders)
-		.then((result) => uploadAsCsvToS3(result, S3_BUCKET1, S3_KEY))
 		.then((result) => uploadAsCsvToS3(result, S3_BUCKET1, S3_KEY));
+
+	const write2: Promise<number> = getDatabaseParamsFromSSM(ssm)
+		.then(createDatabaseConnectionPool)
+		.then(getNextReminders)
+		.then((result) => uploadAsCsvToS3(result, S3_BUCKET2, S3_KEY));
+
+	return Promise.all([write1, write2]);
+};
