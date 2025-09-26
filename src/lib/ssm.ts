@@ -4,7 +4,7 @@ import {
 	SSMClient,
 } from '@aws-sdk/client-ssm';
 import type { DBConfig } from './db';
-import { isProd, isRunningLocally } from './stage';
+import { isProd } from './stage';
 
 // locally, if process.env.Stage is not set, it will fetch CODE credentials from SSM
 export const ssmStage = isProd() ? 'PROD' : 'CODE';
@@ -40,9 +40,7 @@ export async function getDatabaseParamsFromSSM(
 			username.Value
 		) {
 			return {
-				url: isRunningLocally()
-					? 'jdbc:postgresql://localhost/contributions'
-					: url.Value,
+				url: url.Value,
 				password: password.Value,
 				username: username.Value,
 			};
