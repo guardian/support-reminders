@@ -1,6 +1,5 @@
+import { SSMClient } from '@aws-sdk/client-ssm';
 import { SQSBatchResponse, SQSEvent, SQSRecord } from 'aws-lambda';
-import * as AWS from 'aws-sdk';
-import * as SSM from 'aws-sdk/clients/ssm';
 import { Pool, QueryResult } from 'pg';
 import { ZodSchema } from 'zod';
 import { createDatabaseConnectionPool } from '../../lib/db';
@@ -23,7 +22,7 @@ import {
 	recurringSignupRequestSchema,
 } from './models';
 
-const ssm: SSM = new AWS.SSM({ region: 'eu-west-1' });
+const ssm = new SSMClient({ region: 'eu-west-1' });
 
 const dbConnectionPoolPromise: Promise<Pool> = getDatabaseParamsFromSSM(
 	ssm,

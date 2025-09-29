@@ -1,19 +1,25 @@
-import type * as SSM from 'aws-sdk/clients/ssm';
+import {
+	GetParameterCommand,
+	GetParametersByPathCommand,
+	SSMClient,
+} from '@aws-sdk/client-ssm';
 import type { DBConfig } from './db';
-import { isProd, isRunningLocally } from './stage';
+import { isProd } from './stage';
 
 // locally, if process.env.Stage is not set, it will fetch CODE credentials from SSM
 export const ssmStage = isProd() ? 'PROD' : 'CODE';
 
-export async function getDatabaseParamsFromSSM(ssm: SSM): Promise<DBConfig> {
+export async function getDatabaseParamsFromSSM(
+	ssm: SSMClient,
+): Promise<DBConfig> {
 	const dbConfigPath = `/support-reminders/db-config/${ssmStage}`;
 
-	const ssmResponse = await ssm
-		.getParametersByPath({
-			Path: dbConfigPath,
-			WithDecryption: true,
-		})
-		.promise();
+	const command = new GetParametersByPathCommand({
+		Path: dbConfigPath,
+		WithDecryption: true,
+	});
+
+	const ssmResponse = await ssm.send(command);
 
 	if (ssmResponse.Parameters) {
 		const p = ssmResponse.Parameters;
@@ -34,9 +40,7 @@ export async function getDatabaseParamsFromSSM(ssm: SSM): Promise<DBConfig> {
 			username.Value
 		) {
 			return {
-				url: isRunningLocally()
-					? 'jdbc:postgresql://localhost/contributions'
-					: url.Value,
+				url: url.Value,
 				password: password.Value,
 				username: username.Value,
 			};
@@ -46,13 +50,16 @@ export async function getDatabaseParamsFromSSM(ssm: SSM): Promise<DBConfig> {
 	throw new Error(`Could not get config from SSM path ${dbConfigPath}`);
 }
 
-export async function getParamFromSSM(ssm: SSM, path: string): Promise<string> {
-	const ssmResponse = await ssm
-		.getParameter({
-			Name: path,
-			WithDecryption: true,
-		})
-		.promise();
+export async function getParamFromSSM(
+	ssm: SSMClient,
+	path: string,
+): Promise<string> {
+	const command = new GetParameterCommand({
+		Name: path,
+		WithDecryption: true,
+	});
+
+	const ssmResponse = await ssm.send(command);
 
 	if (ssmResponse.Parameter && ssmResponse.Parameter.Value) {
 		return ssmResponse.Parameter.Value;
