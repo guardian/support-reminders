@@ -48,7 +48,7 @@ describe('request validation', () => {
 		});
 		expect(result.success).toBe(false);
 		expect(result.error?.issues[0].message).toEqual(
-			'String must contain at most 100 character(s)',
+			'Too big: expected string to have <=100 characters',
 		);
 	});
 
@@ -58,7 +58,7 @@ describe('request validation', () => {
 			reminderPeriod: 'a',
 		});
 		expect(result.success).toBe(false);
-		expect(result.error?.issues[0].message).toEqual('Invalid date');
+		expect(result.error?.issues[0].message).toEqual('Invalid ISO date');
 	});
 
 	it('accepts a good RecurringSignupRequest', () => {
@@ -75,7 +75,7 @@ describe('request validation', () => {
 		});
 		expect(result.success).toBe(false);
 		expect(result.error?.issues[0].message).toEqual(
-			'Expected number, received string',
+			'Invalid input: expected number, received string',
 		);
 	});
 
