@@ -47,7 +47,7 @@ describe('request validation', () => {
 			email,
 		});
 		expect(result.success).toBe(false);
-		expect(result.error?.errors[0].message).toEqual(
+		expect(result.error?.issues[0].message).toEqual(
 			'String must contain at most 100 character(s)',
 		);
 	});
@@ -58,7 +58,7 @@ describe('request validation', () => {
 			reminderPeriod: 'a',
 		});
 		expect(result.success).toBe(false);
-		expect(result.error?.errors[0].message).toEqual('Invalid date');
+		expect(result.error?.issues[0].message).toEqual('Invalid date');
 	});
 
 	it('accepts a good RecurringSignupRequest', () => {
@@ -74,7 +74,7 @@ describe('request validation', () => {
 			reminderFrequencyMonths: 'a',
 		});
 		expect(result.success).toBe(false);
-		expect(result.error?.errors[0].message).toEqual(
+		expect(result.error?.issues[0].message).toEqual(
 			'Expected number, received string',
 		);
 	});
