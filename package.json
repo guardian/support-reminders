@@ -8,7 +8,7 @@
   "riffraffFile": "./riff-raff.yaml",
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.701.0",
-    "@aws-sdk/client-s3": "^3.701.0",
+    "@aws-sdk/client-s3": "^3.947.0",
     "@aws-sdk/credential-providers": "^3.701.0",
     "@types/pg": "^8.15.6",
     "@types/pg-format": "^1.0.5",
@@ -16,7 +16,7 @@
     "csv-writer": "^1.6.0",
     "pg": "8.16.3",
     "pg-format": "^1.0.4",
-    "typescript": "5.7.3",
+    "typescript": "5.9.3",
     "zod": "^4.1.13"
   },
   "devDependencies": {
@@ -25,10 +25,10 @@
     "@guardian/prettier": "^2.1.5",
     "@types/aws-lambda": "^8.10.147",
     "@types/jest": "^29.5.14",
-    "@types/node": "22.10.7",
+    "@types/node": "24.10.2",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "dotenv": "^16.4.7",
+    "dotenv": "^17.2.3",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
