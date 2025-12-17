@@ -3,6 +3,7 @@ import {
 	fail,
 	getIdentityIdByEmail,
 	idapiBaseUrl,
+	IdentityError,
 	IdentityResult,
 	success,
 } from '../../lib/identity';
@@ -36,7 +37,7 @@ const createIdentityAccount = async (
 		IDENTITY_ACCOUNT_CREATION_MAX_RETRIES,
 	);
 	if (!response.ok) {
-		return response.json().then((body) => {
+		return response.json().then((body: unknown) => {
 			console.log(
 				'Identity guest account creation failed',
 				response.status,
@@ -73,8 +74,8 @@ export const getOrCreateIdentityIdByEmail = async (
 		result.status === 404 &&
 		reminderStage === 'PRE' &&
 		// don't try to create an account if they're already in an incomplete state
-		!result.errorMessage?.errors.some(
-			(m) => m.message === 'Incomplete user',
+		!(result.errorMessage as IdentityError | undefined)?.errors.some(
+			(m: { message: string }) => m.message === 'Incomplete user',
 		)
 	) {
 		return createIdentityAccount(email, accessToken);

@@ -4,7 +4,7 @@ import { Pool, QueryResult } from 'pg';
 import { ZodSchema } from 'zod';
 import { createDatabaseConnectionPool } from '../../lib/db';
 import { getSQSHandler } from '../../lib/handler';
-import { IdentityFailure } from '../../lib/identity';
+import { IdentityError, IdentityFailure } from '../../lib/identity';
 import {
 	getDatabaseParamsFromSSM,
 	getParamFromSSM,
@@ -110,8 +110,10 @@ const runRecurring = async (signupRequest: unknown): Promise<void> => {
 const ignoreSomeValidationErrors = async (
 	identityResult: IdentityFailure,
 ): Promise<void> => {
-	const shouldIgnoreError = identityResult.errorMessage?.errors.some(
-		(error) =>
+	const shouldIgnoreError = (
+		identityResult.errorMessage as IdentityError | undefined
+	)?.errors.some(
+		(error: { message: string; description: string }) =>
 			error.message === 'Registration Error' ||
 			error.description === 'Invalid email format' ||
 			error.message === 'Invalid emailAddress:' ||

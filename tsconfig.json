@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "ES2021",
+		"lib": ["ES2021", "ESNext.Disposable"],
 		"module": "commonjs",
 		"sourceMap": true,
 		"strict": true,
@@ -10,8 +11,5 @@
 		"outDir": "./target",
 		"esModuleInterop": true
 	},
-	"include": [
-		"./src/**/*.ts",
-		"./**/gen-nodejs/*.js"
-	]
+	"include": ["./src/**/*.ts", "./**/gen-nodejs/*.js"]
 }

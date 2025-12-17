@@ -33,7 +33,7 @@ export interface IdentityError {
 export interface IdentityFailure {
 	name: 'failure';
 	status: number;
-	errorMessage?: IdentityError;
+	errorMessage?: unknown;
 }
 export type IdentityResult = IdentitySuccess | IdentityFailure;
 
@@ -42,10 +42,7 @@ export const success = (identityId: string): IdentitySuccess => ({
 	identityId,
 });
 
-export const fail = (
-	status: number,
-	message?: IdentityError,
-): IdentityFailure => ({
+export const fail = (status: number, message?: unknown): IdentityFailure => ({
 	name: 'failure',
 	status,
 	errorMessage: message,
@@ -63,7 +60,7 @@ export const getIdentityIdByEmail = async (
 	);
 
 	if (!response.ok) {
-		return response.json().then((body: IdentityError) => {
+		return response.json().then((body: unknown) => {
 			console.log(
 				`Unable to lookup identity ID for email ${email}`,
 				response.status,
