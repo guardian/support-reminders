@@ -67,7 +67,7 @@ const processRecord = (record: SQSRecord): Promise<void> => {
 	} else if (eventPath === '/create/recurring') {
 		return runRecurring(signupRequest);
 	} else {
-		return Promise.reject(`Invalid path: ${String(eventPath)}`);
+		return Promise.reject(new Error(`Invalid path: ${String(eventPath)}`));
 	}
 };
 
@@ -121,7 +121,7 @@ const ignoreSomeValidationErrors = async (
 	);
 
 	if (!shouldIgnoreError) {
-		return Promise.reject(identityResult.status.toString());
+		return Promise.reject(new Error(identityResult.status.toString()));
 	} else {
 		return Promise.resolve();
 	}
@@ -159,18 +159,18 @@ const createSignup = async <T extends BaseSignupRequest>(
 			console.log('dbResult: ', dbResult);
 
 			if (dbResult.rowCount !== 1) {
-				return Promise.reject(
+				return Promise.reject(new Error(
 					`Unexpected row count in database response: ${
 						dbResult.rowCount ?? 0
 					}`,
-				);
+				));
 			}
 		} else {
 			return ignoreSomeValidationErrors(identityResult);
 		}
 	} else {
 		console.log('Validation of signup failed', parseResult.error.message);
-		return Promise.reject('Validation of signup failed');
+		return Promise.reject(new Error('Validation of signup failed'));
 	}
 };
 

@@ -24,9 +24,8 @@ const getHandler =
 					console.log('Returning to client:', JSON.stringify(result));
 					callback(null, result);
 				})
-				.catch((err) => {
-					// eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- any
-					console.log(`Error: ${err}`);
+				.catch((err: Error) => {
+					console.log(`Error: ${err.message}`);
 					callback(err);
 				});
 		});
