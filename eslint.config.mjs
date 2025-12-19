@@ -1,9 +1,9 @@
+// @ts-check
 import guardian from '@guardian/eslint-config';
-import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
-	guardian.configs.recommended,
-	guardian.configs.typescript,
+export default [
+	...guardian.configs.recommended,
+	...guardian.configs.typescript,
 	{
 		files: ['**/*.ts'],
 		languageOptions: {
@@ -17,4 +17,4 @@ export default tseslint.config(
 			'@typescript-eslint/prefer-optional-chain': 'off',
 		},
 	},
-);
+];
