@@ -1593,10 +1593,10 @@
     read-package-up "12.0.0"
     typescript-eslint "8.53.0"
 
-"@guardian/prettier@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@guardian/prettier/-/prettier-7.0.0.tgz#42ff79808b8aa989ccc2a26aceb14165587b1172"
-  integrity sha512-07Cau6PiJqGhmMJSwWlFW1IXYE+cmA4Bagr+aTEZiSBN38hljatnQEOTlRJW0gEn/PjGz6/au8dPbOhtGwZbGg==
+"@guardian/prettier@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/prettier/-/prettier-10.0.0.tgz#3e1ac1e4c83d8ca578e7ce7c9b67ba8935078781"
+  integrity sha512-b/ITMGfAxL5Rz+HZqmn5AGTI/Bb7Ep50SmRvcDo0QqahTmeAneiWOc1eFBA3pFRkMCR2UwU79v7kDXaMQwS2DQ==
 
 "@humanfs/core@^0.19.1":
   version "0.19.1"
