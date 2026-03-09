@@ -23,7 +23,7 @@
 		"@guardian/prettier": "^10.0.0",
 		"@types/aws-lambda": "^8.10.159",
 		"@types/jest": "^30.0.0",
-		"@types/node": "24.10.2",
+		"@types/node": "25.3.3",
 		"@typescript-eslint/eslint-plugin": "^8.18.1",
 		"@typescript-eslint/parser": "^8.54.0",
 		"dotenv": "^17.2.3",
