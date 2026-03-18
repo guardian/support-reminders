@@ -6,11 +6,6 @@ export default [
 	...guardian.configs.typescript,
 	{
 		files: ['**/*.ts'],
-		languageOptions: {
-			parserOptions: {
-				project: true,
-			},
-		},
 		rules: {
 			'@typescript-eslint/no-inferrable-types': 'off',
 			'import/no-namespace': 'error',
