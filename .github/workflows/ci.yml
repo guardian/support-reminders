@@ -50,10 +50,11 @@ jobs:
           node-version-file: './.nvmrc'
           cache: 'pnpm'
 
-      - name: Pnpm
+      - name: test install build
         run: |
           pnpm clean
           pnpm install
+          pnpm lint
           pnpm run build
 
       - name: Run unit tests
@@ -63,15 +64,14 @@ jobs:
           TEST_DB_USER: postgres
           TEST_DB_PASSWORD: postgres
 
-      - name: Copy files to Riff Raff package
-        run: cp package.json riff-raff.yaml target
+      - name: production install, build
+        run: |
+          pnpm clean
+          pnpm install --production
+          pnpm run build
 
-      - name: Pnpm install in package
-        working-directory: ./target
-        run: pnpm install --production
-
-      - name: Zip target directory contents (quietly)
-        run: zip -qr ../support-reminders.zip ./*
+      - name: Zip target directory contents
+        run: zip -r ../support-reminders.zip ./*
         working-directory: ./target
 
       - name: Pnpm (CDK)
