@@ -14,6 +14,7 @@
 		"@types/pg-format": "^1.0.5",
 		"aws-lambda": "^1.0.7",
 		"csv-writer": "^1.6.0",
+		"esbuild": "^0.27.3",
 		"pg": "8.20.0",
 		"pg-format": "^1.0.4",
 		"zod": "^4.1.13"
@@ -43,12 +44,14 @@
 	"scripts": {
 		"clean": "rm -rf target",
 		"lint": "eslint ./src",
-		"build": "tsc",
+		"build": "rm -rf target  && esbuild src/**/**/*.ts src/**/*.ts --bundle --platform=node --outdir=target",
 		"test": "jest --maxWorkers=1 ./src"
 	},
-	"pnpm": {"overrides": {
-		"flatted": "^3.4.2",
-		"picomatch": "^2.3.2"
-	}},
+	"pnpm": {
+		"overrides": {
+			"flatted": "^3.4.2",
+			"picomatch": "^2.3.2"
+		}
+	},
 	"packageManager": "pnpm@10.33.0"
 }
