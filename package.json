@@ -49,6 +49,7 @@
 	},
 	"pnpm": {
 		"overrides": {
+			"@types/parse-path": "7.0.0",
 			"flatted": "^3.4.2",
 			"picomatch": "^2.3.2"
 		}
