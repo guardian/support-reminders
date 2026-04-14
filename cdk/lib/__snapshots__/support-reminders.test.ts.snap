@@ -3145,7 +3145,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
   "Resources": {
     "ApiGateway4XXAlarm59D14AA2": {
       "Properties": {
-        "ActionsEnabled": false,
+        "ActionsEnabled": true,
         "AlarmActions": [
           {
             "Fn::Join": [
