@@ -38,47 +38,53 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - run: npm install --global corepack@0.31.0
+        shell: bash
+
+      - run: corepack enable
+        shell: bash
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version-file: './.nvmrc'
-          cache: 'yarn'
+          cache: 'pnpm'
 
-      - name: Yarn
+      - name: test install build
         run: |
-          yarn clean
-          yarn install
-          yarn run build
+          pnpm clean
+          pnpm install
+          pnpm lint
+          pnpm run build
 
       - name: Run unit tests
-        run: yarn test --silent
+        run: pnpm test --silent
         env:
           TEST_DB_URL: postgresql://localhost/postgres
           TEST_DB_USER: postgres
           TEST_DB_PASSWORD: postgres
 
-      - name: Copy files to Riff Raff package
-        run: cp package.json riff-raff.yaml target
+      - name: production install, build
+        run: |
+          pnpm clean
+          pnpm install --production
+          pnpm run build
 
-      - name: Yarn install in package
+      - name: Zip target directory contents
+        run: zip -r ../support-reminders.zip ./*
         working-directory: ./target
-        run: yarn install --production
 
-      - name: Zip target directory contents (quietly)
-        run: zip -qr ../support-reminders.zip ./*
-        working-directory: ./target
-
-      - name: Yarn (CDK)
+      - name: Pnpm (CDK)
         working-directory: cdk
         run: |
-          yarn install
-          yarn tsc
-          yarn lint
-          yarn test
+          pnpm install
+          pnpm tsc
+          pnpm lint
+          pnpm test
 
-      - name: Yarn synth (CDK)
+      - name: Pnpm synth (CDK)
         working-directory: cdk
-        run: yarn synth
+        run: pnpm synth
 
       - name: Upload to Riff-Raff
         uses: guardian/actions-riff-raff@v4

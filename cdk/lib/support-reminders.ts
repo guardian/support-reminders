@@ -26,7 +26,6 @@ import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import {CfnRecordSet} from "aws-cdk-lib/aws-route53";
 import { Queue } from "aws-cdk-lib/aws-sqs";
-import {isProd} from "../../src/lib/stage";
 
 export interface SupportRemindersProps extends GuStackProps {
 	certificateId: string;
@@ -308,7 +307,7 @@ export class SupportReminders extends GuStack {
 			alarmDescription: alarmDescription("Reminders API received an invalid request"),
 			evaluationPeriods: 1,
 			threshold: 8,
-			actionsEnabled: isProd(),
+			actionsEnabled: this.stage === 'PROD',
 			snsTopicName: alarmsTopic,
 			comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
 			metric: new Metric({
