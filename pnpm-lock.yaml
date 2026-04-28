@@ -112,7 +112,7 @@ importers:
     devDependencies:
       '@guardian/cdk':
         specifier: 61.1.3
-        version: 61.1.3(aws-cdk-lib@2.177.0(constructs@10.4.2))(aws-cdk@2.177.0)(constructs@10.4.2)
+        version: 61.1.3(aws-cdk-lib@2.177.0(constructs@10.4.2))(aws-cdk@2.1118.4)(constructs@10.4.2)
       '@guardian/eslint-config':
         specifier: 14.0.0
         version: 14.0.0(@typescript-eslint/utils@8.58.2(eslint@9.39.1)(typescript@5.7.3))(eslint-import-resolver-node@0.3.10)(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.18.1(eslint@9.39.1)(typescript@5.7.3))(eslint@9.39.1))(eslint-plugin-storybook@10.2.13(eslint@9.39.1)(storybook@10.3.5(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(typescript@5.7.3))(eslint@9.39.1)(typescript@5.7.3)
@@ -132,8 +132,8 @@ importers:
         specifier: 8.18.1
         version: 8.18.1(eslint@9.39.1)(typescript@5.7.3)
       aws-cdk:
-        specifier: 2.177.0
-        version: 2.177.0
+        specifier: 2.1118.4
+        version: 2.1118.4
       aws-cdk-lib:
         specifier: 2.177.0
         version: 2.177.0(constructs@10.4.2)
@@ -1811,9 +1811,9 @@ packages:
       - yaml
       - mime-types
 
-  aws-cdk@2.177.0:
-    resolution: {integrity: sha512-TiBoyE5wMB5q4jX1bELwkklgbs5eLY1Phjfnb4Mof0K9tOSRJ9UEq6xEamF0esMS+TuYU7a/ESTpmKX3iYqA3w==}
-    engines: {node: '>= 14.15.0'}
+  aws-cdk@2.1118.4:
+    resolution: {integrity: sha512-wJfRQdvb+FJ2cni059mYdmjhfwhMskP+PAB59BL9jhon+jYtjy8X3pbj3uzHgAOJwNhh6jGkP8xq36Cffccbbw==}
+    engines: {node: '>= 18.0.0'}
     hasBin: true
 
   aws-lambda@1.0.7:
@@ -2496,11 +2496,6 @@ packages:
 
   fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
-
-  fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
-    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
-    os: [darwin]
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -5067,10 +5062,10 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@guardian/cdk@61.1.3(aws-cdk-lib@2.177.0(constructs@10.4.2))(aws-cdk@2.177.0)(constructs@10.4.2)':
+  '@guardian/cdk@61.1.3(aws-cdk-lib@2.177.0(constructs@10.4.2))(aws-cdk@2.1118.4)(constructs@10.4.2)':
     dependencies:
       '@oclif/core': 3.26.6
-      aws-cdk: 2.177.0
+      aws-cdk: 2.1118.4
       aws-cdk-lib: 2.177.0(constructs@10.4.2)
       aws-sdk: 2.1693.0
       chalk: 4.1.2
@@ -6753,9 +6748,7 @@ snapshots:
       '@aws-cdk/cloud-assembly-schema': 39.2.20
       constructs: 10.4.2
 
-  aws-cdk@2.177.0:
-    optionalDependencies:
-      fsevents: 2.3.2
+  aws-cdk@2.1118.4: {}
 
   aws-lambda@1.0.7:
     dependencies:
@@ -7683,9 +7676,6 @@ snapshots:
       universalify: 2.0.1
 
   fs.realpath@1.0.0: {}
-
-  fsevents@2.3.2:
-    optional: true
 
   fsevents@2.3.3:
     optional: true
