@@ -87,7 +87,7 @@ jobs:
         run: pnpm synth
 
       - name: Upload to Riff-Raff
-        uses: guardian/actions-riff-raff@v4.2.6
+        uses: guardian/actions-riff-raff@v4.3.0
         with:
           app: support-reminders
           githubToken: ${{ secrets.GITHUB_TOKEN }}
