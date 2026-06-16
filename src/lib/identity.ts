@@ -77,7 +77,7 @@ export const getIdentityIdByEmail = async (
 			return {
 				name: 'success',
 				identityId: id,
-			} as IdentitySuccess;
+			};
 		} else {
 			console.log(
 				`Missing identity ID in response from identity for email ${email}`,

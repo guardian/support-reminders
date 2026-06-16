@@ -20,7 +20,7 @@
 		"zod": "4.1.13"
 	},
 	"devDependencies": {
-		"@guardian/eslint-config": "13.0.3",
+		"@guardian/eslint-config": "16.0.0",
 		"@guardian/prettier": "10.0.0",
 		"@types/aws-lambda": "8.10.159",
 		"@types/jest": "30.0.0",
