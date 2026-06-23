@@ -422,6 +422,9 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
         "RestApireactivatePOSTF57FC066",
         "RestApireactivateDE09DAB5",
       ],
+      "Metadata": {
+        "aws:cdk:do-not-refactor": true,
+      },
       "Properties": {
         "Description": "Automatically created by the RestApi construct",
         "RestApiId": {
@@ -2058,6 +2061,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                 ],
               ],
             },
+            "ReturnData": true,
           },
           {
             "Id": "m1",
@@ -2311,6 +2315,28 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Properties": {
         "ScheduleExpression": "cron(05 00 * * ? *)",
         "State": "ENABLED",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "support-reminders",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "CODE",
+          },
+        ],
         "Targets": [
           {
             "Arn": {
@@ -2707,6 +2733,7 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
                 ],
               ],
             },
+            "ReturnData": true,
           },
           {
             "Id": "m1",
@@ -2941,6 +2968,28 @@ exports[`The SupportReminders stack matches the snapshot 1`] = `
       "Properties": {
         "ScheduleExpression": "cron(05 00 * * ? *)",
         "State": "ENABLED",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "support-reminders",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "CODE",
+          },
+        ],
         "Targets": [
           {
             "Arn": {
@@ -3257,6 +3306,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
             "Expression": "100*m1/m2",
             "Id": "expr_1",
             "Label": "% of 5XX responses served for support-reminders",
+            "ReturnData": true,
           },
           {
             "Id": "m1",
@@ -3590,6 +3640,9 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
         "RestApireactivatePOSTF57FC066",
         "RestApireactivateDE09DAB5",
       ],
+      "Metadata": {
+        "aws:cdk:do-not-refactor": true,
+      },
       "Properties": {
         "Description": "Automatically created by the RestApi construct",
         "RestApiId": {
@@ -5226,6 +5279,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                 ],
               ],
             },
+            "ReturnData": true,
           },
           {
             "Id": "m1",
@@ -5479,6 +5533,28 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Properties": {
         "ScheduleExpression": "cron(05 00 * * ? *)",
         "State": "ENABLED",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "support-reminders",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "PROD",
+          },
+        ],
         "Targets": [
           {
             "Arn": {
@@ -5875,6 +5951,7 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
                 ],
               ],
             },
+            "ReturnData": true,
           },
           {
             "Id": "m1",
@@ -6109,6 +6186,28 @@ exports[`The SupportReminders stack matches the snapshot 2`] = `
       "Properties": {
         "ScheduleExpression": "cron(05 00 * * ? *)",
         "State": "ENABLED",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "support-reminders",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/support-reminders",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "PROD",
+          },
+        ],
         "Targets": [
           {
             "Arn": {
