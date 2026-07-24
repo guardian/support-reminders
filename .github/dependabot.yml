@@ -12,11 +12,14 @@ updates:
     cooldown:
       default-days: 7
     # The version of aws-cdk-lib libraries must match those from @guardian/cdk.
-    # We'd never be able to update them here independently, so just ignore them.
-    ignore:
-      - dependency-name: 'aws-cdk'
-      - dependency-name: 'aws-cdk-lib'
-      - dependency-name: '@aws-cdk/*'
+    # Group them together so they are always updated in a single PR.
+    groups:
+      aws-cdk:
+        patterns:
+          - 'aws-cdk'
+          - 'aws-cdk-lib'
+          - '@aws-cdk/*'
+          - '@guardian/cdk'
 
   - package-ecosystem: 'github-actions'
     directory: '/'
