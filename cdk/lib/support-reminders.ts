@@ -1,31 +1,39 @@
-import {GuApiGatewayWithLambdaByPath, GuScheduledLambda} from "@guardian/cdk";
-import {GuAlarm} from "@guardian/cdk/lib/constructs/cloudwatch";
-import type {GuStackProps} from "@guardian/cdk/lib/constructs/core";
-import {GuStack} from "@guardian/cdk/lib/constructs/core";
-import {GuVpc} from "@guardian/cdk/lib/constructs/ec2";
-import {GuLambdaFunction} from "@guardian/cdk/lib/constructs/lambda";
-import type {App} from "aws-cdk-lib";
-import {Duration} from "aws-cdk-lib";
+import { GuApiGatewayWithLambdaByPath, GuScheduledLambda } from '@guardian/cdk';
+import { GuAlarm } from '@guardian/cdk/lib/constructs/cloudwatch';
+import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
+import { GuStack } from '@guardian/cdk/lib/constructs/core';
+import { GuVpc } from '@guardian/cdk/lib/constructs/ec2';
+import { GuLambdaFunction } from '@guardian/cdk/lib/constructs/lambda';
+import type { App } from 'aws-cdk-lib';
+import { Duration } from 'aws-cdk-lib';
 import {
 	AccessLogFormat,
 	AwsIntegration,
 	CfnBasePathMapping,
 	CfnDomainName,
-	Cors, JsonSchemaType,
+	Cors,
+	JsonSchemaType,
 	JsonSchemaVersion,
 	LogGroupLogDestination,
 	MethodLoggingLevel,
-	RequestValidator
-} from "aws-cdk-lib/aws-apigateway";
-import {ComparisonOperator, Metric} from "aws-cdk-lib/aws-cloudwatch";
-import {SecurityGroup} from "aws-cdk-lib/aws-ec2";
-import {Schedule} from "aws-cdk-lib/aws-events";
-import { Effect, ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
-import {LoggingFormat, Runtime} from "aws-cdk-lib/aws-lambda";
-import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+	RequestValidator,
+} from 'aws-cdk-lib/aws-apigateway';
+import { ComparisonOperator, Metric } from 'aws-cdk-lib/aws-cloudwatch';
+import { SecurityGroup } from 'aws-cdk-lib/aws-ec2';
+import { Schedule } from 'aws-cdk-lib/aws-events';
+import {
+	Effect,
+	ManagedPolicy,
+	Policy,
+	PolicyStatement,
+	Role,
+	ServicePrincipal,
+} from 'aws-cdk-lib/aws-iam';
+import { LoggingFormat, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
-import {CfnRecordSet} from "aws-cdk-lib/aws-route53";
-import { Queue } from "aws-cdk-lib/aws-sqs";
+import { CfnRecordSet } from 'aws-cdk-lib/aws-route53';
+import { Queue } from 'aws-cdk-lib/aws-sqs';
 
 export interface SupportRemindersProps extends GuStackProps {
 	certificateId: string;
@@ -40,23 +48,30 @@ export class SupportReminders extends GuStack {
 	constructor(scope: App, id: string, props: SupportRemindersProps) {
 		super(scope, id, props);
 
-
 		// ---- Miscellaneous constants ---- //
-		const app = "support-reminders";
-		const vpc = GuVpc.fromIdParameter(this, "vpc");
+		const app = 'support-reminders';
+		const vpc = GuVpc.fromIdParameter(this, 'vpc');
 		const alarmsTopic = 'alarms-handler-topic-PROD';
-		const runtime = Runtime.NODEJS_22_X;
-		const fileName = "support-reminders.zip";
+		const runtime = Runtime.NODEJS_24_X;
+		const fileName = 'support-reminders.zip';
 		const environment = {
-			"Bucket": props.datalakeBucket,
-			"Stage": this.stage,
+			Bucket: props.datalakeBucket,
+			Stage: this.stage,
 		};
-		const securityGroups = [SecurityGroup.fromSecurityGroupId(this, "security-group", props.securityGroupToAccessPostgresId)];
+		const securityGroups = [
+			SecurityGroup.fromSecurityGroupId(
+				this,
+				'security-group',
+				props.securityGroupToAccessPostgresId,
+			),
+		];
 		const vpcSubnets = {
 			subnets: GuVpc.subnetsFromParameter(this),
 		};
 		const awsLambdaVpcAccessExecutionRole =
-			ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")
+			ManagedPolicy.fromAwsManagedPolicyName(
+				'service-role/AWSLambdaVPCAccessExecutionRole',
+			);
 
 		// SQS Queues
 		const queueName = `${app}-queue-${props.stage}`;
@@ -97,7 +112,7 @@ export class SupportReminders extends GuStack {
 			reportBatchItemFailures: true,
 			batchSize: 1,
 		});
-		const events=[eventSource];
+		const events = [eventSource];
 
 		const loggingFormat = LoggingFormat.TEXT;
 
@@ -130,38 +145,51 @@ export class SupportReminders extends GuStack {
 					'integration.request.header.Content-Type': `'application/x-www-form-urlencoded'`,
 				},
 				requestTemplates: {
-					'application/json': 'Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params(\'X-GU-GeoIP-Country-Code\')&MessageAttribute.2.Name=EventPath&MessageAttribute.2.Value.DataType=String&MessageAttribute.2.Value.StringValue=$context.path',
+					'application/json':
+						"Action=SendMessage&MessageBody=$input.body&MessageAttribute.1.Name=X-GU-GeoIP-Country-Code&MessageAttribute.1.Value.DataType=String&MessageAttribute.1.Value.StringValue=$input.params('X-GU-GeoIP-Country-Code')&MessageAttribute.2.Name=EventPath&MessageAttribute.2.Value.DataType=String&MessageAttribute.2.Value.StringValue=$context.path",
 				},
 				integrationResponses: [
 					{
 						statusCode: '200',
 						responseTemplates: {
-							"application/json": `{"done": true}`,
+							'application/json': `{"done": true}`,
 						},
 					},
-				]
+				],
 			},
 		});
 
 		// ---- API-triggered lambda functions ---- //
-		const createRemindersSignupLambda = new GuLambdaFunction(this, "create-reminders-signup", {
-			handler: "create-reminder-signup/lambda/lambda.handler",
-			functionName: `support-reminders-create-reminder-signup-${this.stage}`,
-			...sharedLambdaProps,
-			events,
-		});
+		const createRemindersSignupLambda = new GuLambdaFunction(
+			this,
+			'create-reminders-signup',
+			{
+				handler: 'create-reminder-signup/lambda/lambda.handler',
+				functionName: `support-reminders-create-reminder-signup-${this.stage}`,
+				...sharedLambdaProps,
+				events,
+			},
+		);
 
-		const reactivateRecurringReminderLambda = new GuLambdaFunction(this, "reactivate-recurring-reminder", {
-			handler: "reactivate-recurring-reminder/lambda/lambda.handler",
-			functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`,
-			...sharedLambdaProps,
-		});
+		const reactivateRecurringReminderLambda = new GuLambdaFunction(
+			this,
+			'reactivate-recurring-reminder',
+			{
+				handler: 'reactivate-recurring-reminder/lambda/lambda.handler',
+				functionName: `support-reminders-reactivate-recurring-reminder-${this.stage}`,
+				...sharedLambdaProps,
+			},
+		);
 
-		const cancelRemindersLambda = new GuLambdaFunction(this, "cancel-reminders", {
-			handler: "cancel-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-cancel-reminders-${this.stage}`,
-			...sharedLambdaProps,
-		});
+		const cancelRemindersLambda = new GuLambdaFunction(
+			this,
+			'cancel-reminders',
+			{
+				handler: 'cancel-reminders/lambda/lambda.handler',
+				functionName: `support-reminders-cancel-reminders-${this.stage}`,
+				...sharedLambdaProps,
+			},
+		);
 
 		// ---- API gateway ---- //
 		const apiGatewayLogGroup = new LogGroup(this, 'ApiGatewayAccessLogs', {
@@ -173,23 +201,26 @@ export class SupportReminders extends GuStack {
 			defaultCorsPreflightOptions: {
 				allowOrigins: Cors.ALL_ORIGINS,
 				allowMethods: Cors.ALL_METHODS,
-				allowHeaders: ["Content-Type"],
+				allowHeaders: ['Content-Type'],
 			},
-			monitoringConfiguration: this.stage === 'CODE' ? { noMonitoring: true } : {
-				snsTopicName: alarmsTopic,
-				http5xxAlarm: {
-					tolerated5xxPercentage: 1,
-				}
-			},
+			monitoringConfiguration:
+				this.stage === 'CODE'
+					? { noMonitoring: true }
+					: {
+							snsTopicName: alarmsTopic,
+							http5xxAlarm: {
+								tolerated5xxPercentage: 1,
+							},
+						},
 			targets: [
 				{
-					path: "/reactivate",
-					httpMethod: "POST",
+					path: '/reactivate',
+					httpMethod: 'POST',
 					lambda: reactivateRecurringReminderLambda,
 				},
 				{
-					path: "/cancel",
-					httpMethod: "POST",
+					path: '/cancel',
+					httpMethod: 'POST',
 					lambda: cancelRemindersLambda,
 				},
 			],
@@ -202,97 +233,117 @@ export class SupportReminders extends GuStack {
 				metricsEnabled: true,
 				dataTraceEnabled: false,
 			},
-		})
+		});
 
 		/**
 		 * A basic request model to validate the JSON request body.
 		 * The Lambdas will perform more detailed validation, but we want to avoid queueing up requests with e.g. empty JSON objects
 		 */
-		const createReminderRequestModel = supportRemindersApi.api.addModel('CreateReminderRequestModel', {
-			contentType: 'application/json',
-			modelName: 'CreateReminderRequestModel',
-			schema: {
-				schema: JsonSchemaVersion.DRAFT4,
-				title: 'CreatReminderRequest',
-				type: JsonSchemaType.OBJECT,
-				required: ['email'],
-				properties: {
-					email: { type: JsonSchemaType.STRING },
-				}
-			}
-		});
+		const createReminderRequestModel = supportRemindersApi.api.addModel(
+			'CreateReminderRequestModel',
+			{
+				contentType: 'application/json',
+				modelName: 'CreateReminderRequestModel',
+				schema: {
+					schema: JsonSchemaVersion.DRAFT4,
+					title: 'CreatReminderRequest',
+					type: JsonSchemaType.OBJECT,
+					required: ['email'],
+					properties: {
+						email: { type: JsonSchemaType.STRING },
+					},
+				},
+			},
+		);
 
 		// post method to /create
-		supportRemindersApi.api.root.resourceForPath('/create/one-off').addMethod('POST', sendMessageIntegration, {
-			methodResponses: [
-				{
-					statusCode: '200',
+		supportRemindersApi.api.root
+			.resourceForPath('/create/one-off')
+			.addMethod('POST', sendMessageIntegration, {
+				methodResponses: [
+					{
+						statusCode: '200',
+					},
+				],
+				requestParameters: {
+					'method.request.header.X-GU-GeoIP-Country-Code': true,
 				},
-			],
-			requestParameters: {
-				'method.request.header.X-GU-GeoIP-Country-Code': true,
-			},
-			requestModels: {
-				'application/json': createReminderRequestModel
-			},
-			requestValidator: new RequestValidator(this, 'one-off-validator', {
-				restApi: supportRemindersApi.api,
-				validateRequestParameters: true,
-				validateRequestBody: true,
-			}),
-		});
-		supportRemindersApi.api.root.resourceForPath('/create/recurring').addMethod('POST', sendMessageIntegration, {
-			methodResponses: [
-				{
-					statusCode: '200',
+				requestModels: {
+					'application/json': createReminderRequestModel,
 				},
-			],
-			requestParameters: {
-				'method.request.header.X-GU-GeoIP-Country-Code': true,
-			},
-			requestModels: {
-				'application/json': createReminderRequestModel
-			},
-			requestValidator: new RequestValidator(this, 'recurring-validator', {
-				restApi: supportRemindersApi.api,
-				validateRequestParameters: true,
-				validateRequestBody: true,
-			}),
-		});
-
-
+				requestValidator: new RequestValidator(
+					this,
+					'one-off-validator',
+					{
+						restApi: supportRemindersApi.api,
+						validateRequestParameters: true,
+						validateRequestBody: true,
+					},
+				),
+			});
+		supportRemindersApi.api.root
+			.resourceForPath('/create/recurring')
+			.addMethod('POST', sendMessageIntegration, {
+				methodResponses: [
+					{
+						statusCode: '200',
+					},
+				],
+				requestParameters: {
+					'method.request.header.X-GU-GeoIP-Country-Code': true,
+				},
+				requestModels: {
+					'application/json': createReminderRequestModel,
+				},
+				requestValidator: new RequestValidator(
+					this,
+					'recurring-validator',
+					{
+						restApi: supportRemindersApi.api,
+						validateRequestParameters: true,
+						validateRequestBody: true,
+					},
+				),
+			});
 
 		// ---- Scheduled lambda functions ---- //
-		const signupExportsLambda = new GuScheduledLambda(this, "signup-exports", {
-			handler: "signup-exports/lambda/lambda.handler",
-			functionName: `support-reminders-signup-exports-${this.stage}`,
-			rules: [
-				{
-					schedule: Schedule.cron({ hour: "00", minute: "05" }),
+		const signupExportsLambda = new GuScheduledLambda(
+			this,
+			'signup-exports',
+			{
+				handler: 'signup-exports/lambda/lambda.handler',
+				functionName: `support-reminders-signup-exports-${this.stage}`,
+				rules: [
+					{
+						schedule: Schedule.cron({ hour: '00', minute: '05' }),
+					},
+				],
+				monitoringConfiguration: {
+					snsTopicName: alarmsTopic,
+					toleratedErrorPercentage: 1,
 				},
-			],
-			monitoringConfiguration: {
-				snsTopicName: alarmsTopic,
-				toleratedErrorPercentage: 1,
+				...sharedLambdaProps,
 			},
-			...sharedLambdaProps,
-		});
+		);
 
-		const nextRemindersLambda = new GuScheduledLambda(this, "next-reminders", {
-			handler: "next-reminders/lambda/lambda.handler",
-			functionName: `support-reminders-next-reminders-${this.stage}`,
-			rules: [
-				{
-					schedule: Schedule.cron({ hour: "00", minute: "05" }),
+		const nextRemindersLambda = new GuScheduledLambda(
+			this,
+			'next-reminders',
+			{
+				handler: 'next-reminders/lambda/lambda.handler',
+				functionName: `support-reminders-next-reminders-${this.stage}`,
+				rules: [
+					{
+						schedule: Schedule.cron({ hour: '00', minute: '05' }),
+					},
+				],
+				monitoringConfiguration: {
+					snsTopicName: alarmsTopic,
+					toleratedErrorPercentage: 1,
 				},
-			],
-			monitoringConfiguration: {
-				snsTopicName: alarmsTopic,
-				toleratedErrorPercentage: 1,
+				...sharedLambdaProps,
 			},
-			...sharedLambdaProps,
-		});
-
+		);
 
 		// ---- Alarms ---- //
 		const alarmName = (shortDescription: string) =>
@@ -303,134 +354,132 @@ export class SupportReminders extends GuStack {
 
 		new GuAlarm(this, 'ApiGateway4XXAlarm', {
 			app,
-			alarmName: alarmName("API gateway 4XX response"),
-			alarmDescription: alarmDescription("Reminders API received an invalid request"),
+			alarmName: alarmName('API gateway 4XX response'),
+			alarmDescription: alarmDescription(
+				'Reminders API received an invalid request',
+			),
 			evaluationPeriods: 1,
 			threshold: 8,
 			actionsEnabled: this.stage === 'PROD',
 			snsTopicName: alarmsTopic,
-			comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+			comparisonOperator:
+				ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
 			metric: new Metric({
-				metricName: "4XXError",
-				namespace: "AWS/ApiGateway",
-				statistic: "Sum",
+				metricName: '4XXError',
+				namespace: 'AWS/ApiGateway',
+				statistic: 'Sum',
 				period: Duration.seconds(300),
 				dimensionsMap: {
 					ApiName: `support-reminders-${this.stage}`,
-				}
+				},
 			}),
 		});
-
 
 		// ---- DNS ---- //
 		const certificateArn = `arn:aws:acm:eu-west-1:${this.account}:certificate/${props.certificateId}`;
 
-		const cfnDomainName = new CfnDomainName(this, "DomainName", {
+		const cfnDomainName = new CfnDomainName(this, 'DomainName', {
 			domainName: props.domainName,
 			regionalCertificateArn: certificateArn,
 			endpointConfiguration: {
-				types: ["REGIONAL"]
-			}
+				types: ['REGIONAL'],
+			},
 		});
 
-		new CfnBasePathMapping(this, "BasePathMapping", {
+		new CfnBasePathMapping(this, 'BasePathMapping', {
 			domainName: cfnDomainName.ref,
 			restApiId: supportRemindersApi.api.restApiId,
 			stage: supportRemindersApi.api.deploymentStage.stageName,
 		});
 
-		new CfnRecordSet(this, "DNSRecord", {
+		new CfnRecordSet(this, 'DNSRecord', {
 			name: props.domainName,
-			type: "CNAME",
+			type: 'CNAME',
 			hostedZoneId: props.hostedZoneId,
-			ttl: "60",
-			resourceRecords: [
-				cfnDomainName.attrRegionalDomainName
-			],
+			ttl: '60',
+			resourceRecords: [cfnDomainName.attrRegionalDomainName],
 		});
 
-
 		// ---- Apply policies ---- //
-		const ssmInlinePolicy: Policy = new Policy(this, "SSM inline policy", {
+		const ssmInlinePolicy: Policy = new Policy(this, 'SSM inline policy', {
 			statements: [
 				new PolicyStatement({
 					effect: Effect.ALLOW,
-					actions: [
-						"ssm:GetParametersByPath",
-						"ssm:GetParameter"
-					],
+					actions: ['ssm:GetParametersByPath', 'ssm:GetParameter'],
 					resources: [
 						`arn:aws:ssm:${this.region}:${this.account}:parameter/support-reminders/db-config/${props.stage}`,
 						`arn:aws:ssm:${this.region}:${this.account}:parameter/support-reminders/idapi/${props.stage}/*`,
 						`arn:aws:ssm:${this.region}:${this.account}:parameter/${props.stage}/support/support-reminders/db-config`,
 						`arn:aws:ssm:${this.region}:${this.account}:parameter/${props.stage}/support/support-reminders/idapi/*`,
-					]
+					],
 				}),
 			],
-		})
+		});
 
-		const s3GetObjectInlinePolicy: Policy = new Policy(this, "S3 getObject inline policy", {
+		const s3GetObjectInlinePolicy: Policy = new Policy(
+			this,
+			'S3 getObject inline policy',
+			{
+				statements: [
+					new PolicyStatement({
+						effect: Effect.ALLOW,
+						actions: ['s3:GetObject'],
+						resources: [`arn:aws:s3::*:${props.deployBucket}/*`],
+					}),
+				],
+			},
+		);
+
+		const s3PutObjectInlinePolicy: Policy = new Policy(
+			this,
+			'S3 putObject inline policy',
+			{
+				statements: [
+					new PolicyStatement({
+						effect: Effect.ALLOW,
+						actions: ['s3:PutObject'],
+						resources: [
+							`arn:aws:s3:::${props.datalakeBucket}`,
+							`arn:aws:s3:::${props.datalakeBucket}/*`,
+						],
+					}),
+				],
+			},
+		);
+
+		const apiRolePolicy: Policy = new Policy(this, 'SendMessagePolicy', {
 			statements: [
 				new PolicyStatement({
+					actions: ['sqs:SendMessage'],
 					effect: Effect.ALLOW,
-					actions: [
-						"s3:GetObject"
-					],
-					resources: [
-						`arn:aws:s3::*:${props.deployBucket}/*`
-					]
-				})
-			],
-		})
-
-		const s3PutObjectInlinePolicy: Policy = new Policy(this, "S3 putObject inline policy", {
-			statements: [
-				new PolicyStatement({
-					effect: Effect.ALLOW,
-					actions: [
-						"s3:PutObject"
-					],
-					resources: [
-						`arn:aws:s3:::${props.datalakeBucket}`,
-						`arn:aws:s3:::${props.datalakeBucket}/*`
-					]
-				})
-			]
-		})
-
-		const apiRolePolicy: Policy = 	new Policy(this, "SendMessagePolicy", {
-			statements: [
-				new PolicyStatement({
-					actions: ["sqs:SendMessage"],
-					effect:  Effect.ALLOW,
 					resources: [queue.queueArn],
 				}),
 			],
-		})
+		});
 
 		const apiGatewayTriggeredLambdaFunctions: GuLambdaFunction[] = [
 			createRemindersSignupLambda,
 			reactivateRecurringReminderLambda,
 			cancelRemindersLambda,
-		]
+		];
 
 		const scheduledLambdaFunctions: GuLambdaFunction[] = [
 			signupExportsLambda,
-			nextRemindersLambda
-		]
+			nextRemindersLambda,
+		];
 
 		apiGatewayTriggeredLambdaFunctions.forEach((l: GuLambdaFunction) => {
-			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
-			l.role?.attachInlinePolicy(ssmInlinePolicy)
-			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy)
-			l.role?.attachInlinePolicy(apiRolePolicy)
-		})
+			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole);
+			l.role?.attachInlinePolicy(ssmInlinePolicy);
+			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy);
+			l.role?.attachInlinePolicy(apiRolePolicy);
+		});
 
 		scheduledLambdaFunctions.forEach((l: GuLambdaFunction) => {
-			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole)
-			l.role?.attachInlinePolicy(ssmInlinePolicy)
-			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy)
-			l.role?.attachInlinePolicy(s3PutObjectInlinePolicy)
-		})
+			l.role?.addManagedPolicy(awsLambdaVpcAccessExecutionRole);
+			l.role?.attachInlinePolicy(ssmInlinePolicy);
+			l.role?.attachInlinePolicy(s3GetObjectInlinePolicy);
+			l.role?.attachInlinePolicy(s3PutObjectInlinePolicy);
+		});
 	}
 }
