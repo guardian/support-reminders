@@ -8,6 +8,8 @@ overrides:
   '@types/parse-path': 7.0.0
   flatted: 3.4.2
   picomatch: 2.3.2
+  js-yaml@3: '>=3.15.1'
+  js-yaml@4: '>=4.3.0'
 
 importers:
 
@@ -2825,10 +2827,6 @@ packages:
     resolution: {integrity: sha512-S99WuO3HlhO3XN41EtYUNl9zzXjoJx7QvmipxsJVxtCBT0YHEFy+iOJhjSvrmV12nYhWpZaM8lPHkJm0yUMbag==}
     hasBin: true
 
-  js-yaml@4.1.1:
-    resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
-    hasBin: true
-
   js-yaml@4.3.0:
     resolution: {integrity: sha512-1td788aAnnZ5qs7V2QIRl1owjtYpbKt749Y3xauqQgwIIGF/xXWz1wMTEBx5O3LK3lXLVuqXPdPxj2BoFHaW9Q==}
     hasBin: true
@@ -4899,7 +4897,7 @@ snapshots:
       codemaker: 1.128.0
       constructs: 10.7.0
       git-url-parse: 16.1.0
-      js-yaml: 4.1.1
+      js-yaml: 4.3.0
       read-pkg-up: 7.0.1
       yargs: 17.7.2
     transitivePeerDependencies:
@@ -7613,10 +7611,6 @@ snapshots:
     dependencies:
       argparse: 1.0.10
       esprima: 4.0.1
-
-  js-yaml@4.1.1:
-    dependencies:
-      argparse: 2.0.1
 
   js-yaml@4.3.0:
     dependencies:
