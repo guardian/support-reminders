@@ -67,7 +67,7 @@ and fill it in. The default user through homebrew will be your macos name, the p
 TEST_DB_URL='postgresql://localhost/support-reminders-test'
 ```
 
-Remember to run `nvm use` before running the tests.
+Remember to run `mise install` before running the tests.
 
 ## Connecting to the contributions store database
 
