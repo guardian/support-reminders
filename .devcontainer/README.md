@@ -37,3 +37,8 @@ extra VS Code extensions or Intellij plugins, personal settings or tweaks that s
 Modify this file freely without worrying about polluting shared config.
 > [!IMPORTANT]
 > But be aware that `devenv generate` will overwrite it!
+
+### Returning to local development without dev container (VSCode)
+
+From the command palette, choose: Dev Containers: Reopen Folder Locally
+Note that if you cloned the repo inside the dev container, you will lose any changes unless you committed them.
