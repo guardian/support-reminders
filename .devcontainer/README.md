@@ -52,8 +52,8 @@ into a container volume** — so there is no bind mount of your working tree.
       **Create Dev Container and Clone Sources**.
    - **VS Code**: run **Dev Containers: Clone Repository in Container Volume** from the command palette
      (pointed at this repo), using the `user/devcontainer.json` configuration when prompted.
-5. Wait for the build to finish.  In case of errors, see Troubleshooting below, otherwise dependencies are 
-    now installed so use your IDE and copilot CLI as normal.
+5. Wait for the build to finish - dependencies should now be installed so use your IDE and copilot CLI as normal.
+6. You might want to add a local configuration into the user/devcontainer.json.
 
 > [!NOTE]
 > Using `user/devcontainer.json` (rather than the committed `shared/devcontainer.json`) is what lets your
@@ -63,23 +63,16 @@ into a container volume** — so there is no bind mount of your working tree.
 ## Open an existing dev container
 
 Once the container has been created (see above), you don't need to recreate it — reconnect to the existing
-container instead (this reuses the same cloned-sources volume, so your work is preserved). 
+container instead (this reuses the same cloned-sources volume, so your work is preserved if you're cloning into the volume). 
 
-If you have opened
-the project in the container recently you can just use your IDE's **recent projects** menu. Otherwise attach to
-the existing container using the IDE's dev container attach action:
+If you have opened the project in the container recently you can just use your IDE's **recent projects** menu. Otherwise attach to the existing container using the IDE's dev container attach action:
 
 **IntelliJ IDEA**:  
 Use **File > Remote Development**, click on the Dev containers tab and pick the **support-reminders-devcontainer** from the
   list of existing dev containers. 
 
-// ***TODO:*** test this!
-
 **VS Code**:  
-Run the `Remote Explorer: Focus on dev containers` command, find the **support-service-lambdas-devcontainer** container
-  under **Dev Containers**, and choose **Attach in [current | new] window**.
-
-// ***TODO:*** check this!
+Run the `Dev Containers: Reopen in Container` command from the VS Code Command Palette, and select your .devcontainer/user/devcontainer.json option from the drop down.
 
 > [!NOTE]
 > Different IDEs clone the sources to different paths (JetBrains → `/IdeaProjects/<repo>`, VS Code →
@@ -95,9 +88,6 @@ Run the `Remote Explorer: Focus on dev containers` command, find the **support-s
 > sources" action does reuse the existing sources volume (so your work isn't lost), and `postCreateCommand` is
 > idempotent (safe to rerun), but it does redo work like `mise install` and `pnpm install`, so it's slower and
 > unnecessary in normal use — prefer the reconnect/attach actions above for getting back into an existing container.
-
-
-// ***TODO:*** some stuff around troubleshooting here?
 
 ## .devcontainer directory contents
 
@@ -125,12 +115,12 @@ This file is intended for your own overrides:
 extra VS Code extensions or Intellij plugins, personal settings or tweaks that shouldn't affect other contributors.
 Modify this file freely without worrying about polluting shared config.
 > [!IMPORTANT]
-> But be aware that `devenv generate` will overwrite it!
+> Be aware that `devenv generate` will overwrite it including any changes you may have made!
 
 You may want to create your own user configuration that pulls in your own dotfiles to use your configuration in the 
 
 ### Returning to local development without dev container (VSCode)
 
-From the command palette, choose: Dev Containers: Reopen Folder Locally
-Note that if you cloned the repo inside the dev container, you will lose any changes unless you committed and pushed them to remote.
-If you delete the Docker container, you will need to recreate it.
+- From the command palette, choose: `Dev Containers:  Reopen Folder Locally`
+- Note that if you cloned the repo inside the dev container, you will lose any changes unless you committed and pushed them to remote.
+- If you delete the Docker container, you will need to recreate it and this will take some time.
