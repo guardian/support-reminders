@@ -110,14 +110,14 @@ It is generated from `devenv.yaml`.
 
 ### `user/devcontainer.json`
 
-A personal copy of the devcontainer config, **git-ignored** (see `.gitignore`).
+A personal copy of the devcontainer config, is **git-ignored** (see `.gitignore`).
 This file is intended for your own overrides:
 extra VS Code extensions or Intellij plugins, personal settings or tweaks that shouldn't affect other contributors.
 Modify this file freely without worrying about polluting shared config.
 > [!IMPORTANT]
 > Be aware that `devenv generate` will overwrite it including any changes you may have made!
 
-You may want to create your own user configuration that pulls in your own dotfiles to use your configuration in the 
+You may want to create your own user configuration that pulls in your own dotfiles.
 
 ### Returning to local development without dev container (VSCode)
 
