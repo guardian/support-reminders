@@ -16,7 +16,7 @@
 		"esbuild": "0.28.2",
 		"pg": "8.23.1",
 		"pg-format": "1.0.4",
-		"zod": "4.4.3"
+		"zod": "4.6.6"
 	},
 	"devDependencies": {
 		"@guardian/eslint-config": "16.0.0",
