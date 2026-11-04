@@ -89,6 +89,13 @@ Run the `Dev Containers: Reopen in Container` command from the VS Code Command P
 > idempotent (safe to rerun), but it does redo work like `mise install` and `pnpm install`, so it's slower and
 > unnecessary in normal use — prefer the reconnect/attach actions above for getting back into an existing container.
 
+### Keeping things up to date
+
+It's best to get into the habit of upgrading mise and the various tools within the dev container with 
+
+`mise self-update` 
+`mise upgrade`
+
 ## .devcontainer directory contents
 
 ### `devenv.yaml`
