@@ -45,13 +45,13 @@ into a container volume** — so there is no bind mount of your working tree.
    ```bash
    devenv generate
    ```
-4. Create the container from the generated **`user/devcontainer.json`**, using your IDE's
-   clone-into-volume action (this clones the sources into a container volume; your local checkout is
-   not bind-mounted):
+4. Create the container using your IDE:
    - **IntelliJ IDEA**: open `.devcontainer/user/devcontainer.json` and use the gutter action
-      **Create Dev Container and Clone Sources**.
-   - **VS Code**: run **Dev Containers: Clone Repository in Container Volume** from the command palette
-     (pointed at this repo), using the `user/devcontainer.json` configuration when prompted.
+     **Create Dev Container and Clone Sources**.
+   - **VS Code, with personal configuration**: run **Dev Containers: Reopen in Container** from the local
+     checkout and select `user/devcontainer.json`. This bind-mounts your local working tree.
+   - **VS Code, with sources in a container volume**: run **Dev Containers: Clone Repository in Container Volume**
+     and select `shared/devcontainer.json`. The git-ignored local `user/devcontainer.json` is not available in the clone.
 5. Wait for the build to finish - dependencies should now be installed so use your IDE and copilot CLI as normal.
 6. You might want to add a local configuration into the user/devcontainer.json.
 
