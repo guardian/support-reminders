@@ -72,7 +72,7 @@ Use **File > Remote Development**, click on the Dev containers tab and pick the 
   list of existing dev containers. 
 
 **VS Code**:  
-Run the `Dev Containers: Reopen in Container` command from the VS Code Command Palette, and select your .devcontainer/user/devcontainer.json option from the drop down.
+Run `Dev Containers: Attach to Running Container...` from the VS Code Command Palette, select `support-reminders-devcontainer`, and open `/home/vscode/project` if the project does not open automatically.
 
 > [!NOTE]
 > Different IDEs clone the sources to different paths (JetBrains → `/IdeaProjects/<repo>`, VS Code →
