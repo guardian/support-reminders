@@ -23,9 +23,7 @@ is installed automatically inside the container, so nothing else needs to be ins
 
 ### Create the dev container (one time only)
 
-When creating the container you can either mount the repo from your local machine or clone it from github, the default is to mount from your local machine.
-
-// ***TODO***: define what we plan to use - bind mounted or cloned.
+When creating the container you can either mount the repo from your local machine or clone it from github.
 
 The standard flow uses a **local checkout only to hold the config**, then has the IDE **clone the sources
 into a container volume** — so there is no bind mount of your working tree.
@@ -46,14 +44,17 @@ into a container volume** — so there is no bind mount of your working tree.
    devenv generate
    ```
 4. Create the container using your IDE:
+
+  - The preferred option is cloning the repo into the remote which reduces the risk of supply chain attacks affecting the host machine but with VSCode this currently appears to be problematic.
+
    - **IntelliJ IDEA**: open `.devcontainer/user/devcontainer.json` and use the gutter action
      **Create Dev Container and Clone Sources**.
-   - **VS Code, with personal configuration**: run **Dev Containers: Reopen in Container** from the local
-     checkout and select `user/devcontainer.json`. This bind-mounts your local working tree.
-   - **VS Code, with sources in a container volume**: run **Dev Containers: Clone Repository in Container Volume**
+
+   - **VS Code, mounted on the host machine**: From the command palette, choose **Reopen in container**. This should allow your local tools to be available.
+
+   - Later we should be able to use **VS Code, with sources in a container volume**: run **Dev Containers: Clone Repository in Container Volume**
      and select `shared/devcontainer.json`. The git-ignored local `user/devcontainer.json` is not available in the clone.
 5. Wait for the build to finish - dependencies should now be installed so use your IDE and copilot CLI as normal.
-6. You might want to add a local configuration into the user/devcontainer.json.
 
 > [!NOTE]
 > Using `user/devcontainer.json` (rather than the committed `shared/devcontainer.json`) is what lets your
@@ -88,6 +89,10 @@ Run `Dev Containers: Attach to Running Container...` from the VS Code Command Pa
 > sources" action does reuse the existing sources volume (so your work isn't lost), and `postCreateCommand` is
 > idempotent (safe to rerun), but it does redo work like `mise install` and `pnpm install`, so it's slower and
 > unnecessary in normal use — prefer the reconnect/attach actions above for getting back into an existing container.
+
+## Working inside the container
+
+The `postCreateCommand` (see devenv.yaml) already runs pnpm install for you as part of the first build, so the Node dependencies are ready once the container has finished setting up. Open a terminal inside the container and follow the main README for the Node.js workflows (building, testing, linting, etc.).
 
 ### Keeping things up to date
 
@@ -124,10 +129,18 @@ Modify this file freely without worrying about polluting shared config.
 > [!IMPORTANT]
 > Be aware that `devenv generate` will overwrite it including any changes you may have made!
 
-You may want to create your own user configuration that pulls in your own dotfiles.
+You may want to create your own user configuration that pulls in your own dotfiles if you plan to clone into the remote.
 
 ### Returning to local development without dev container (VSCode)
 
 - From the command palette, choose: `Dev Containers:  Reopen Folder Locally`
 - Note that if you cloned the repo inside the dev container, you will lose any changes unless you committed and pushed them to remote.
 - If you delete the Docker container, you will need to recreate it and this will take some time.
+
+## Useful links
+
+[Containerised development (devenv)](https://github.com/guardian/devenv/blob/main/docs/containerised-development/containerised-development.md)
+
+[Containerised development in IntelliJ (devenv)](https://github.com/guardian/devenv/blob/main/docs/containerised-development/containerised-development-in-intellij.md)
+
+[Containerised development in VSCode (devenv)](https://github.com/guardian/devenv/blob/main/docs/containerised-development/containerised-development-in-vscode.md)
