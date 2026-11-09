@@ -114,7 +114,7 @@ importers:
     devDependencies:
       '@guardian/cdk':
         specifier: 66.0.0
-        version: 66.0.0(aws-cdk-lib@2.274.0(constructs@10.7.0))(aws-cdk@2.1146.1)(constructs@10.7.0)
+        version: 66.0.0(aws-cdk-lib@2.275.0(constructs@10.7.0))(aws-cdk@2.1147.0)(constructs@10.7.0)
       '@guardian/eslint-config':
         specifier: 16.0.0
         version: 16.0.0(@typescript-eslint/utils@8.72.0(eslint@9.39.1)(typescript@5.7.3))(eslint-import-resolver-node@0.3.10)(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.2(eslint@9.39.1)(typescript@5.7.3))(eslint@9.39.1))(eslint@9.39.1)(typescript@5.7.3)
@@ -134,11 +134,11 @@ importers:
         specifier: 8.71.2
         version: 8.71.2(eslint@9.39.1)(typescript@5.7.3)
       aws-cdk:
-        specifier: 2.1146.1
-        version: 2.1146.1
+        specifier: 2.1147.0
+        version: 2.1147.0
       aws-cdk-lib:
-        specifier: 2.274.0
-        version: 2.274.0(constructs@10.7.0)
+        specifier: 2.275.0
+        version: 2.275.0(constructs@10.7.0)
       constructs:
         specifier: 10.7.0
         version: 10.7.0
@@ -181,8 +181,8 @@ packages:
   '@aws-cdk/asset-node-proxy-agent-v6@2.1.3':
     resolution: {integrity: sha512-98We1QWfin9vtuuQtNFhIIAEWb8CreyYTAP0Vn8HqSBoNiFJM9nZgifJeQawT9Wq0NX1HCNFlxCyTccIrK1PSA==}
 
-  '@aws-cdk/cloud-assembly-schema@55.2.0':
-    resolution: {integrity: sha512-DHfYrZdyJZwWlI5sOK97X7SDc5Ow+uH3w3/qnB/ZYtY530lEsLObOoq/Z8BcJM6bAwJI6ozIgg9VYg2ot+A1jQ==}
+  '@aws-cdk/cloud-assembly-schema@55.3.0':
+    resolution: {integrity: sha512-V40A9DFnKSB8kS615QaaMxLEyWRhHhPWz6fTlssT5fr61BAPgY+dduRtgN3wEo1IyV/zURuhVEfDIKyE8JzSNw==}
     engines: {node: '>= 18.0.0'}
     bundledDependencies:
       - jsonschema
@@ -1444,8 +1444,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  aws-cdk-lib@2.274.0:
-    resolution: {integrity: sha512-jez6nnPRPGLRv6PfaVUdJNnIQN/5OQQRyQRfdf2lbkww5Z2W4FJ+RIEW1TpYgJ3oLXoM23f9LGA1kxoqvF/sFg==}
+  aws-cdk-lib@2.275.0:
+    resolution: {integrity: sha512-Gjj1tM3dQedhsI7MdwMvULF1PzgEO/zX0KFHU9xwZskkSL9057IZB4fJWm9nL+aaNU3TU+lNt8uB6d8QcZtUpQ==}
     engines: {node: '>= 20.0.0'}
     peerDependencies:
       constructs: ^10.5.0
@@ -1463,8 +1463,8 @@ packages:
       - yaml
       - mime-types
 
-  aws-cdk@2.1146.1:
-    resolution: {integrity: sha512-Sb3RHuPt8yLP4BPFNl+D2li5wI9h4UL/+NYVq8FCxmDfUJwayzEOc/Tgb4wcixB8naOmPOLzhWkdbFx17tuhSg==}
+  aws-cdk@2.1147.0:
+    resolution: {integrity: sha512-2ON/W4jShXWS926bKO6Osgw3MDlxhco5cz3n7SS5GLzaEaYs6ebpAHRDZp6sirkGnMqWoUwxCmIOkvAHS9Rn2A==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
 
@@ -3450,7 +3450,7 @@ snapshots:
 
   '@aws-cdk/asset-node-proxy-agent-v6@2.1.3': {}
 
-  '@aws-cdk/cloud-assembly-schema@55.2.0': {}
+  '@aws-cdk/cloud-assembly-schema@55.3.0': {}
 
   '@aws-sdk/checksums@3.1001.1':
     dependencies:
@@ -4194,13 +4194,13 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@guardian/cdk@66.0.0(aws-cdk-lib@2.274.0(constructs@10.7.0))(aws-cdk@2.1146.1)(constructs@10.7.0)':
+  '@guardian/cdk@66.0.0(aws-cdk-lib@2.275.0(constructs@10.7.0))(aws-cdk@2.1147.0)(constructs@10.7.0)':
     dependencies:
       '@aws-sdk/client-ec2': 3.1156.0
       '@aws-sdk/client-ssm': 3.1156.0
       '@aws-sdk/credential-providers': 3.1156.0
-      aws-cdk: 2.1146.1
-      aws-cdk-lib: 2.274.0(constructs@10.7.0)
+      aws-cdk: 2.1147.0
+      aws-cdk-lib: 2.275.0(constructs@10.7.0)
       chalk: 4.1.2
       codemaker: 1.142.0
       constructs: 10.7.0
@@ -5121,14 +5121,14 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  aws-cdk-lib@2.274.0(constructs@10.7.0):
+  aws-cdk-lib@2.275.0(constructs@10.7.0):
     dependencies:
       '@aws-cdk/asset-awscli-v1': 2.2.292
       '@aws-cdk/asset-node-proxy-agent-v6': 2.1.3
-      '@aws-cdk/cloud-assembly-schema': 55.2.0
+      '@aws-cdk/cloud-assembly-schema': 55.3.0
       constructs: 10.7.0
 
-  aws-cdk@2.1146.1: {}
+  aws-cdk@2.1147.0: {}
 
   axe-core@4.11.3: {}
 
