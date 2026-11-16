@@ -26,7 +26,7 @@
 		"eslint-config-prettier": "10.1.8",
 		"jest": "30.5.2",
 		"prettier": "3.9.10",
-		"source-map-support": "0.5.20",
+		"source-map-support": "0.5.21",
 		"ts-jest": "29.4.6",
 		"ts-node": "10.9.2",
 		"tslib": "2.9.1",
