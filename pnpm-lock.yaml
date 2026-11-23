@@ -54,7 +54,7 @@ importers:
         version: 16.0.0(@typescript-eslint/utils@8.72.1(eslint@9.39.1)(typescript@5.7.3))(eslint-import-resolver-node@0.3.10)(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.2(eslint@9.39.1)(typescript@5.7.3))(eslint@9.39.1))(eslint@9.39.1)(typescript@5.7.3)
       '@guardian/prettier':
         specifier: 11.0.0
-        version: 11.0.0(prettier@3.9.10)(tslib@2.9.1)
+        version: 11.0.0(prettier@3.10.1)(tslib@2.9.1)
       '@types/aws-lambda':
         specifier: 8.10.164
         version: 8.10.164
@@ -87,13 +87,13 @@ importers:
         version: 2.32.0(@typescript-eslint/parser@8.71.2(eslint@9.39.1)(typescript@5.7.3))(eslint@9.39.1)
       eslint-plugin-prettier:
         specifier: 5.5.7
-        version: 5.5.7(eslint-config-prettier@10.1.8(eslint@9.39.1))(eslint@9.39.1)(prettier@3.9.10)
+        version: 5.5.7(eslint-config-prettier@10.1.8(eslint@9.39.1))(eslint@9.39.1)(prettier@3.10.1)
       jest:
         specifier: 30.5.2
         version: 30.5.2(@types/node@26.6.5)(ts-node@10.9.2(@types/node@26.6.5)(typescript@5.7.3))
       prettier:
-        specifier: 3.9.10
-        version: 3.9.10
+        specifier: 3.10.1
+        version: 3.10.1
       ts-jest:
         specifier: 29.4.6
         version: 29.4.6(@babel/core@7.29.13)(@jest/transform@30.5.2)(@jest/types@30.5.1)(babel-jest@30.5.2(@babel/core@7.29.13))(esbuild@0.28.2)(jest-util@30.5.1)(jest@30.5.2(@types/node@26.6.5)(ts-node@10.9.2(@types/node@26.6.5)(typescript@5.7.3)))(typescript@5.7.3)
@@ -120,7 +120,7 @@ importers:
         version: 16.0.0(@typescript-eslint/utils@8.72.1(eslint@9.39.1)(typescript@5.7.3))(eslint-import-resolver-node@0.3.10)(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.71.2(eslint@9.39.1)(typescript@5.7.3))(eslint@9.39.1))(eslint@9.39.1)(typescript@5.7.3)
       '@guardian/prettier':
         specifier: 11.0.0
-        version: 11.0.0(prettier@3.9.10)(tslib@2.9.1)
+        version: 11.0.0(prettier@3.10.1)(tslib@2.9.1)
       '@types/jest':
         specifier: 30.0.0
         version: 30.0.0
@@ -152,8 +152,8 @@ importers:
         specifier: 30.5.2
         version: 30.5.2(@types/node@26.6.5)(ts-node@10.9.2(@types/node@26.6.5)(typescript@5.7.3))
       prettier:
-        specifier: 3.9.10
-        version: 3.9.10
+        specifier: 3.10.1
+        version: 3.10.1
       source-map-support:
         specifier: 0.5.21
         version: 0.5.21
@@ -3158,8 +3158,8 @@ packages:
     resolution: {integrity: sha512-SxToR7P8Y2lWmv/kTzVLC1t/GDI2WGjMwNhLLE9qtH8Q13C+aEmuRlzDst4Up4s0Wc8sF2M+J57iB3cMLqftfg==}
     engines: {node: '>=6.0.0'}
 
-  prettier@3.9.10:
-    resolution: {integrity: sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==}
+  prettier@3.10.1:
+    resolution: {integrity: sha512-70vp3ZUYoPlFbF9uiTdXHUUCGEIp7d4+6p+8DYbkm2jP7x/3i/paXVF6dopSI3zd/CEitrZN1rc4i85xWmmXlg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -4465,9 +4465,9 @@ snapshots:
       - supports-color
       - typescript
 
-  '@guardian/prettier@11.0.0(prettier@3.9.10)(tslib@2.9.1)':
+  '@guardian/prettier@11.0.0(prettier@3.10.1)(tslib@2.9.1)':
     dependencies:
-      prettier: 3.9.10
+      prettier: 3.10.1
       tslib: 2.9.1
 
   '@humanfs/core@0.19.1': {}
@@ -6049,10 +6049,10 @@ snapshots:
       safe-regex-test: 1.1.0
       string.prototype.includes: 2.0.1
 
-  eslint-plugin-prettier@5.5.7(eslint-config-prettier@10.1.8(eslint@9.39.1))(eslint@9.39.1)(prettier@3.9.10):
+  eslint-plugin-prettier@5.5.7(eslint-config-prettier@10.1.8(eslint@9.39.1))(eslint@9.39.1)(prettier@3.10.1):
     dependencies:
       eslint: 9.39.1
-      prettier: 3.9.10
+      prettier: 3.10.1
       prettier-linter-helpers: 1.0.1
       synckit: 0.12.3
     optionalDependencies:
@@ -7326,7 +7326,7 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier@3.9.10: {}
+  prettier@3.10.1: {}
 
   pretty-format@30.3.0:
     dependencies:
